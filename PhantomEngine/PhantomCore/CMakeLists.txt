@@ -1,0 +1,5 @@
+include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include")
+link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2015")
+link_libraries("glfw3.lib")
+add_executable(PhantomCore main.cpp)
+target_link_libraries(PhantomCore glfw3.lib)
