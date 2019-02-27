@@ -2,6 +2,8 @@
 PhantomEngine/build
 
 
+# mac os
+*.DS_Store
 
 # Prerequisites
 *.d
