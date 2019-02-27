@@ -1,5 +1,9 @@
-include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include")
-link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2015")
-link_libraries("glfw3.lib")
-add_executable(PhantomCore main.cpp)
-target_link_libraries(PhantomCore glfw3.lib)
+﻿# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_LIB_SRCS 变量
+aux_source_directory(./src/graphics DIR_LIB_SRCS)
+
+
+# 生成链接库
+add_library (PhantomCore 
+	${DIR_LIB_SRCS}
+)
