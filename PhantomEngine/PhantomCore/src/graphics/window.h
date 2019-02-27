@@ -19,11 +19,13 @@ namespace phantom { namespace graphics {
 		void clear() const;
 		void update();
 		bool closed() const;
+		void terminate() const;
 
 		inline int getWidth() const { return m_Width; }
 		inline int getHeight() const { return m_Height; }
 	private:
 		bool init();
+		
 	};
 
 } } 

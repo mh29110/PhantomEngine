@@ -3,6 +3,7 @@
 namespace phantom { namespace graphics {
 
 	void windowResize(GLFWwindow *window, int width, int height);
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 	Window::Window(const char *title, int width, int height)
 	{
@@ -25,14 +26,22 @@ namespace phantom { namespace graphics {
 			std::cout << "Failed to initialize GLFW!" << std::endl;
 			return false;
 		}
+		//版本号 opengl3.0 (举例)
+		//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, NULL, NULL);
 		if (!m_Window)
 		{
 			std::cout << "Failed to create GLFW window!" << std::endl;
+			glfwTerminate();
 			return false;
 		}
+
+		glfwSetKeyCallback(m_Window, key_callback);
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowSizeCallback(m_Window, windowResize);
+		glfwSwapInterval(1);
 		return true;
 	}
 
@@ -52,8 +61,20 @@ namespace phantom { namespace graphics {
 		return glfwWindowShouldClose(m_Window) == 1;
 	}
 
+	void Window::terminate() const 
+	{
+		glfwDestroyWindow(m_Window);
+		glfwTerminate();
+	}
+
 	void windowResize(GLFWwindow *window, int width, int height)
 	{
 		glViewport(0, 0, width, height);
+	}
+
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+    	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    	    glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 } }

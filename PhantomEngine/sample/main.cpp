@@ -19,6 +19,7 @@ int main()
 		glEnd();
 		window.update();
 	}
+	window.terminate();
 
 	return 0;
 } 
