@@ -20,6 +20,7 @@ elseif(MACOS)
     target_link_libraries(sample  
     	PhantomCore 
     	${OPENGL_LIBRARIES} 
+        libGLEW.a
     	${EXTRA_LIBS}
     	libglfw3.a
     )

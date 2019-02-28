@@ -28,16 +28,17 @@ elseif(MACOS)
 	FIND_LIBRARY(IOKit_LIBRARY IOKit)
 	FIND_LIBRARY(COREVIDEO_LIB NAMES CoreVideo)
     FIND_LIBRARY(OpenGL_LIBRARY OpenGL )
-
+    
     MARK_AS_ADVANCED (COCOA_LIBRARY
     				IOKit_LIBRARY
     				COREVIDEO_LIB
                     OpenGL_LIBRARY)
-    SET(EXTRA_LIBS ${COCOA_LIBRARY} ${IOKit_LIBRARY} ${COREVIDEO_LIB} ${OpenGL_LIBRARY})
+    SET(EXTRA_LIBS ${COCOA_LIBRARY} ${IOKit_LIBRARY} ${COREVIDEO_LIB} ${OpenGL_LIBRARY} )
 
     link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-mac")
+    link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLEW/lib/Release/mac")
     
-    MESSAGE( STATUS "message = ${OPENGL_INCLUDE_DIR}.")
+    # MESSAGE( STATUS "message openGL include = ${OPENGL_INCLUDE_DIR}.")
 endif(WINDOWS)
 
 add_subdirectory(PhantomCore)

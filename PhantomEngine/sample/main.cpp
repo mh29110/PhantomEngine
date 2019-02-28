@@ -1,5 +1,6 @@
 #include "src/graphics/window.h"
 #include "src/maths/maths.h"
+
 using namespace phantom::maths;
 int main()
 {
