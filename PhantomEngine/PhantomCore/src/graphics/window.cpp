@@ -2,8 +2,8 @@
 
 namespace phantom { namespace graphics {
 
-	void windowResize(GLFWwindow *window, int width, int height);
-	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void windowResize(GLFWwindow *window, int width, int height);
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 	Window::Window(const char *title, int width, int height)
 	{
@@ -42,6 +42,15 @@ namespace phantom { namespace graphics {
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowSizeCallback(m_Window, windowResize);
 		glfwSwapInterval(1);
+
+		// must after  glfwMakeContextCurrent	
+		if (glewInit() != GLEW_OK) {
+			std::cout << "Failed to initialize glew!" << std::endl;
+			glfwTerminate();
+			return false;
+		}
+
+		std::cout << glGetString(GL_VERSION) << std::endl;
 		return true;
 	}
 

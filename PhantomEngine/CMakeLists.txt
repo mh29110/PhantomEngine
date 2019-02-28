@@ -20,6 +20,7 @@ include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLEW/include")
 if(WINDOWS)
     link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2015"
     				"${PROJECT_SOURCE_DIR}/Dependencies/GLEW/lib/Release/Win32")
+   
 elseif(MACOS)
 	INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
