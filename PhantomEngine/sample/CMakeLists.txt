@@ -11,7 +11,11 @@ add_executable (sample ${DIR_SAMPLE_SRCS} ${HEADERS})
 
 
 if(WINDOWS)
-	target_link_libraries(sample PhantomCore opengl32.lib glfw3.lib)
+	target_link_libraries(  sample 
+							PhantomCore 
+							opengl32.lib 
+							glew32s.lib
+							glfw3.lib)
 
 elseif(MACOS)
     target_link_libraries(sample  
