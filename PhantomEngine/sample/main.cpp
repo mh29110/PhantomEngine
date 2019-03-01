@@ -12,7 +12,13 @@ int main()
 
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
-#if(1)
+#if( 1 )
+	/*mat4x4 m1(  1, 0, 0, 0, 
+				0, 1, 0, 0,
+				0, 0, 1, 0, 
+				5, 0, 0, 1);*/
+#endif
+#if(0)
 	vec2 v1(3,2);
 	vec2 v2(1, 3);
 	vec2 v3;
