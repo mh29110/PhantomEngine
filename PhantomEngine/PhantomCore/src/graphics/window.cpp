@@ -29,7 +29,6 @@ namespace phantom { namespace graphics {
 		//版本号 opengl3.0 (举例)
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, NULL, NULL);
