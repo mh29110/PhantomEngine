@@ -13,11 +13,11 @@ int main()
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
 #if(1)
-	vec4 v1(3,2,0,1);
-	vec4 v2(1, 3,100,3);
-	vec4 v3;
-	float x = (v2 * v1);
-	std::cout << v1 << v2 << v3<<"x="<<x<< std::endl;
+	vec2 v1(3,2);
+	vec2 v2(1, 3);
+	vec2 v3;
+	v3 = v2 + v1;
+	std::cout << v1 << v2 << v3<<"x="<< std::endl;
 
 	vec4 v4(3,2,0,1);
 	vec4 v5(1, 3,100,3);
