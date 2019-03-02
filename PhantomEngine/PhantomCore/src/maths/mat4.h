@@ -15,7 +15,6 @@ namespace phantom {namespace maths {
 	struct  mat4x4 {
 		mat4x4();
 		mat4x4(float diagonal);
-		mat4x4 identity();
 		mat4x4(float m00, float m01, float m02, float m03, // 1st column
 			float m04, float m05, float m06, float m07, // 2nd column
 			float m08, float m09, float m10, float m11, // 3rd column
@@ -32,6 +31,7 @@ namespace phantom {namespace maths {
 		//transform matrix
 		mat4x4& translate(const vec3& v);
 		mat4x4& translate(float x, float y, float z);
+		static mat4x4 identity();
 		static mat4x4 translation(const vec3& translation);
 		static mat4x4 rotation(float angle, const vec3& axis);
 		static mat4x4 scale(const vec3& scale);

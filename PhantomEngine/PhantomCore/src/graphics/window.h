@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+extern double mouse_x ;
+extern double mouse_y ;
 
 
 namespace phantom { namespace graphics {
@@ -25,6 +27,7 @@ namespace phantom { namespace graphics {
 
 		inline int getWidth() const { return m_Width; }
 		inline int getHeight() const { return m_Height; }
+
 	private:
 		bool init();
 		
