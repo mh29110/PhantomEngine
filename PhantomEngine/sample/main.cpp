@@ -10,8 +10,25 @@ int main()
 	Window window("phantom!", 960, 540);
 	glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 
-	GLuint vao;
-	glGenVertexArrays(1, &vao);
+
+	GLfloat vertices[] = {
+        -0.5f, 0.0f, 0.0f,
+        0.5f, 0.0f, 0.0f,
+        0.0f, 0.5f, 0.0f
+    };
+	GLuint vaoId,vboId;
+	glGenVertexArrays(1, &vaoId);
+	glBindVertexArray(vaoId);
+
+	glGenBuffers(1,&vboId);
+	glBindBuffer(GL_ARRAY_BUFFER,vboId);
+
+	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+	glVertexAttribPointer(0,3,GL_FLOAT	,GL_FALSE,3*sizeof(GL_FLOAT),(GLvoid*) 0);
+	glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 #if( 1 )
 	/*mat4x4 m1(  1, 0, 0, 0, 
 				0, 1, 0, 0,
@@ -40,12 +57,9 @@ int main()
 	while (!window.closed())
 	{
 		window.clear();
-		glBegin(GL_QUADS);
-		glVertex2f(-0.5f, -0.5f);
-		glVertex2f(-0.5f, 0.5f);
-		glVertex2f(0.5f, 0.5f);
-		glVertex2f(0.5f, -0.5f);
-		glEnd();
+		glColor3f(1.0, 1.0, 1.0);
+		glBindVertexArray(vaoId); // 使用VAO信息
+    	glDrawArrays(GL_TRIANGLES, 0, 3);
 		window.update();
 	}
 	window.terminate();

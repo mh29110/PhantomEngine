@@ -27,9 +27,16 @@ namespace phantom { namespace graphics {
 			return false;
 		}
 		//版本号 opengl3.0 (举例)
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
+		// Set up OpenGL options.
+		// Use OpenGL verion 4.1,
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+		// GLFW_OPENGL_FORWARD_COMPAT specifies whether the OpenGL context should be forward-compatible, i.e. one where all functionality deprecated in the requested version of OpenGL is removed.
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		// Indicate we only want the newest core profile, rather than using backwards compatible and deprecated features.
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// Make the window resize-able.
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, NULL, NULL);
 		if (!m_Window)
@@ -60,7 +67,7 @@ namespace phantom { namespace graphics {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
- 	void Window::update()
+	void Window::update()
 	{
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
@@ -84,7 +91,7 @@ namespace phantom { namespace graphics {
 
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-    	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    	    glfwSetWindowShouldClose(window, GLFW_TRUE);
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 } }

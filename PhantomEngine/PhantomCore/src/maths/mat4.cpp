@@ -24,7 +24,7 @@ namespace phantom {namespace maths {
 	{
 		mat4x4 result(1);
 		result.elements[0];
-		for (int column = 0;i < column ; column++)
+		for (int column = 0;column < 4 ; column++)
 		{
 			for (int row = 0; row < 4 ; row++)
 			{
