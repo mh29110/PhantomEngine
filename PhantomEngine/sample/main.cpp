@@ -30,10 +30,25 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 #if( 1 )
-	/*mat4x4 m1(  1, 0, 0, 0, 
-				0, 1, 0, 0,
-				0, 0, 1, 0, 
-				5, 0, 0, 1);*/
+    //时刻注意我们的矩阵输入时的一行，会旋转为列向量。
+	// mat4x4 m1(  0, 1, 2, 3, 
+	// 			4, 5, 6, 7,
+	// 			8, 9, 10,11, 
+	// 			12,13,14,15);
+	mat4x4 m2(  0, 4, 8, 12, 
+				1, 5, 9, 13,
+				2, 6, 10,14, 
+				3, 7, 11,15);
+	vec3 v (10,1,	1);
+	mat4x4 m4 = mat4x4::scale(v);
+	std::cout << m4;
+	mat4x4 m3 = m4*m2;
+	std::cout << m3;
+	m2.scale(10,1,1);
+	std::cout << m2;
+
+
+
 #endif
 #if(0)
 	vec2 v1(3,2);
