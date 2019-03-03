@@ -1,5 +1,4 @@
 #include "mat4.h"
-#include "utils.h"
 
 namespace phantom {namespace maths {
 	mat4x4::mat4x4()

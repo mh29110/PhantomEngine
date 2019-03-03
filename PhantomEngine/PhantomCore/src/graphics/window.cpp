@@ -62,7 +62,8 @@ namespace phantom { namespace graphics {
 			glfwTerminate();
 			return false;
 		}
-		windowResize(m_Window, m_Width, m_Height);
+		// std::cout << m_Width <<std::endl;
+		// windowResize(m_Window, m_Width, m_Height);
 
 		std::cout << glGetString(GL_VERSION) << std::endl;
 		return true;

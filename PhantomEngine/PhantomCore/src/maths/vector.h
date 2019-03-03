@@ -1,5 +1,7 @@
 #pragma once 
 #include <iostream>
+#include "vector.h"
+#include "utils.h"
 namespace phantom {namespace maths {
 
 	struct vec2 {

@@ -1,8 +1,8 @@
-#pragma once
+#ifndef _FILE_UTILS_H_
+#define _FILE_UTILS_H_
 
-#include <fstream>
 #include <stdlib.h>
-
+#include <stdio.h>
 char* read_file(const char* filename)
 {
 	FILE * file = fopen( filename , "rt");
@@ -30,3 +30,4 @@ char* read_file(const char* filename)
 
 	return code;
 }
+#endif //_FILE_UTILS_H_

@@ -1,5 +1,5 @@
 #include "vector.h"
-#include "utils.h"
+
 namespace phantom {
 	namespace maths {
 		vec2::vec2()

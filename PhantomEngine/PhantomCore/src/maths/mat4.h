@@ -3,6 +3,8 @@
 #include <iostream>
 #include "vector.h"
 
+#include "utils.h"
+
 // The elements of the matrix are stored as column major order.
 // | 0 2 |    | 0 3 6 |    |  0  4  8 12 |
 // | 1 3 |    | 1 4 7 |    |  1  5  9 13 |
