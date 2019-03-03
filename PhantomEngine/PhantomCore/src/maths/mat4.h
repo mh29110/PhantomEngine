@@ -39,6 +39,7 @@ namespace phantom {namespace maths {
 		static mat4x4 scale(const vec3& scale);
 		//project
 		static mat4x4 orthographic(float left, float right, float bottom, float top, float near, float far);
+		static mat4x4 perspective(float fov, float aspectRatio, float near, float far);
 		friend std::ostream & operator <<(std::ostream &os, const mat4x4 & m);
 		mat4x4& scale(float x, float y, float z);
 		// union  is  better

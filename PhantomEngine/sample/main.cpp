@@ -11,15 +11,17 @@ double mouse_x = 0.0;
 double mouse_y = 0.0;
 
 
+
 int main()
 {
 	Window window("phantom!", 960, 540);
 
-    Shader shader("shaders/vert.shader","shaders/frag.shader");
+    Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
 
     m_ShaderID = shader.m_ShaderId;
 
     shader.bind();
+
 	GLfloat vertices[] = {
 	      0.5f, -0.5f, 0.0f,  // 右下角
     -0.5f, -0.5f, 0.0f, // 左下角
@@ -43,15 +45,14 @@ int main()
     glBindVertexArray(0);
 
 
-// 	mat4x4 oro ;
- 	// mat4x4 ortho = mat4x4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
- 	// mat4x4 ortho = mat4x4::identity();
-// 	std::cout << ortho;
+ 	mat4x4 pm = mat4x4::orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+ 	//mat4x4 pm = mat4x4::perspective(60.0f, 16.0/9.0f, -1.0f, 1.0f);
 
-	// glUniformMatrix4fv(getUniformLocation("pr_matrix"),1,GL_FALSE, ortho.elements);
+ 	shader.setUniformMat4("projection_matrix",pm);
+ 	shader.setUniform2f("light_pos",vec2(4.0f ,1.5f));
+ 	shader.setUniform4f("color_light",vec4(1.0f,0.7f,0.8f,1.0f));
+ 	shader.setUniform1f("factor_light", 0.3f);
 
-// 	glUniform2f(getUniformLocation("light_pos"), 4.0f, 1.5f);
-// 	glUniform4f(getUniformLocation("colour"), 1.0f, 0.7f, 0.8f, 1.0f);
    
 
 //当前程序运行根目录
@@ -68,8 +69,10 @@ int main()
         // Draw our first triangle
         glUseProgram(m_ShaderID);
 	    glBindVertexArray(vaoId);
+	    shader.setUniform2f("light_pos", vec2((float)(mouse_x * 1.0f / 960.0f - 0.5f), (float)(0.5f - mouse_y * 1.0f / 540.0f)));
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
+
 
         // Swap the screen buffers
 		window.update();

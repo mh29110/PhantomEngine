@@ -156,6 +156,26 @@ namespace phantom {namespace maths {
 		return result;
 	}
 
+	mat4x4 mat4x4::perspective(float fov, float aspectRatio, float near, float far)
+	{
+		mat4x4 result(1.0f);
+
+		float q = 1.0f / tan(toRadians(0.5f * fov));
+		float a = q / aspectRatio;
+
+		float b = (near + far) / (near - far);
+		float c = (2.0f * near * far) / (near - far);
+
+		result.elements[0 + 0 * 4] = a;
+		result.elements[1 + 1 * 4] = q;
+		result.elements[2 + 2 * 4] = b;
+		result.elements[3 + 2 * 4] = -1.0f;
+		result.elements[2 + 3 * 4] = c;
+
+		return result;
+	}
+
+
 
 	///////////////////////////////////////////////////////////////////////////////
 	// translate this matrix by (x, y, z)  有点晕 # todo

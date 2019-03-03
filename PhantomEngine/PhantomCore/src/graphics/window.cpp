@@ -51,7 +51,7 @@ namespace phantom { namespace graphics {
 		glfwSetKeyCallback(m_Window, key_callback);
 		glfwSetWindowSizeCallback(m_Window, windowResize);
 		glfwSetCursorPosCallback(m_Window, cursor_position_callback);
-		glfwSwapInterval(1);
+		glfwSwapInterval(1);//vAsync  每帧交换一次缓冲器
 
 		    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
  		glewExperimental = GL_TRUE;
