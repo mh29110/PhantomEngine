@@ -91,9 +91,7 @@ GLuint setupShaders() {
 
 int main()
 {
-
 	Window window("phantom!", 960, 540);
-	
 
     m_ShaderID = setupShaders();
 	glUseProgram(m_ShaderID);
@@ -119,7 +117,8 @@ int main()
 
 
 // 	mat4x4 oro ;
-// 	mat4x4 ortho = oro.orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+ 	mat4x4 ortho = mat4x4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+ 	// mat4x4 ortho = mat4x4::identity();
 // 	std::cout << ortho;
 
 // 	glUniformMatrix4fv(getUniformLocation("pr_matrix"),1,GL_FALSE, ortho.elements);

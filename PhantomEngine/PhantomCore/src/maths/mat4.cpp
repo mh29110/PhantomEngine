@@ -120,7 +120,7 @@ namespace phantom {namespace maths {
 		return result;
 	}
 
-	mat4x4 identity()
+	mat4x4 mat4x4::identity()
 	{
 		return mat4x4(1.0f);
 	}
