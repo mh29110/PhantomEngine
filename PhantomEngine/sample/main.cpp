@@ -23,10 +23,44 @@ int main()
     shader.bind();
 
 	GLfloat vertices[] = {
-	      0.5f, -0.5f, 0.0f,  // 右下角
-    -0.5f, -0.5f, 0.0f, // 左下角
-    -0.5f, 0.5f, 0.0f   // 左上角
+	    -1.0f,-1.0f,-1.0f, // triangle 1 : begin
+	    -1.0f,-1.0f, 1.0f,
+	    -1.0f, 1.0f, 1.0f, // triangle 1 : end
+	    1.0f, 1.0f,-1.0f, // triangle 2 : begin
+	    -1.0f,-1.0f,-1.0f,
+	    -1.0f, 1.0f,-1.0f, // triangle 2 : end
+	    1.0f,-1.0f, 1.0f,
+	    -1.0f,-1.0f,-1.0f,
+	    1.0f,-1.0f,-1.0f,
+	    1.0f, 1.0f,-1.0f,
+	    1.0f,-1.0f,-1.0f,
+	    -1.0f,-1.0f,-1.0f,
+	    -1.0f,-1.0f,-1.0f,
+	    -1.0f, 1.0f, 1.0f,
+	    -1.0f, 1.0f,-1.0f,
+	    1.0f,-1.0f, 1.0f,
+	    -1.0f,-1.0f, 1.0f,
+	    -1.0f,-1.0f,-1.0f,
+	    -1.0f, 1.0f, 1.0f,
+	    -1.0f,-1.0f, 1.0f,
+	    1.0f,-1.0f, 1.0f,
+	    1.0f, 1.0f, 1.0f,
+	    1.0f,-1.0f,-1.0f,
+	    1.0f, 1.0f,-1.0f,
+	    1.0f,-1.0f,-1.0f,
+	    1.0f, 1.0f, 1.0f,
+	    1.0f,-1.0f, 1.0f,
+	    1.0f, 1.0f, 1.0f,
+	    1.0f, 1.0f,-1.0f,
+	    -1.0f, 1.0f,-1.0f,
+	    1.0f, 1.0f, 1.0f,
+	    -1.0f, 1.0f,-1.0f,
+	    -1.0f, 1.0f, 1.0f,
+	    1.0f, 1.0f, 1.0f,
+	    -1.0f, 1.0f, 1.0f,
+	    1.0f,-1.0f, 1.0f
 	};
+
 	GLfloat colors[] = {
 
 	};
@@ -45,8 +79,8 @@ int main()
     glBindVertexArray(0);
 
 
- 	mat4x4 pm = mat4x4::orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
- 	//mat4x4 pm = mat4x4::perspective(60.0f, 16.0/9.0f, -1.0f, 1.0f);
+ 	//mat4x4 pm = mat4x4::orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+ 	mat4x4 pm = mat4x4::perspective(120.0f, 16.0/9.0f, -1.0f, 1.0f);
 
  	shader.setUniformMat4("projection_matrix",pm);
  	shader.setUniform2f("light_pos",vec2(4.0f ,1.5f));
@@ -60,9 +94,12 @@ int main()
     char buffer[MAXPATH];
     getcwd(buffer, MAXPATH);
     printf("The current directory is: %s", buffer);
-
-
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    
+    glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
 	while (!window.closed())
 	{
         window.clear();
@@ -70,7 +107,7 @@ int main()
         glUseProgram(m_ShaderID);
 	    glBindVertexArray(vaoId);
 	    shader.setUniform2f("light_pos", vec2((float)(mouse_x * 1.0f / 960.0f - 0.5f), (float)(0.5f - mouse_y * 1.0f / 540.0f)));
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 12*3);
         glBindVertexArray(0);
 
 
