@@ -15,7 +15,6 @@
 ///////////////////////////////////////////////////////////////////////////
 namespace phantom {namespace maths {
 	struct  mat4x4 {
-		mat4x4();
 		mat4x4(float diagonal);
 		mat4x4(float m00, float m01, float m02, float m03, // 1st column
 			float m04, float m05, float m06, float m07, // 2nd column
@@ -37,9 +36,12 @@ namespace phantom {namespace maths {
 		static mat4x4 translation(const vec3& translation);
 		static mat4x4 rotation(float angle, const vec3& axis);
 		static mat4x4 scale(const vec3& scale);
-		//project
-		static mat4x4 orthographic(float left, float right, float bottom, float top, float near, float far);
-		static mat4x4 perspective(float fov, float aspectRatio, float near, float far);
+		//project 
+		//对于以下静态方法考虑重构，比如LookAt矩阵，它需要在update时不断变化自身，每次创建一个值效率不好。(done)
+		mat4x4 orthographic(float left, float right, float bottom, float top, float near, float far);
+		mat4x4 perspective(float fov, float aspectRatio, float near, float far);
+		mat4x4 LookAtMatrixBuild(const vec3& pos, const vec3& focal, const vec3 & up);
+		
 		friend std::ostream & operator <<(std::ostream &os, const mat4x4 & m);
 		mat4x4& scale(float x, float y, float z);
 		// union  is  better

@@ -49,6 +49,8 @@ namespace phantom {
 			return multiply(other);
 		}
 
+	
+
 		float vec2::getAngle(const vec2 & other)
 		{
 			float dotsum = this->multiply(other);
@@ -106,10 +108,29 @@ namespace phantom {
 			return x * other.x + y*other.y + z * other.z;
 		}
 
+		vec3 vec3::crossProduct(const vec3 & other) const
+		{
+			return vec3( y* other.z -z*other.y , z*other.x - x* other.z, x*other.y - y*other.x);
+		}
+
+		vec3 & vec3::normalize()
+		{
+			float length = x * x + y * y + z * z;
+			if (length == 0) // this check isn't an optimization but prevents getting NAN in the sqrt.
+				return *this;
+			length = 1.0f / sqrt(length);
+
+			x *= length;
+			y *= length;
+			z *= length;
+			return *this;
+		}
+
 		bool vec3::operator==(const vec3 & other)
 		{
 			return x == other.x && y == other.y && z == other.z;
 		}
+
 		bool vec3::operator!=(const vec3 & other)
 		{
 			return !(*this == other);
@@ -138,6 +159,11 @@ namespace phantom {
 		float operator*(const vec3 & left, const vec3 & right)
 		{
 			return left.x*right.x + left.y*right.y + left.z * right.z;
+		}
+
+		vec3 vec3::operator-(const vec3 & right)
+		{
+			return vec3(right.x * -1, right.y *-1, right.z * -1);
 		}
 
 		std::ostream & operator<<(std::ostream & stream, const vec3 & vector)

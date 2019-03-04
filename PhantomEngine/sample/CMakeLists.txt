@@ -2,10 +2,10 @@
 add_executable (sample main.cpp)
 
 
-# copy
-    add_custom_command(TARGET sample PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/assets   $<TARGET_FILE_DIR:sample>)
+# copy resource to execute dir (debug directory)
+add_custom_command(TARGET sample PRE_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_directory
+${CMAKE_SOURCE_DIR}/assets   $<TARGET_FILE_DIR:sample>)
 
 
 if(WINDOWS)
@@ -14,6 +14,11 @@ if(WINDOWS)
     POST_BUILD COMMAND 
     ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/Dependencies/GLEW/bin/Release/Win32" "$<TARGET_FILE_DIR:sample>"
     )
+
+    # copy resource to execute dir (debug mode)
+    add_custom_command(TARGET sample PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets   "${PROJECT_BINARY_DIR}/sample")
 
 	target_link_libraries(  sample 
 							PhantomCore 

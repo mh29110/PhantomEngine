@@ -5,7 +5,7 @@ set(DIR_LIB_SRCS "./src/")
 file (GLOB_RECURSE  SOURCES 
 					"${DIR_LIB_SRCS}/*.h"
 					"${DIR_LIB_SRCS}/*.cpp")
-message("My source files: " ${SOURCES})
+# message("My source files: " ${SOURCES})
 
 # 生成链接库
 add_library (PhantomCore 

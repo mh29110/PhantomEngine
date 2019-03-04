@@ -36,9 +36,13 @@ namespace phantom {namespace maths {
 		vec3& subtract(const vec3 & other);
 		float multiply(const vec3 & other);
 
+		vec3 crossProduct(const vec3 & other) const;
+		vec3& normalize();
+
 		friend vec3 operator +(const vec3& left, const vec3&right);
 		friend vec3 operator -(const vec3& left, const vec3&right);
 		friend float operator *(const vec3& left, const vec3&right);
+		vec3 operator -( const vec3&right);
 
 		bool operator==(const vec3& other);
 		bool operator!=(const vec3& other);
