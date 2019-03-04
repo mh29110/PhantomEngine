@@ -1,5 +1,5 @@
 # PhantomEngine
-A game engine developed by my selef. 
+A game engine
 
 #  develop
 ## windows 开发环境
