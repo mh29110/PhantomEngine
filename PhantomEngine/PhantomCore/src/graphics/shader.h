@@ -11,7 +11,7 @@ namespace phantom { namespace graphics {
 	public:
 		Shader (const char* $vPath,const char* $fPath);
 
-		~Shader();
+		virtual~Shader();
 
 		GLuint m_ShaderId;
 		void bind() const;

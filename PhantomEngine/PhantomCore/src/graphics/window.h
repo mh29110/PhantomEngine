@@ -19,7 +19,7 @@ namespace phantom { namespace graphics {
 		bool m_Closed;
 	public:
 		Window(const char *name, int width, int height);
-		~Window();
+		virtual~Window();
 		void clear() const;
 		void update();
 		bool closed() const;
