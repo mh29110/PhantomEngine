@@ -29,7 +29,7 @@ PhantomEngine/build
 # Compiled Static libraries
 *.lai
 *.la
-*.a
+# *.a 提交mac类库
 
 # Executables
 *.exe

@@ -47,6 +47,7 @@ endif(WINDOWS)
 
 add_subdirectory(PhantomCore)
 add_subdirectory(sample)
+add_subdirectory(Platform)
 
 
 
