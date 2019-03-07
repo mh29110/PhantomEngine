@@ -1,6 +1,6 @@
 #include "renderer.h"
 namespace phantom { namespace graphics {
-
+	using namespace phantom::maths;
 	void Renderer::submit(const Renderable* renderable)
 	{
 		m_RenderQueue.push_back(renderable);

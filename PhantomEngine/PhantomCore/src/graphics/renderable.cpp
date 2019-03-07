@@ -1,5 +1,5 @@
 #include "renderable.h"
-
+using namespace phantom::maths;
 static  GLfloat vertices[] = {
 		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
 		-1.0f,-1.0f, 1.0f,

@@ -2,9 +2,7 @@
 
 namespace phantom { namespace graphics {
 
-	static void windowResize(GLFWwindow *window, int width, int height);
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+	
 
 	Window::Window(const char *title, int width, int height)
 	{
