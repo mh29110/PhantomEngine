@@ -1,0 +1,2 @@
+add_executable(WindowEngine WindowsApplication.cpp)
+target_link_libraries(WindowEngine PhantomCore)

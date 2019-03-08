@@ -1,5 +1,5 @@
 #pragma once
-#include "src/interface/IApplication.h"
+#include "IApplication.h"
 
 namespace Phantom {
     class BaseApplication : implements IApplication

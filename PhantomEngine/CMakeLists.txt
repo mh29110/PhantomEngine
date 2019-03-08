@@ -12,19 +12,21 @@ elseif(CMAKE_HOST_UNIX)
 endif()
 
 project (PhantomEngine)
-include_directories("${PROJECT_SOURCE_DIR}/PhantomCore")
+include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/common")
+include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/graphics")
+include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/interface")
+include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/maths")
+include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/utils")
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include")
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLEW/include")
 
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
-    # message(STATUS "---------clang | libstdc++")
-endif()
+# 测试寻找openGL库， window/macos
+#find_package(OpenGL REQUIRED)
+#message ( STATUS " openGL libraries "  ${OPENGL_LIBRARIES})
 
 if(WINDOWS)
     link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2015"
     				"${PROJECT_SOURCE_DIR}/Dependencies/GLEW/lib/Release/Win32")
-   
 elseif(MACOS)
 	INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)

@@ -26,9 +26,9 @@ int main()
 
 	Renderer renderer;
 	//osx
-    Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
+    //Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
 	//vs
-    // Shader shader("Resources/shaders/vert_light.shader","Resources/shaders/frag_light.shader");
+     Shader shader("Resources/shaders/vert_light.shader","Resources/shaders/frag_light.shader");
     m_ShaderID = shader.m_ShaderId;
     shader.bind();
 
