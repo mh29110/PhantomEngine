@@ -1,6 +1,8 @@
 #include "GraphicsManager.h"
 #include <iostream>
 using namespace std;
+
+
 int Phantom::GraphicsManager::Initialize()
 {
 	cout << "Initialize" << endl;
@@ -14,7 +16,9 @@ void Phantom::GraphicsManager::Finalize()
 
 void Phantom::GraphicsManager::Tick()
 {
+#ifdef OS_MACOS
 	cout << "Tick" << endl;
+#endif
 }
 
 void Phantom::GraphicsManager::DrawSingleMesh()

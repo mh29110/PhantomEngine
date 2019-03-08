@@ -1,3 +1,4 @@
+#include "config.h"
 #include "maths.h"
 #include "shader.h"
 #include "window.h"
@@ -25,10 +26,11 @@ int main()
 	Window window("phantom!", 960, 540);
 
 	Renderer renderer;
-	//osx
-    //Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
-	//vs
-     Shader shader("Resources/shaders/vert_light.shader","Resources/shaders/frag_light.shader");
+#ifdef OS_MACOS
+    Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
+#elif OS_WINDOWS
+    Shader shader("Resources/shaders/vert_light.shader","Resources/shaders/frag_light.shader");
+#endif
     m_ShaderID = shader.m_ShaderId;
     shader.bind();
 
@@ -41,7 +43,7 @@ int main()
 
 
 	mat4x4 proMat(1);
- 	proMat.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
+ 	// proMat.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
  	proMat.perspective(90.0f, 16.0f/9.0f, 0.01f, 1000.0f);
 	mat4x4 viewMat(1);
 	viewMat.LookAtMatrixBuild(vec3(0, 0,2), vec3(0, 0 , 0), vec3(0 ,1, 0));
@@ -51,14 +53,14 @@ int main()
  	shader.setUniformMat4(MVP_NAME_P, proMat);
  	shader.setUniform2f("light_pos",vec2(4.0f ,1.5f));
  	shader.setUniform4f("color_light",vec4(1.0f,0.7f,0.8f,1.0f));
- 	shader.setUniform1f("factor_light", 1.3f);
+ 	shader.setUniform1f("factor_light", 5.3f);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
-	GLfloat radius = 10.0f;
+	GLfloat radius = 100.0f;
 
 	while (!window.closed())
 	{

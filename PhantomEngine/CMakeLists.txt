@@ -3,13 +3,37 @@ set (CMAKE_C_STANDARD 11)
 set (CMAKE_CXX_STANDARD 11)
 
 # Check platforms
-if (CMAKE_HOST_WIN32)
-    set(WINDOWS 1)
-elseif(CMAKE_HOST_APPLE)
-    set(MACOS 1)
-elseif(CMAKE_HOST_UNIX)
-    set(LINUX 1)
-endif()
+IF(UNIX)
+    IF(APPLE)
+        set(MYGE_TARGET_PLATFORM "Darwin")
+        set(OS_MACOS 1)
+    ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES Android)
+        set(MYGE_TARGET_PLATFORM "Android")
+        set(ANDROID 1)
+        set(OS_ANDROID 1)
+    ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+        set(MYGE_TARGET_PLATFORM "FreeBSD")
+        include_directories("/usr/local/include")
+        set(BSD 1)
+        set(OS_BSD 1)
+    ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES Emscripten)
+        set(MYGE_TARGET_PLATFORM "Emscripten")
+        set(WA 1)
+        set(OS_WEBASSEMBLY 1)
+        unset (USE_ISPC)
+    ELSE(LINUX)
+        set(MYGE_TARGET_PLATFORM "Linux")
+        set(OS_LINUX 1)
+    ENDIF(APPLE)
+ELSEIF(WIN32)
+    set(MYGE_TARGET_PLATFORM "Windows")
+        set(OS_WINDOWS 1)
+ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES Psp2)
+    set(MYGE_TARGET_PLATFORM "PSP2")
+    set(PSP2 1)
+    set(OS_PSP2 1)
+ENDIF(UNIX)
+
 
 project (PhantomEngine)
 include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/common")
@@ -19,15 +43,20 @@ include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/maths")
 include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/utils")
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include")
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLEW/include")
+# config in .h file
+include_directories(${PROJECT_SOURCE_DIR})
+configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+
+
 
 # 测试寻找openGL库， window/macos
 #find_package(OpenGL REQUIRED)
 #message ( STATUS " openGL libraries "  ${OPENGL_LIBRARIES})
 
-if(WINDOWS)
+if(OS_WINDOWS)
     link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2015"
     				"${PROJECT_SOURCE_DIR}/Dependencies/GLEW/lib/Release/Win32")
-elseif(MACOS)
+elseif(OS_MACOS)
 	INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
 	# find_library(CoreFoundation_LIBRARY CoreFoundation)
@@ -45,7 +74,9 @@ elseif(MACOS)
     link_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLEW/lib/Release/mac")
     
     # MESSAGE( STATUS "message openGL include = ${OPENGL_INCLUDE_DIR}.")
-endif(WINDOWS)
+endif(OS_WINDOWS)
+
+
 
 add_subdirectory(PhantomCore)
 add_subdirectory(sample)

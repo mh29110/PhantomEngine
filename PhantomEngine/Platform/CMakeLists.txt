@@ -1,7 +1,7 @@
 add_subdirectory(Empty)
 
-IF(WIN32)
+IF(OS_WINDOWS)
 	add_subdirectory(Windows)
-ELSEIF(MACOS)
+ELSEIF(OS_MACOS)
 	add_subdirectory(Macos)
-ENDIF(WIN32)
+ENDIF(OS_WINDOWS)
