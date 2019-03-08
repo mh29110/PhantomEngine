@@ -1,11 +1,11 @@
-#include "src/maths/maths.h"
-#include "src/graphics/shader.h"
-#include "src/graphics/window.h"
-#include "src/graphics/GVertexArray.h"
-#include "src/graphics/GVertexBuffer.h"
-#include "src/graphics/GIndexBuffer.h"
-#include "src/graphics/renderable.h"
-#include "src/graphics/renderer.h"
+#include "maths.h"
+#include "shader.h"
+#include "window.h"
+#include "GVertexArray.h"
+#include "GVertexBuffer.h"
+#include "GIndexBuffer.h"
+#include "renderable.h"
+#include "renderer.h"
 
 using namespace phantom::maths;
 using namespace phantom;
