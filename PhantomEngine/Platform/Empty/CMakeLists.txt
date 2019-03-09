@@ -1,3 +1,1 @@
-add_executable(Default DefaultApplication.cpp)
-
-target_link_libraries(Default PhantomCore)
+add_library(PlatformInterface DefaultApplication.cpp)

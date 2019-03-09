@@ -1,2 +1,0 @@
-add_executable(MacEngine MacApplication.cpp)
-target_link_libraries(MacEngine PhantomCore)
