@@ -14,7 +14,6 @@ if(OS_WINDOWS)
     POST_BUILD COMMAND 
     ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/Dependencies/GLEW/bin/Release/Win32" "$<TARGET_FILE_DIR:sample>"
     )
-
     # copy resource to execute dir (debug mode)
     add_custom_command(TARGET sample PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory

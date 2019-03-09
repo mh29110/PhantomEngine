@@ -19,6 +19,9 @@ void Phantom::GraphicsManager::Tick()
 #ifdef OS_MACOS
 	cout << "Tick" << endl;
 #endif
+#ifdef OS_WINDOWS
+	cout << "Tick" << endl;
+#endif
 }
 
 void Phantom::GraphicsManager::DrawSingleMesh()

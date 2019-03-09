@@ -28,7 +28,8 @@ int main()
 	Renderer renderer;
 #ifdef OS_MACOS
     Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
-#elif OS_WINDOWS
+#endif
+#ifdef OS_WINDOWS
     Shader shader("Resources/shaders/vert_light.shader","Resources/shaders/frag_light.shader");
 #endif
     m_ShaderID = shader.m_ShaderId;
