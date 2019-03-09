@@ -1,7 +1,7 @@
 #ifndef _FILE_SHADER_H_
 #define _FILE_SHADER_H_
 // *有个小插曲，fileUtils的include的写在头文件里，造成重复定义了，查了半天*
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include "../maths/maths.h"
 
 namespace phantom { namespace graphics {

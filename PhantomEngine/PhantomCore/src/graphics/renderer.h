@@ -1,5 +1,5 @@
 #pragma once
-#include "GL/glew.h"
+#include <glad/glad.h>
 #include "renderable.h"
 #include "../maths/maths.h"
 #include <deque>

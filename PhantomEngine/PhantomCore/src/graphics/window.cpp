@@ -51,15 +51,13 @@ namespace phantom { namespace graphics {
 		glfwSetCursorPosCallback(m_Window, cursor_position_callback);
 		glfwSwapInterval(1);//vAsync  每帧交换一次缓冲器
 
-		    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
- 		glewExperimental = GL_TRUE;
- 
 		// must after  glfwMakeContextCurrent	
-		if (glewInit() != GLEW_OK) {
-			std::cout << "Failed to initialize glew!" << std::endl;
-			glfwTerminate();
-			return false;
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			std::cout << "Failed to initialize GLAD" << std::endl;
+			return -1;
 		}
+
 		// std::cout << m_Width <<std::endl;
 		// windowResize(m_Window, m_Width, m_Height);
 
