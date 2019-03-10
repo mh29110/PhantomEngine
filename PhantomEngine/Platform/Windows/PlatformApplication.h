@@ -5,10 +5,10 @@
 #include "BaseApplication.h"
 #include "GraphicsManager.h"
 namespace Phantom {
-    class WindowsApplication : public BaseApplication
+    class PlatformApplication : public BaseApplication
     {
     public:
-        WindowsApplication(GfxConfiguration& config)
+        PlatformApplication(GfxConfiguration& config)
             : BaseApplication(config) {};
 
         virtual int Initialize();

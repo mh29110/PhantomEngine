@@ -16,11 +16,11 @@ void Phantom::GraphicsManager::Finalize()
 
 void Phantom::GraphicsManager::Tick()
 {
-#ifdef OS_MACOS
+#ifdef DEBUG
 	cout << "Tick" << endl;
 #endif
-#ifdef OS_WINDOWS
-	cout << "Tick" << endl;
+#ifdef _DEBUG
+	cout << "_Tick" << endl;
 #endif
 }
 

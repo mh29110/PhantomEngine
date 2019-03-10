@@ -1,1 +1,1 @@
-add_library(PlatformInterface WindowsApplication.cpp)
+add_library(PlatformInterface PlatformApplication.cpp)

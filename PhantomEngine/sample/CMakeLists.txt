@@ -24,8 +24,7 @@ if(OS_WINDOWS)
 							PhantomCore 
 							${OPENGL_LIBRARIES}
 							glfw3.lib)
-	target_include_directories(sample PRIVATE "${PROJECT_SOURCE_DIR}/Dependencies/src/glad/include")
-
+	
 elseif(OS_MACOS)
 
     target_link_libraries(sample  
@@ -36,3 +35,5 @@ elseif(OS_MACOS)
     	libglfw3.a
     )
 endif()
+
+target_include_directories(sample PRIVATE "${PROJECT_SOURCE_DIR}/Dependencies/src/glad/include")

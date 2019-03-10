@@ -1,1 +1,1 @@
-add_library(PlatformInterface MacApplication.cpp)
+#add_library(PlatformInterface PlatformApplication.cpp)

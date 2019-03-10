@@ -6,7 +6,9 @@ ELSEIF(UNIX)
     IF(APPLE)
         # Apple specific code
         add_subdirectory(Darwin)
-        add_subdirectory(Cef)
+
+        add_subdirectory(Empty)  # 先写通用的
+        #add_subdirectory(Cef)
     ELSEIF(ANDROID)
         add_subdirectory(Android)
     ELSEIF(WA)
@@ -23,4 +25,6 @@ ELSE()
     # Empty
     add_subdirectory(Empty)
 ENDIF(WIN32)
+
+
 

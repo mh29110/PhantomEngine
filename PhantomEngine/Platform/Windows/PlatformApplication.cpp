@@ -1,9 +1,11 @@
-#include "WindowsApplication.h"
+#include "PlatformApplication.h"
 #include <tchar.h>
 
 using namespace Phantom;
+Phantom::PlatformApplication::PlatformApplication(GfxConfiguration& config)
+            : BaseApplication(config) {};
 
-int Phantom::WindowsApplication::Initialize()
+int Phantom::PlatformApplication::Initialize()
 {
     int result;
 
@@ -58,11 +60,11 @@ int Phantom::WindowsApplication::Initialize()
     return result;
 }
 
-void Phantom::WindowsApplication::Finalize()
+void Phantom::PlatformApplication::Finalize()
 {
 }
 
-void Phantom::WindowsApplication::Tick()
+void Phantom::PlatformApplication::Tick()
 {
     // this struct holds Windows event messages
     MSG msg;
@@ -80,12 +82,12 @@ void Phantom::WindowsApplication::Tick()
 }
 
 // this is the main message handler for the program
-LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Phantom::PlatformApplication::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    WindowsApplication* pThis;
+    PlatformApplication* pThis;
     if (message == WM_NCCREATE)
     {
-        pThis = static_cast<WindowsApplication*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+        pThis = static_cast<PlatformApplication*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
 
         SetLastError(0);
         if (!SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pThis)))
@@ -96,7 +98,7 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
     }
     else
     {
-        pThis = reinterpret_cast<WindowsApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+        pThis = reinterpret_cast<PlatformApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
     }
 
     // sort through and find what code to run for the message given
