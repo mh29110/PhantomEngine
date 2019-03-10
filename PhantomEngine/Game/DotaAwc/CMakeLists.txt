@@ -1,4 +1,4 @@
-include_directories("${PROJECT_SOURCE_DIR}/Platform/Empty")
+#include_directories("${PROJECT_SOURCE_DIR}/Platform/Empty")
 
 add_executable(DotaAwc DefaultGame.cpp)
 

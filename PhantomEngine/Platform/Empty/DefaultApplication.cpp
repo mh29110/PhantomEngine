@@ -7,6 +7,7 @@ Phantom::DefaultApplication::DefaultApplication(GfxConfiguration& config)
             
 int DefaultApplication::Initialize()
 {
+	BaseApplication::Initialize();
 	if (!glfwInit())
 	{
 		std::cout << "Failed to initialize GLFW!" << std::endl;
@@ -54,6 +55,8 @@ int DefaultApplication::Initialize()
 	std::cout << glGetString(GL_VERSION) << std::endl;
 	return 0;
 }
+void* DefaultApplication::GetMainWindowHandler(){}
+void DefaultApplication::CreateMainWindow() {}
 void DefaultApplication::Finalize()
 {
 	glfwDestroyWindow(m_Window);

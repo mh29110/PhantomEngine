@@ -17,6 +17,8 @@ namespace Phantom {
         virtual void Finalize();
         // One cycle of the main loop
         virtual void Tick();
+        void* GetMainWindowHandler() override;
+        void CreateMainWindow() override;
 
     private:
             GLFWwindow *m_Window;
