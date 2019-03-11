@@ -20,7 +20,7 @@ void Phantom::GraphicsManager::Tick()
 	cout << "Tick" << endl;
 #endif
 #ifdef _DEBUG
-	cout << "_Tick" << endl;
+	//cout << "_Tick" << endl;
 #endif
 }
 

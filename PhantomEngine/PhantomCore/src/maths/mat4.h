@@ -3,7 +3,7 @@
 #include <iostream>
 #include "vector.h"
 
-#include "utils.h"
+#include "AngleUtils.h"
 
 // The elements of the matrix are stored as column major order.
 // | 0 2 |    | 0 3 6 |    |  0  4  8 12 |

@@ -1,7 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include "renderable.h"
-#include "../maths/maths.h"
+#include "../maths/PhMaths.h"
 #include <deque>
 
 extern const char* MVP_NAME_M;

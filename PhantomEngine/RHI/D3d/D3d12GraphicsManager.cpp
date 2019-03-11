@@ -1,7 +1,8 @@
 #include <objbase.h>
 #include <d3dcompiler.h>
-#include "D3d12GraphicsManager.hpp"
-#include "WindowsApplication.hpp"
+#include "D3d12GraphicsManager.h"
+#include "WindowsApplication.h"
+#include "utility.hpp"
 
 using namespace Phantom;
 
@@ -349,7 +350,7 @@ HRESULT Phantom::D3d12GraphicsManager::CreateGraphicsResources()
 	}
 
 
-    HWND hWnd = reinterpret_cast<WindowsApplication*>(g_pApp)->GetMainWindow();
+    HWND hWnd = (HWND)reinterpret_cast<WindowsApplication*>(g_pApp)->GetMainWindowHandler();
 
     // Describe and create the command queue.
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};

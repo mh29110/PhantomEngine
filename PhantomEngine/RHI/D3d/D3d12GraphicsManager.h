@@ -2,11 +2,12 @@
 #include <stdint.h>
 #include <d3d12.h>
 #include <DXGI1_4.h>
-#include "GraphicsManager.hpp"
-#include "Buffer.hpp"
-#include "Image.hpp"
+#include "GraphicsManager.h"
+#include "buffer.h"
+#include "Image.h"
 
 namespace Phantom {
+	
     class D3d12GraphicsManager : public GraphicsManager
     {
     public:

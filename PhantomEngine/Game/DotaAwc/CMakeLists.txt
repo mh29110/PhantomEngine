@@ -19,8 +19,10 @@ if(OS_WINDOWS)
 	 target_link_libraries(DotaAwc 
                             PhantomCore
                             PlatformInterface
-                            D2dRHI
-							d2d1
+
+                            #D3dRHI d3d12 dxgi d3dcompiler #3d
+
+							D2dRHI d2d1					  #2d 	
                         )
 elseif(OS_MACOS)
     target_link_libraries(DotaAwc 

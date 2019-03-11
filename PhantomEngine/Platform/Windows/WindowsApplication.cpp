@@ -25,7 +25,7 @@ void  Phantom::WindowsApplication::CreateMainWindow()
 
 	// register the window class
 	RegisterClassEx(&wc);
-
+	//https://github.com/365082218/W4D/blob/master/W4d/W4d.cpp È«ÆÁÊ¾Àý
 	int height_adjust = (GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CXPADDEDBORDER));
 	int width_adjust = (GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER));
 

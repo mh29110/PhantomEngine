@@ -1,5 +1,6 @@
 #include "GraphicsManager.h"
 #include "D2d/D2dGraphicsManager.h"
+//#include "D3d/D3d12GraphicsManager.h"
 #include "GfxConfiguration.h"
 #include "IApplication.h"
 #if defined(OS_MACOS)

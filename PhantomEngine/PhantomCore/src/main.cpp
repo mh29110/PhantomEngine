@@ -6,6 +6,7 @@
 #include "parser/BMPParser.h"
 #include "Image.h"
 #include "D2d/D2dGraphicsManager.h"
+#include "Timer.h"
 
 using namespace Phantom;
 using namespace std;
@@ -44,14 +45,25 @@ int main(int argc, char** argv) {
 	Image  image = bp.Parse(bmpdata);
 	Image m_Image[1];
 	m_Image[0] = image;
-	static_cast<D2dGraphicsManager*> (g_pGraphicsManager)->DrawBitmap(m_Image,0);
+	static_cast<D2dGraphicsManager*> (g_pGraphicsManager)->DrawBitmap(m_Image, 0);
 
+	Timer timer;
+	float timeCount = 0.0f;
+	unsigned int  frames = 0;
 	while (!g_pApp->IsQuit()) {
 		g_pApp->Tick();
+		float now = timer.ElapsedMillis();
         // g_pMemoryManager->Tick();
         g_pGraphicsManager->Tick();
 		g_pLoadMgr->Tick();
 		static_cast<D2dGraphicsManager*> (g_pGraphicsManager)->DrawBitmap(m_Image, 0);
+		frames++;
+		if (timer.Elapsed() - timeCount > 1.0f)
+		{
+			timeCount += 1.0f;
+			std::cout << "frames === " << frames << std::endl;
+			frames = 0;
+		}
 	}
 
     g_pGraphicsManager->Finalize();

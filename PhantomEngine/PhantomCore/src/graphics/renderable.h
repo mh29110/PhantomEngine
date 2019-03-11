@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GVertexArray.h"
-#include "../maths/maths.h"
+#include "../maths/PhMaths.h"
 #include "shader.h"
 
 
