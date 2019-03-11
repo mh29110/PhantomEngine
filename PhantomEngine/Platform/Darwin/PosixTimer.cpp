@@ -15,7 +15,7 @@ namespace Phantom {
 
 
 	Timer::Timer()
-		: m_Members(new (m_Reserved) Members())
+		: m_Members(new Members())
 	{
 		Reset();
 	}

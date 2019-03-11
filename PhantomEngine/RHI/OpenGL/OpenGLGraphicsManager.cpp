@@ -1,13 +1,13 @@
 #include <iostream>
 #include <fstream>
-#include "OpenGLGraphicsManager.hpp"
-#include "AssetLoader.hpp"
+#include "OpenGLGraphicsManager.h"
+#include "AssetLoadManager.h"
 #include "glad/glad.h"
 
 const char VS_SHADER_SOURCE_FILE[] = "Shaders/color.vs";
 const char PS_SHADER_SOURCE_FILE[] = "Shaders/color.ps";
 
-using namespace My;
+using namespace Phantom;
 using namespace std;
 
 extern struct gladGLversionStruct GLVersion;
@@ -54,8 +54,8 @@ void OpenGLGraphicsManager::Tick()
 }
 
 
-namespace My {
-    extern AssetLoader* g_pAssetLoader;
+namespace Phantom {
+    extern AssetLoadManager * g_pAssetLoader;
 
     static void OutputShaderErrorMessage(unsigned int shaderId, const char* shaderFilename)
     {

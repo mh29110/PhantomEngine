@@ -1,5 +1,5 @@
 #include "config.h"
-#include "maths.h"
+#include "PhMaths.h"
 #include "shader.h"
 #include "window.h"
 #include "GVertexArray.h"

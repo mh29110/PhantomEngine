@@ -5,7 +5,9 @@
 // #include "MemoryManager.h"
 #include "parser/BMPParser.h"
 #include "Image.h"
-#include "D2d/D2dGraphicsManager.h"
+#ifdef OS_WINDOWS
+	#include "D2d/D2dGraphicsManager.h"
+#endif
 #include "Timer.h"
 
 using namespace Phantom;
@@ -39,13 +41,14 @@ int main(int argc, char** argv) {
 		printf("Graphics Manager Initialize failed, will exit now.");
 		return ret;
 	}
-
+#ifdef OS_WINDOWS
 	Buffer bmpdata = g_pLoadMgr->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
 	BmpParser bp;
 	Image  image = bp.Parse(bmpdata);
 	Image m_Image[1];
 	m_Image[0] = image;
 	static_cast<D2dGraphicsManager*> (g_pGraphicsManager)->DrawBitmap(m_Image, 0);
+#endif
 
 	Timer timer;
 	float timeCount = 0.0f;
@@ -56,7 +59,9 @@ int main(int argc, char** argv) {
         // g_pMemoryManager->Tick();
         g_pGraphicsManager->Tick();
 		g_pLoadMgr->Tick();
+#ifdef OS_WINDOWS		
 		static_cast<D2dGraphicsManager*> (g_pGraphicsManager)->DrawBitmap(m_Image, 0);
+#endif
 		frames++;
 		if (timer.Elapsed() - timeCount > 1.0f)
 		{

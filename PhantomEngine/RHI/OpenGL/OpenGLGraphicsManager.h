@@ -1,7 +1,7 @@
 #pragma once
-#include "GraphicsManager.hpp"
+#include "GraphicsManager.h"
 
-namespace My {
+namespace Phantom {
     class OpenGLGraphicsManager : public GraphicsManager
     {
     public:

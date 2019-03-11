@@ -8,6 +8,7 @@ add_library(PlatformInterface
         AppDelegate.m
         WindowDelegate.m
         MetalView.mm
+        PosixTimer.cpp
     )
 target_link_libraries(PlatformInterface
         ${COCOA_LIBRARY} 

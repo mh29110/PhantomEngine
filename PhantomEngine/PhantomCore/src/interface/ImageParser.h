@@ -1,5 +1,5 @@
 #pragma once
-#include "interface/IInterface.h"
+#include "IInterface.h"
 #include "Image.h"
 #include "Buffer.h"
 
