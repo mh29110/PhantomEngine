@@ -3,7 +3,7 @@
 #include "Interface.h"
 
 namespace Phantom {
-	Interface IRuntimeModule{
+	IInterface IRuntimeModule{
 	public:
 		virtual ~IRuntimeModule() {};
 

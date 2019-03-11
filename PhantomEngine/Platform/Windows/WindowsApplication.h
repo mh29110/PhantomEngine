@@ -3,21 +3,18 @@
 #include <windows.h>
 #include <windowsx.h>
 #include "BaseApplication.h"
-#include "GraphicsManager.h"
 namespace Phantom {
-    class PlatformApplication : public BaseApplication
+    class WindowsApplication : public BaseApplication
     {
     public:
-        PlatformApplication(GfxConfiguration& config)
-            : BaseApplication(config) {};
+		using BaseApplication::BaseApplication;
 
-        virtual int Initialize();
-        virtual void Finalize();
-        // One cycle of the main loop
-        virtual void Tick();
+		void Finalize() override;
+		// One cycle of the main loop
+		void Tick() override;
 
-        inline HWND GetMainWindow() const { return m_hWnd; };
-
+		void* GetMainWindowHandler() override { return m_hWnd; };
+		void CreateMainWindow() override;
     private:
         // the WindowProc function prototype
         static LRESULT CALLBACK WindowProc(HWND hWnd,
@@ -26,7 +23,11 @@ namespace Phantom {
                          LPARAM lParam);
 
     private:
-        HWND m_hWnd;
+		HWND m_hWnd;
+		HDC  m_hDc;
+		bool m_bInDrag = false;
+		int  m_iPreviousX = 0;
+		int  m_iPreviousY = 0;
     };
 }
 

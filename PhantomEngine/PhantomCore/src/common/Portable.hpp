@@ -43,7 +43,7 @@ namespace std {
 }
 #endif
 
-namespace My {
+namespace Phantom {
     template <typename T>
     T endian_native_unsigned_int(T net_number)
     {

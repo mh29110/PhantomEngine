@@ -18,7 +18,8 @@ int main(int argc, char** argv) {
 		printf("App Initialize failed, will exit now.");
 		return ret;
 	}
-
+	// create the main window
+	g_pApp->CreateMainWindow();
 	// if ((ret = g_pMemoryManager->Initialize()) != 0) {
 	// 	printf("Memory Manager Initialize failed, will exit now.");
 	// 	return ret;

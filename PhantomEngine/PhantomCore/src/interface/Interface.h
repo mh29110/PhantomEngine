@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config.h"
-#define Interface class
+#define IInterface class
 
 #define implements public
 

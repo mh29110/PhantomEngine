@@ -3,7 +3,7 @@
 #include "GfxConfiguration.h"
 
 namespace Phantom {
-    Interface IApplication : implements IRuntimeModule
+    IInterface IApplication : implements IRuntimeModule
     {
     public:
         virtual int Initialize() = 0;
@@ -14,5 +14,8 @@ namespace Phantom {
         virtual bool IsQuit() = 0;
 
         virtual GfxConfiguration& GetConfiguration() = 0;
+
+        virtual void CreateMainWindow() = 0;
+        virtual void* GetMainWindowHandler() = 0;
     };
 }
