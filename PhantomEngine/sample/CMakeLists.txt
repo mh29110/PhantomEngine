@@ -5,7 +5,7 @@ find_package(OpenGL REQUIRED)
 # copy resource to execute dir (debug directory)
 add_custom_command(TARGET sample PRE_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy_directory
-${CMAKE_SOURCE_DIR}/assets   $<TARGET_FILE_DIR:sample>)
+${CMAKE_SOURCE_DIR}/Assets   $<TARGET_FILE_DIR:sample>)
 
 
 if(OS_WINDOWS)
@@ -18,7 +18,7 @@ if(OS_WINDOWS)
     # copy resource to execute dir (debug mode)
     add_custom_command(TARGET sample PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/assets   "${PROJECT_BINARY_DIR}/sample")
+    ${CMAKE_SOURCE_DIR}/Assets   "${PROJECT_BINARY_DIR}/sample")
 
 	target_link_libraries(  sample 
 							PhantomCore 

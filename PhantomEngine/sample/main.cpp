@@ -30,7 +30,7 @@ int main()
     Shader shader("shaders/vert_light.shader","shaders/frag_light.shader");
 #endif
 #ifdef OS_WINDOWS
-    Shader shader("Resources/shaders/vert_light.shader","Resources/shaders/frag_light.shader");
+    Shader shader("Assets/Resources/shaders/vert_light.shader","Assets/Resources/shaders/frag_light.shader");
 #endif
     m_ShaderID = shader.m_ShaderId;
     shader.bind();

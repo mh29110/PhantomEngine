@@ -21,10 +21,12 @@ namespace Phantom {
                          UINT message,
                          WPARAM wParam,
                          LPARAM lParam);
+	protected:
+		virtual void OnDraw() ;
 
     private:
-		HWND m_hWnd;
-		HDC  m_hDc;
+		HWND m_hWnd;//´°¿Ú¾ä±ú
+		HDC  m_hDc;//´°¿ÚÖÐµÄ»­°å»­²¼¾ä±ú
 		bool m_bInDrag = false;
 		int  m_iPreviousX = 0;
 		int  m_iPreviousY = 0;

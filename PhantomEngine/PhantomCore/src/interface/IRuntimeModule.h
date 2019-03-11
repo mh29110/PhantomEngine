@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Interface.h"
+#include "IInterface.h"
 
 namespace Phantom {
 	IInterface IRuntimeModule{

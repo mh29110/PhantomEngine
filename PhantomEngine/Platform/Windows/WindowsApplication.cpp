@@ -13,6 +13,7 @@ void  Phantom::WindowsApplication::CreateMainWindow()
 	// clear out the window class for use
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
+	const char g_szClassName[] = "myWindowClass";
 	// fill in the struct with the needed information
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -20,7 +21,7 @@ void  Phantom::WindowsApplication::CreateMainWindow()
 	wc.hInstance = hInstance;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	wc.lpszClassName = _T("GameEngineFromScratch");
+	wc.lpszClassName = _T(g_szClassName);
 
 	// register the window class
 	RegisterClassEx(&wc);
@@ -30,7 +31,7 @@ void  Phantom::WindowsApplication::CreateMainWindow()
 
 	// create the window and use the result as the handle
 	m_hWnd = CreateWindowEx(0,
-		_T("GameEngineFromScratch"),      // name of the window class
+		_T(g_szClassName),      // name of the window class
 		m_Config.appName,                 // title of the window
 		WS_OVERLAPPEDWINDOW,              // window style
 		CW_USEDEFAULT,                    // x-position of the window
@@ -50,10 +51,14 @@ void  Phantom::WindowsApplication::CreateMainWindow()
 
 void Phantom::WindowsApplication::Finalize()
 {
+	ReleaseDC(m_hWnd, m_hDc);
+
+	BaseApplication::Finalize();
 }
 
 void Phantom::WindowsApplication::Tick()
 {
+	BaseApplication::Tick();
     // this struct holds Windows event messages
     MSG msg;
 
@@ -117,6 +122,18 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 
     // Handle any messages the switch statement didn't
     return DefWindowProc (hWnd, message, wParam, lParam);
+}
+
+void Phantom::WindowsApplication::OnDraw()
+{
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(m_hWnd, &ps);
+	RECT rec = { 20, 20, 60, 80 };
+	HBRUSH brush = (HBRUSH)GetStockObject(BLACK_BRUSH);
+
+	FillRect(hdc, &rec, brush);
+
+	EndPaint(m_hWnd, &ps);
 }
 
 

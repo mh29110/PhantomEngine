@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+﻿cmake_minimum_required (VERSION 3.1)
 set (CMAKE_C_STANDARD 11)
 set (CMAKE_CXX_STANDARD 11)
 
@@ -48,6 +48,8 @@ include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include")
 include_directories("${PROJECT_SOURCE_DIR}/Platform/${MYGE_TARGET_PLATFORM}") # 根据平台来决定include
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/src/glad/include")
 
+include_directories("${PROJECT_SOURCE_DIR}/RHI/")
+
 # config in .h file
 include_directories(${PROJECT_SOURCE_DIR})
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
@@ -84,6 +86,7 @@ endif(OS_WINDOWS)
 add_subdirectory(PhantomCore)
 add_subdirectory(sample)
 add_subdirectory(Platform)
+add_subdirectory(RHI)
 add_subdirectory(Game)
 
 
