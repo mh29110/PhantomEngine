@@ -3,7 +3,7 @@
 #import <Carbon/Carbon.h>
 #include <string.h>
 #include "CocoaApplication.h"
-// #include "InputManager.h"
+#include "InputManager.h"
 
 using namespace Phantom;
 
@@ -72,19 +72,19 @@ void CocoaApplication::Tick()
                     {
                         keyChar = [theArrow characterAtIndex:0];
                         if (keyChar == NSLeftArrowFunctionKey) {
-                            // g_pInputManager->LeftArrowKeyUp();
+                            g_pInputManager->LeftArrowKeyUp();
                             break;
                         }
                         if (keyChar == NSRightArrowFunctionKey) {
-                            // g_pInputManager->RightArrowKeyUp();
+                            g_pInputManager->RightArrowKeyUp();
                             break;
                         }
                         if (keyChar == NSUpArrowFunctionKey) {
-                            // g_pInputManager->UpArrowKeyUp();
+                            g_pInputManager->UpArrowKeyUp();
                             break;
                         }
                         if (keyChar == NSDownArrowFunctionKey) {
-                            // g_pInputManager->DownArrowKeyUp();
+                            g_pInputManager->DownArrowKeyUp();
                             break;
                         }
                     }
@@ -92,13 +92,13 @@ void CocoaApplication::Tick()
                     switch ([event keyCode])
                     {
                         case kVK_ANSI_D: // d key
-                            // g_pInputManager->AsciiKeyUp('d');
+                            g_pInputManager->AsciiKeyUp('d');
                             break;
                         case kVK_ANSI_R: // r key
-                            // g_pInputManager->AsciiKeyUp('r');
+                            g_pInputManager->AsciiKeyUp('r');
                             break;
                         case kVK_ANSI_U: // u key
-                            // g_pInputManager->AsciiKeyUp('u');
+                            g_pInputManager->AsciiKeyUp('u');
                             break;
                     }
                 }
@@ -114,19 +114,19 @@ void CocoaApplication::Tick()
                     {
                         keyChar = [theArrow characterAtIndex:0];
                         if (keyChar == NSLeftArrowFunctionKey) {
-                            // g_pInputManager->LeftArrowKeyDown();
+                            g_pInputManager->LeftArrowKeyDown();
                             break;
                         }
                         if (keyChar == NSRightArrowFunctionKey) {
-                            // g_pInputManager->RightArrowKeyDown();
+                            g_pInputManager->RightArrowKeyDown();
                             break;
                         }
                         if (keyChar == NSUpArrowFunctionKey) {
-                            // g_pInputManager->UpArrowKeyDown();
+                            g_pInputManager->UpArrowKeyDown();
                             break;
                         }
                         if (keyChar == NSDownArrowFunctionKey) {
-                            // g_pInputManager->DownArrowKeyDown();
+                            g_pInputManager->DownArrowKeyDown();
                             break;
                         }
                     }
@@ -134,13 +134,13 @@ void CocoaApplication::Tick()
                     switch ([event keyCode])
                     {
                         case kVK_ANSI_D: // d key
-                            // g_pInputManager->AsciiKeyDown('d');
+                            g_pInputManager->AsciiKeyDown('d');
                             break;
                         case kVK_ANSI_R: // r key
-                            // g_pInputManager->AsciiKeyDown('r');
+                            g_pInputManager->AsciiKeyDown('r');
                             break;
                         case kVK_ANSI_U: // u key
-                            // g_pInputManager->AsciiKeyDown('u');
+                            g_pInputManager->AsciiKeyDown('u');
                             break;
                     }
                 }

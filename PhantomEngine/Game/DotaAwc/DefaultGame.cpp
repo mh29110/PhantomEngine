@@ -10,6 +10,7 @@
 #include "GfxConfiguration.h"
 #include "IApplication.h"
 #include "AssetLoadManager.h"
+#include "InputManager.h"
 // #include "MemoryManager.h"
  
 
@@ -23,5 +24,6 @@ namespace Phantom {
 	GraphicsManager* g_pGraphicsManager = static_cast<GraphicsManager*>(new D2dGraphicsManager);
 #endif
 	AssetLoadManager* g_pLoadMgr = static_cast<AssetLoadManager*>(new AssetLoadManager);
+	InputManager*    g_pInputManager    = static_cast<InputManager*>(new InputManager);
 	// MemoryManager*   g_pMemoryManager   = static_cast<MemoryManager*>(new MemoryManager);
 }
