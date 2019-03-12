@@ -27,6 +27,7 @@ elseif(OS_MACOS)
                             PhantomCore
                             PlatformInterface
                             libglfw3.a
+                            OpenGLRHI
 					    	${OPENGL_LIBRARIES} 
         					libc++.dylib
 					    	${EXTRA_LIBS}

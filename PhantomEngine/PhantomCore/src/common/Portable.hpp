@@ -4,7 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <assert.h>
-#include "config.h"
+#include "projectConfig.h"
 
 #ifdef ALIGN
 #undef ALIGN

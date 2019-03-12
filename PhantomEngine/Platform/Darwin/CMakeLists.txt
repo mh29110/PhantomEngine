@@ -9,9 +9,11 @@ add_library(PlatformInterface
         WindowDelegate.m
         MetalView.mm
         PosixTimer.cpp
+        GLView.mm
+        CocoaOpenGLApplication.mm
+        CocoaOpenGLApplicationConfig.cpp
     )
 target_link_libraries(PlatformInterface
         ${COCOA_LIBRARY} 
         ${OPENGL_LIBRARY}
-        dl
     )

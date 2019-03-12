@@ -1,3 +1,4 @@
+#pragma once 
 #include "Portable.hpp"
 #include "BaseApplication.h"
 

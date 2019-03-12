@@ -2,7 +2,24 @@
 
 namespace Phantom { namespace graphics {
 
-	
+	void windowResize(GLFWwindow *window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+	}
+
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	{
+		// printf("%d\n", xpos);
+		// printf("%d\n", ypos);
+		//Window* win = (Window*)glfwGetWindowUserPointer(window);
+		mouse_x = xpos;
+		mouse_y = ypos;
+	}
 
 	Window::Window(const char *title, int width, int height)
 	{
@@ -90,24 +107,7 @@ namespace Phantom { namespace graphics {
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();
 	}
+	
 
-
-	void windowResize(GLFWwindow *window, int width, int height)
-	{
-		glViewport(0, 0, width, height);
-	}
-
-	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-	}
-	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-	{
-		// printf("%d\n", xpos);
-		// printf("%d\n", ypos);
-		//Window* win = (Window*)glfwGetWindowUserPointer(window);
-		mouse_x = xpos;
-		mouse_y = ypos;
-	}
+	
 } }
