@@ -77,55 +77,122 @@ void Phantom::WindowsApplication::Tick()
 // this is the main message handler for the program
 LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	LRESULT result = 0;
+
 	WindowsApplication* pThis;
-    if (message == WM_NCCREATE)
-    {
-        pThis = static_cast<WindowsApplication*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+	if (message == WM_NCCREATE)
+	{
+		pThis = static_cast<WindowsApplication*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
 
-        SetLastError(0);
-        if (!SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pThis)))
-        {
-            if (GetLastError() != 0)
-                return FALSE;
-        }
-    }
-    else
-    {
-        pThis = reinterpret_cast<WindowsApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    }
+		SetLastError(0);
+		if (!SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pThis)))
+		{
+			if (GetLastError() != 0)
+				return FALSE;
+		}
+	}
+	else
+	{
+		pThis = reinterpret_cast<WindowsApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	}
 
-    // sort through and find what code to run for the message given
-    switch(message)
-    {
+	// sort through and find what code to run for the message given
+	switch (message)
+	{
+	case WM_CHAR:
+	{
+		//g_pInputManager->AsciiKeyDown(static_cast<char>(wParam));
+	}
+	break;
+	case WM_KEYUP:
+	{
+		switch (wParam)
+		{
+		case VK_LEFT:
+			//g_pInputManager->LeftArrowKeyUp();
+			break;
+		case VK_RIGHT:
+			//g_pInputManager->RightArrowKeyUp();
+			break;
+		case VK_UP:
+			//g_pInputManager->UpArrowKeyUp();
+			break;
+		case VK_DOWN:
+			//g_pInputManager->DownArrowKeyUp();
+			break;
+
+		default:
+			break;
+		}
+	}
+	break;
+	case WM_KEYDOWN:
+	{
+		switch (wParam)
+		{
+		case VK_LEFT:
+			//g_pInputManager->LeftArrowKeyDown();
+			break;
+		case VK_RIGHT:
+			//g_pInputManager->RightArrowKeyDown();
+			break;
+		case VK_UP:
+			//g_pInputManager->UpArrowKeyDown();
+			break;
+		case VK_DOWN:
+			//g_pInputManager->DownArrowKeyDown();
+			break;
+
+		default:
+			break;
+		}
+	}
+	break;
+	case WM_LBUTTONDOWN:
+	{
+		//g_pInputManager->LeftMouseButtonDown();
+		pThis->m_bInDrag = true;
+		pThis->m_iPreviousX = GET_X_LPARAM(lParam);
+		pThis->m_iPreviousY = GET_Y_LPARAM(lParam);
+	}
+	break;
+	case WM_LBUTTONUP:
+	{
+		//g_pInputManager->LeftMouseButtonUp();
+		pThis->m_bInDrag = false;
+	}
+	break;
 	case WM_PAINT:
-	    {
-            pThis->OnDraw();
-	    } 
-        break;
+	{
+		pThis->OnDraw();
+	}
+	break;
+	case WM_MOUSEMOVE:
+		if (pThis->m_bInDrag) {
+			int pos_x = GET_X_LPARAM(lParam);
+			int pos_y = GET_Y_LPARAM(lParam);
+			//g_pInputManager->LeftMouseDrag(pos_x - pThis->m_iPreviousX, pos_y - pThis->m_iPreviousY);
+		}
+		break;
+		// this message is read when the window is closed
+	case WM_DESTROY:
+	{
+		// close the application entirely
+		PostQuitMessage(0);
+		m_bQuit = true;
+	}
+	break;
+	default:
+		// Handle any messages the switch statement didn't
+		result = DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return result;
 
-    case WM_KEYDOWN:
-        {
-            // we will replace this with input manager
-            m_bQuit = true;
-        } 
-        break;
-
-        // this message is read when the window is closed
-    case WM_DESTROY:
-        {
-            // close the application entirely
-            PostQuitMessage(0);
-            m_bQuit = true;
-            return 0;
-        }
-    }
-
-    // Handle any messages the switch statement didn't
-    return DefWindowProc (hWnd, message, wParam, lParam);
 }
 
 void Phantom::WindowsApplication::OnDraw()
 {
+	//cpu draw
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(m_hWnd, &ps);
 	RECT rec = { 20, 20, 60, 80 };

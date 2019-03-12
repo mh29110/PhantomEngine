@@ -1,7 +1,6 @@
 #pragma once
 #include <cstring>
 #include <iostream>
-#include "config.h"
 
 namespace Phantom {
 

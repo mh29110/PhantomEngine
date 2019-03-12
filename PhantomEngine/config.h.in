@@ -1,9 +1,0 @@
-#cmakedefine OS_WINDOWS
-#cmakedefine OS_LINUX
-#cmakedefine OS_BSD
-#cmakedefine OS_ANDROID
-#cmakedefine OS_MACOS
-#cmakedefine OS_WEBASSEMBLY
-
-// Enable this to print out very detailed decode information
-// #define DUMP_DETAILS 1

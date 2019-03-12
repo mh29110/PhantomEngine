@@ -52,7 +52,7 @@ include_directories("${PROJECT_SOURCE_DIR}/RHI/")
 
 # config in .h file
 include_directories(${PROJECT_SOURCE_DIR})
-configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+configure_file(${PROJECT_SOURCE_DIR}/projectConfig.h.in ${PROJECT_SOURCE_DIR}/projectConfig.h)
 
 
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config.h"
+#include "projectConfig.h"
 #define IInterface class
 
 #define implements public
