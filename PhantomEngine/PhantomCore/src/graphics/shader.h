@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include "../maths/PhMaths.h"
 
-namespace phantom { namespace graphics {
+namespace Phantom { namespace graphics {
 
 	class Shader
 	{

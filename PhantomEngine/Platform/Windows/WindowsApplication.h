@@ -24,7 +24,7 @@ namespace Phantom {
 	protected:
 		virtual void OnDraw() ;
 
-    private:
+    protected:
 		HWND m_hWnd;//´°¿Ú¾ä±ú
 		HDC  m_hDc;//´°¿ÚÖÐµÄ»­°å»­²¼¾ä±ú
 		bool m_bInDrag = false;

@@ -13,14 +13,15 @@
 ///////////////////////////////////////////////////////////////////////////
 // 4x4 matrix
 ///////////////////////////////////////////////////////////////////////////
-namespace phantom {namespace maths {
+namespace Phantom { namespace maths {
 	struct  mat4x4 {
 		mat4x4(float diagonal);
+		mat4x4();
 		mat4x4(float m00, float m01, float m02, float m03, // 1st column
 			float m04, float m05, float m06, float m07, // 2nd column
 			float m08, float m09, float m10, float m11, // 3rd column
 			float m12, float m13, float m14, float m15);// 4th column
-		inline vec4 getColumn(int index)
+		vec4 getColumn(int index)
 		{
 			index *= 4;
 			return vec4(elements[index], elements[index + 1], elements[index + 2], elements[index + 3]);

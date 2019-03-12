@@ -1,6 +1,6 @@
 #include "GVertexBuffer.h"
 
-phantom::graphics::GVertexBuffer::GVertexBuffer(GLfloat * data, GLsizei size, GLuint componentCount):
+Phantom::graphics::GVertexBuffer::GVertexBuffer(GLfloat * data, GLsizei size, GLuint componentCount):
 	m_ComponentCount(componentCount)
 {
 	glGenBuffers(1, &m_BufferId);
@@ -9,17 +9,17 @@ phantom::graphics::GVertexBuffer::GVertexBuffer(GLfloat * data, GLsizei size, GL
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 }
 
-phantom::graphics::GVertexBuffer::~GVertexBuffer()
+Phantom::graphics::GVertexBuffer::~GVertexBuffer()
 {
 	glDeleteBuffers(1, &m_BufferId);
 }
 
-void phantom::graphics::GVertexBuffer::bind()
+void Phantom::graphics::GVertexBuffer::bind()
 {
 	glBindBuffer(GL_ARRAY_BUFFER,m_BufferId);
 }
 
-void phantom::graphics::GVertexBuffer::unbind()
+void Phantom::graphics::GVertexBuffer::unbind()
 {
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 }

@@ -1,11 +1,11 @@
 #include "GVertexArray.h"
 
-phantom::graphics::GVertexArray::GVertexArray()
+Phantom::graphics::GVertexArray::GVertexArray()
 {
 	glGenVertexArrays(1, &m_ArrayId);
 }
 
-phantom::graphics::GVertexArray::~GVertexArray()
+Phantom::graphics::GVertexArray::~GVertexArray()
 {
 	int length = m_Buffers.size();
 	for (int i = 0 ; i < length;i++)
@@ -14,17 +14,17 @@ phantom::graphics::GVertexArray::~GVertexArray()
 	}
 }
 
-void phantom::graphics::GVertexArray::bind() const
+void Phantom::graphics::GVertexArray::bind() const
 {
 	glBindVertexArray(m_ArrayId);
 }
 
-void phantom::graphics::GVertexArray::unbind() const
+void Phantom::graphics::GVertexArray::unbind() const
 {
 	glBindVertexArray(0);
 }
 
-void phantom::graphics::GVertexArray::addBuffer(GVertexBuffer * buffer, GLuint index)
+void Phantom::graphics::GVertexArray::addBuffer(GVertexBuffer * buffer, GLuint index)
 {
 	bind();
 	buffer->bind();

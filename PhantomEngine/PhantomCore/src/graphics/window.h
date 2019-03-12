@@ -8,7 +8,7 @@ extern double mouse_x ;
 extern double mouse_y ;
 
 
-namespace phantom { namespace graphics {
+namespace Phantom { namespace graphics {
 
 	class Window
 	{

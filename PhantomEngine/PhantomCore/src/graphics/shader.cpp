@@ -1,7 +1,7 @@
 #include "shader.h"
 #include "../utils/fileUtils.h"
 
-namespace phantom { namespace graphics {
+namespace Phantom { namespace graphics {
 
 	Shader::Shader (const char* $vPath,const char* $fPath):vPath($vPath),fPath($fPath)
 	{

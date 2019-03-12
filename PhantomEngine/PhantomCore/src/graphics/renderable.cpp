@@ -1,5 +1,5 @@
 #include "renderable.h"
-using namespace phantom::maths;
+using namespace Phantom::maths;
 static  GLfloat vertices[] = {
 		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
 		-1.0f,-1.0f, 1.0f,
@@ -80,7 +80,7 @@ static  GLfloat colors[] = {
 
 
 
-namespace phantom { namespace graphics {
+namespace Phantom { namespace graphics {
 	Renderable::Renderable(vec3 pos, vec3 color, Shader & shader) :m_Position(pos), m_Color(color), m_Shader(shader)
 	{
 		m_Vao = new GVertexArray();

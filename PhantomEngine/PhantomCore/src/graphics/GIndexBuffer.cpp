@@ -1,6 +1,6 @@
 #include "GIndexBuffer.h"
 
-phantom::graphics::GIndexBuffer::GIndexBuffer(GLuint * data, GLsizei count)
+Phantom::graphics::GIndexBuffer::GIndexBuffer(GLuint * data, GLsizei count)
 {
 	glGenBuffers(1, &m_BufferId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferId);
@@ -8,7 +8,7 @@ phantom::graphics::GIndexBuffer::GIndexBuffer(GLuint * data, GLsizei count)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-phantom::graphics::GIndexBuffer::~GIndexBuffer()
+Phantom::graphics::GIndexBuffer::~GIndexBuffer()
 {
 	glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &m_BufferId);
 }

@@ -2,7 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-namespace phantom {
+namespace Phantom {
 	namespace maths {
 
 		inline float toRadians(float degrees)

@@ -1,6 +1,6 @@
 #include "window.h"
 
-namespace phantom { namespace graphics {
+namespace Phantom { namespace graphics {
 
 	
 

@@ -1,6 +1,6 @@
 #include "mat4.h"
 
-namespace phantom {namespace maths {
+namespace Phantom {namespace maths {
 
 	mat4x4::mat4x4(float diagonal)
 	{
@@ -11,6 +11,17 @@ namespace phantom {namespace maths {
 		for (int i = 0;i < 4;i ++)
 		{
 			elements[i + i * 4] = diagonal;
+		}
+	}
+	mat4x4::mat4x4()
+	{
+		for (int i = 0; i < 4 * 4; i++) {
+			elements[i] = 0.0f;
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			elements[i + i * 4] = 1.0f;
 		}
 	}
 

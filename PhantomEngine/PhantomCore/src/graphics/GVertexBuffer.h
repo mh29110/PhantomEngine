@@ -1,7 +1,7 @@
 #pragma once 
 #include <glad/glad.h>
 
-namespace phantom {namespace graphics {	
+namespace Phantom {namespace graphics {	
 
 	class GVertexBuffer
 	{

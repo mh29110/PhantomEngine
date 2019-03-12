@@ -10,7 +10,7 @@ using namespace std;
 
 namespace Phantom {
 	extern IApplication*    g_pApp;
-	extern AssetLoadManager* g_pLoadMgr;
+	extern AssetLoadManager* g_pAssetLoader;
     //extern MemoryManager*   g_pMemoryManager;
     extern GraphicsManager* g_pGraphicsManager;
 }
@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
 	// 	printf("Memory Manager Initialize failed, will exit now.");
 	// 	return ret;
 	// }
-	if ((ret = g_pLoadMgr->Initialize()) != 0) {
-		cerr << "Failed. err =  g_pLoadMgr initialize failed , will exit now." << ret;
+	if ((ret = g_pAssetLoader->Initialize()) != 0) {
+		cerr << "Failed. err =  g_pAssetLoader initialize failed , will exit now." << ret;
 		return ret;
 	}
 	if ((ret = g_pGraphicsManager->Initialize()) != 0) {
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 		float now = timer.ElapsedMillis();
         // g_pMemoryManager->Tick();
         g_pGraphicsManager->Tick();
-		g_pLoadMgr->Tick();
+		g_pAssetLoader->Tick();
 
 		frames++;
 		if (timer.Elapsed() - timeCount > 1.0f)
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     g_pGraphicsManager->Finalize();
     // g_pMemoryManager->Finalize();
 	g_pApp->Finalize();
-	g_pLoadMgr->Finalize();
+	g_pAssetLoader->Finalize();
 
 	return 0;
 }

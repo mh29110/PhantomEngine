@@ -3,7 +3,7 @@
 #include <vector>
 #include "GVertexBuffer.h"
 
-namespace phantom {namespace graphics {	
+namespace Phantom {namespace graphics {	
 
 	class GVertexArray
 	{

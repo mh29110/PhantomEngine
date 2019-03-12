@@ -1,1 +1,2 @@
 add_subdirectory(DotaAwc)
+add_subdirectory(Dota3DOpengl)

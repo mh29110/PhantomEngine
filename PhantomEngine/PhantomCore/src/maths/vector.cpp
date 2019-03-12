@@ -1,6 +1,6 @@
 #include "vector.h"
 
-namespace phantom {
+namespace Phantom {
 	namespace maths {
 		vec2::vec2()
 		{

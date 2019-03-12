@@ -50,7 +50,7 @@ namespace Phantom {
 	IApplication*    g_pApp = static_cast<IApplication*>(new TestApplication(config));
 	GraphicsManager* g_pGraphicsManager = static_cast<GraphicsManager*>(new TestGraphicsManager);
 #endif
-	AssetLoadManager* g_pLoadMgr = static_cast<AssetLoadManager*>(new AssetLoadManager);
+	AssetLoadManager* g_pAssetLoader = static_cast<AssetLoadManager*>(new AssetLoadManager);
 	InputManager*    g_pInputManager    = static_cast<InputManager*>(new InputManager);
 	// MemoryManager*   g_pMemoryManager   = static_cast<MemoryManager*>(new MemoryManager);
 }
@@ -63,11 +63,11 @@ int Phantom::TestApplication::Initialize()
 
 	if (result == 0) {
 		BmpParser   parser;
-		Buffer buf = g_pLoadMgr->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
+		Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
 
 		m_Image[0] = parser.Parse(buf);
 
-		buf = g_pLoadMgr->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
+		buf = g_pAssetLoader->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
 
 		m_Image[1] = parser.Parse(buf);
 	}

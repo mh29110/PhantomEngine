@@ -2,7 +2,7 @@
 #include <iostream>
 #include "vector.h"
 #include "AngleUtils.h"
-namespace phantom {namespace maths {
+namespace Phantom {namespace maths {
 
 	struct vec2 {
 		float x, y;

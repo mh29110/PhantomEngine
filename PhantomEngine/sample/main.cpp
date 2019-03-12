@@ -8,8 +8,8 @@
 #include "renderable.h"
 #include "renderer.h"
 
-using namespace phantom::maths;
-using namespace phantom;
+using namespace Phantom::maths;
+using namespace Phantom;
 using namespace graphics;
 
 GLuint m_ShaderID;
@@ -23,7 +23,7 @@ const char* MVP_NAME_P = "projection_matrix";
 
 int main()
 {
-	Window window("phantom!", 960, 540);
+	Window window("Phantom!", 960, 540);
 
 	Renderer renderer;
 #ifdef OS_MACOS
