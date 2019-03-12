@@ -1,4 +1,4 @@
-#include "config.h"
+#include "projectConfig.h"
 #include "PhMaths.h"
 #include "shader.h"
 #include "window.h"
