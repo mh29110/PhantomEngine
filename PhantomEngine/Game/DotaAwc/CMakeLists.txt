@@ -20,7 +20,7 @@ if(OS_WINDOWS)
                             PhantomCore
                             PlatformInterface
 
-                            #D3dRHI d3d12 dxgi d3dcompiler #3d
+                            D3dRHI d3d12 dxgi d3dcompiler #3d
 
 							D2dRHI d2d1					  #2d 	
                         )

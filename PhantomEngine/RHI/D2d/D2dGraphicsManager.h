@@ -12,10 +12,8 @@ namespace Phantom {
 
         virtual void Tick();
 
-		void DrawBitmap(const Image image[], int32_t index);
     protected:
         HRESULT CreateGraphicsResources();
-		ID2D1Bitmap* m_pBitmap = nullptr;
     protected:
         ID2D1Factory            *m_pFactory = nullptr;
         ID2D1HwndRenderTarget   *m_pRenderTarget = nullptr;

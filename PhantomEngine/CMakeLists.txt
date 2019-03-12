@@ -44,6 +44,7 @@ include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/graphics")
 include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/interface")
 include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/maths")
 include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/utils")
+include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/parser")
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/GLFW/include")
 include_directories("${PROJECT_SOURCE_DIR}/Platform/${MYGE_TARGET_PLATFORM}") # 根据平台来决定include
 include_directories("${PROJECT_SOURCE_DIR}/Dependencies/src/glad/include")
