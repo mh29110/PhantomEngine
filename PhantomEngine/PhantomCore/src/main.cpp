@@ -2,6 +2,7 @@
 #include "interface/IApplication.h"
 #include "GraphicsManager.h"
 #include "AssetLoadManager.h"
+#include "SceneManager.h"
 // #include "MemoryManager.h"
 #include "Timer.h"
 
@@ -13,6 +14,7 @@ namespace Phantom {
 	extern AssetLoadManager* g_pAssetLoader;
     //extern MemoryManager*   g_pMemoryManager;
     extern GraphicsManager* g_pGraphicsManager;
+    extern SceneManager* g_pSceneManager;
 }
 
 int main(int argc, char** argv) {
@@ -30,6 +32,10 @@ int main(int argc, char** argv) {
 	// }
 	if ((ret = g_pAssetLoader->Initialize()) != 0) {
 		cerr << "Failed. err =  g_pAssetLoader initialize failed , will exit now." << ret;
+		return ret;
+	}
+	if ((ret = g_pSceneManager->Initialize()) != 0) {
+		cerr << "Failed. err =  g_pSceneManager initialize failed , will exit now." << ret;
 		return ret;
 	}
 	if ((ret = g_pGraphicsManager->Initialize()) != 0) {

@@ -1,14 +1,10 @@
 #include_directories("${PROJECT_SOURCE_DIR}/Platform/Empty")
-add_executable(Dota3DOpengl DefaultGame.cpp)
 
-# copy resource to execute dir (debug directory)
-add_custom_command(TARGET Dota3DOpengl PRE_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy_directory
-${CMAKE_SOURCE_DIR}/Assets   $<TARGET_FILE_DIR:Dota3DOpengl>)
+
 
 
 if(OS_WINDOWS)
-
+	add_executable(Dota3DOpengl DefaultGame.cpp WindowsOpenGLApplicationConfig.cpp)
  	 # copy resource to execute dir (debug mode)
     add_custom_command(TARGET Dota3DOpengl PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -23,6 +19,7 @@ if(OS_WINDOWS)
                             OpenGLRHI
                         )
 elseif(OS_MACOS)
+	add_executable(Dota3DOpengl DefaultGame.cpp WindowsOpen123GLApplicationConfig.cpp)
     target_link_libraries(Dota3DOpengl 
                             PhantomCore
                             PlatformInterface
@@ -33,5 +30,9 @@ elseif(OS_MACOS)
 					    	${EXTRA_LIBS}
                         )
 endif()
+# copy resource to execute dir (debug directory)
+add_custom_command(TARGET Dota3DOpengl PRE_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_directory
+${CMAKE_SOURCE_DIR}/Assets   $<TARGET_FILE_DIR:Dota3DOpengl>)
 
 target_include_directories(Dota3DOpengl PRIVATE "${PROJECT_SOURCE_DIR}/External/src/glad/include")

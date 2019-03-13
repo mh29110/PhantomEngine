@@ -23,8 +23,3 @@ void Phantom::GraphicsManager::Tick()
 	//cout << "_Tick" << endl;
 #endif
 }
-
-void Phantom::GraphicsManager::DrawSingleMesh()
-{
-	cout << "DrawSingleMesh" << endl;
-}

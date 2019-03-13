@@ -11,6 +11,7 @@ in vec4 mcolor;
 
 void main()
 {
-	float intensity = factor_light * 1.0 / length(pos.xy - light_pos);
-	color = mcolor * intensity * color_light;
+	//float intensity = factor_light * 1.0 / length(pos.xy - light_pos);
+	//color = mcolor * intensity * color_light;
+	color = mcolor ;
 } 

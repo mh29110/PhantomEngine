@@ -12,7 +12,9 @@ namespace Phantom {
 		virtual void Finalize();
 
 		virtual void Tick();
-		virtual void DrawSingleMesh();
-	};
 
+		virtual void Clear() = 0;
+		virtual void Draw() = 0;
+	};
+	extern GraphicsManager* g_pGraphicsManager;
 }

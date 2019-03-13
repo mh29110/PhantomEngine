@@ -3,106 +3,112 @@
 #include <fstream>
 #include "OpenGLGraphicsManager.h"
 #include "AssetLoadManager.h"
+#include "SceneManager.h"
 #include "GfxConfiguration.h"
+#include "IApplication.h"
+#include "Scene.h"
 
-const char VS_SHADER_SOURCE_FILE[] = "Shaders/color.vs";
-const char PS_SHADER_SOURCE_FILE[] = "Shaders/color.ps";
+const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
+const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
+const char* MVP_NAME_M = "ojbect2world_matrix";
+const char* MVP_NAME_V = "world2view_matrix";
+const char* MVP_NAME_P = "projection_matrix";
 
-using namespace Phantom;
 using namespace std;
 using namespace Phantom::maths;
-float PI = 3.1415926f;
 
 extern struct gladGLversionStruct GLVersion;
+float PI = 3.1415926f;
+namespace Phantom{
 
-namespace Phantom {
-	extern AssetLoadManager* g_pAssetLoader;
+extern AssetLoadManager* g_pAssetLoader;
+extern SceneManager* g_pSceneManager;
+extern IApplication* g_pApp;
 
-	static void OutputShaderErrorMessage(unsigned int shaderId, const char* shaderFilename)
+static void OutputShaderErrorMessage(unsigned int shaderId, const char* shaderFilename)
+{
+	int logSize, i;
+	char* infoLog;
+	ofstream fout;
+
+	// Get the size of the string containing the information log for the failed shader compilation message.
+	glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logSize);
+
+	// Increment the size by one to handle also the null terminator.
+	logSize++;
+
+	// Create a char buffer to hold the info log.
+	infoLog = new char[logSize];
+	if (!infoLog)
 	{
-		int logSize, i;
-		char* infoLog;
-		ofstream fout;
-
-		// Get the size of the string containing the information log for the failed shader compilation message.
-		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logSize);
-
-		// Increment the size by one to handle also the null terminator.
-		logSize++;
-
-		// Create a char buffer to hold the info log.
-		infoLog = new char[logSize];
-		if (!infoLog)
-		{
-			return;
-		}
-
-		// Now retrieve the info log.
-		glGetShaderInfoLog(shaderId, logSize, NULL, infoLog);
-
-		// Open a file to write the error message to.
-		fout.open("shader-error.txt");
-
-		// Write out the error message.
-		for (i = 0; i < logSize; i++)
-		{
-			fout << infoLog[i];
-		}
-
-		// Close the file.
-		fout.close();
-
-		// Pop a message up on the screen to notify the user to check the text file for compile errors.
-		cerr << "Error compiling shader.  Check shader-error.txt for message." << shaderFilename << endl;
-
 		return;
 	}
 
-	static void OutputLinkerErrorMessage(unsigned int programId)
+	// Now retrieve the info log.
+	glGetShaderInfoLog(shaderId, logSize, NULL, infoLog);
+
+	// Open a file to write the error message to.
+	fout.open("shader-error.txt");
+
+	// Write out the error message.
+	for (i = 0; i < logSize; i++)
 	{
-		int logSize, i;
-		char* infoLog;
-		ofstream fout;
-
-
-		// Get the size of the string containing the information log for the failed shader compilation message.
-		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logSize);
-
-		// Increment the size by one to handle also the null terminator.
-		logSize++;
-
-		// Create a char buffer to hold the info log.
-		infoLog = new char[logSize];
-		if (!infoLog)
-		{
-			return;
-		}
-
-		// Now retrieve the info log.
-		glGetProgramInfoLog(programId, logSize, NULL, infoLog);
-
-		// Open a file to write the error message to.
-		fout.open("linker-error.txt");
-
-		// Write out the error message.
-		for (i = 0; i < logSize; i++)
-		{
-			fout << infoLog[i];
-		}
-
-		// Close the file.
-		fout.close();
-
-		// Pop a message up on the screen to notify the user to check the text file for linker errors.
-		cerr << "Error compiling linker.  Check linker-error.txt for message." << endl;
+		fout << infoLog[i];
 	}
+
+	// Close the file.
+	fout.close();
+
+	// Pop a message up on the screen to notify the user to check the text file for compile errors.
+	cerr << "Error compiling shader.  Check shader-error.txt for message." << shaderFilename << endl;
+
+	return;
+}
+
+static void OutputLinkerErrorMessage(unsigned int programId)
+{
+	int logSize, i;
+	char* infoLog;
+	ofstream fout;
+
+
+	// Get the size of the string containing the information log for the failed shader compilation message.
+	glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logSize);
+
+	// Increment the size by one to handle also the null terminator.
+	logSize++;
+
+	// Create a char buffer to hold the info log.
+	infoLog = new char[logSize];
+	if (!infoLog)
+	{
+		return;
+	}
+
+	// Now retrieve the info log.
+	glGetProgramInfoLog(programId, logSize, NULL, infoLog);
+
+	// Open a file to write the error message to.
+	fout.open("linker-error.txt");
+
+	// Write out the error message.
+	for (i = 0; i < logSize; i++)
+	{
+		fout << infoLog[i];
+	}
+
+	// Close the file.
+	fout.close();
+
+	// Pop a message up on the screen to notify the user to check the text file for linker errors.
+	cerr << "Error compiling linker.  Check linker-error.txt for message." << endl;
 }
 
 int OpenGLGraphicsManager::Initialize()
 {
 	int result;
 
-	result = gladLoadGL();
+	result = gladLoadGL();//在OpenGL RHI下初始化glad ，注意各平台引用glad/(_wgl).c不同，暂在cmake中设置
 	if (!result) {
 		cerr << "OpenGL load failed!" << endl;
 		result = -1;
@@ -119,7 +125,8 @@ int OpenGLGraphicsManager::Initialize()
 			glEnable(GL_DEPTH_TEST);
 
 			// Set the polygon winding to front facing for the right handed system.
-			glFrontFace(GL_CW);
+			//默认值是GL_CCW，它代表逆时针，GL_CW代表顺时针顺序。
+			glFrontFace(GL_CCW);
 
 			// Enable back face culling.
 			glEnable(GL_CULL_FACE);
@@ -128,16 +135,18 @@ int OpenGLGraphicsManager::Initialize()
 			// Initialize the world/model matrix to the identity matrix.
 			//BuildIdentityMatrix(m_worldMatrix);
 			m_worldMatrix = mat4x4(1);
-
 			// Set the field of view and screen aspect ratio.
 			float fieldOfView = PI / 4.0f;
-			//GfxConfiguration& conf = g_pApp->GetConfiguration();
+			GfxConfiguration& conf = g_pApp->GetConfiguration();
 
-			//float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;
+			float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;
 
 			// Build the perspective projection matrix.
 			//BuildPerspectiveFovLHMatrix(m_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
-
+			//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
+			m_projectionMatrix.perspective(90.0f, 16.0f / 9.0f, 0.01f, 1000.0f);
+			// proMat.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
+			m_viewMatrix.LookAtMatrixBuild(vec3(0, 3, 5), vec3(0, 0, 0), vec3(0, 1, 0));
 		}
 
 		InitializeShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
@@ -184,7 +193,7 @@ void OpenGLGraphicsManager::Tick()
 void OpenGLGraphicsManager::Clear()
 {
 	// Set the color to clear the screen to.
-	glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
+	glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
 	// Clear the screen and depth buffer.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -206,7 +215,7 @@ void OpenGLGraphicsManager::Draw()
 
 	// Set the color shader as the current shader program and set the matrices that it will use for rendering.
 	glUseProgram(m_shaderProgram);
-	//SetShaderParameters(m_worldMatrix, m_viewMatrix, m_projectionMatrix);
+	SetShaderParameters(m_worldMatrix, m_viewMatrix, m_projectionMatrix);
 
 	// Render the model using the color shader.
 	RenderBuffers();
@@ -214,59 +223,45 @@ void OpenGLGraphicsManager::Draw()
 	glFlush();
 }
 
-bool OpenGLGraphicsManager::SetShaderParameters(float* worldMatrix, float* viewMatrix, float* projectionMatrix)
+bool OpenGLGraphicsManager::SetShaderParameters(mat4x4  worldMatrix, mat4x4  viewMatrix, mat4x4  projectionMatrix)
 {
 	unsigned int location;
 
 	// Set the world matrix in the vertex shader.
-	location = glGetUniformLocation(m_shaderProgram, "worldMatrix");
+	location = glGetUniformLocation(m_shaderProgram, MVP_NAME_M);
 	if (location == -1)
 	{
 		return false;
 	}
-	glUniformMatrix4fv(location, 1, false, worldMatrix);
+	glUniformMatrix4fv(location, 1, false, worldMatrix.elements);
 
 	// Set the view matrix in the vertex shader.
-	location = glGetUniformLocation(m_shaderProgram, "viewMatrix");
+	location = glGetUniformLocation(m_shaderProgram, MVP_NAME_V);
 	if (location == -1)
 	{
 		return false;
 	}
-	glUniformMatrix4fv(location, 1, false, viewMatrix);
+	glUniformMatrix4fv(location, 1, false, viewMatrix.elements);
 
 	// Set the projection matrix in the vertex shader.
-	location = glGetUniformLocation(m_shaderProgram, "projectionMatrix");
+	location = glGetUniformLocation(m_shaderProgram, MVP_NAME_P);
 	if (location == -1)
 	{
 		return false;
 	}
-	glUniformMatrix4fv(location, 1, false, projectionMatrix);
+	glUniformMatrix4fv(location, 1, false, projectionMatrix.elements);
 
 	return true;
 }
 
 bool OpenGLGraphicsManager::InitializeBuffers()
 {
-	struct VertexType
-	{
-		vec3 position;
-		vec3 color;
-	};
+	auto& scene = g_pSceneManager->GetSceneForRendering();
 
-	VertexType vertices[] = {
-		{{  1.0f,  1.0f,  1.0f }, { 1.0f, 0.0f, 0.0f }},
-		{{  1.0f,  1.0f, -1.0f }, { 0.0f, 1.0f, 0.0f }},
-		{{ -1.0f,  1.0f, -1.0f }, { 0.0f, 0.0f, 1.0f }},
-		{{ -1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 0.0f }},
-		{{  1.0f, -1.0f,  1.0f }, { 1.0f, 0.0f, 1.0f }},
-		{{  1.0f, -1.0f, -1.0f }, { 0.0f, 1.0f, 1.0f }},
-		{{ -1.0f, -1.0f, -1.0f }, { 0.5f, 1.0f, 0.5f }},
-		{{ -1.0f, -1.0f,  1.0f }, { 1.0f, 0.5f, 1.0f }},
-	};
 	uint16_t indices[] = { 1, 2, 3, 3, 2, 6, 6, 7, 3, 3, 0, 1, 0, 3, 7, 7, 6, 4, 4, 6, 5, 0, 7, 4, 1, 0, 4, 1, 4, 5, 2, 1, 5, 2, 5, 6 };
-
+	float * vvvv = (float *)scene.m_pVertexArray->m_pData;
 	// Set the number of vertices in the vertex array.
-	m_vertexCount = sizeof(vertices) / sizeof(VertexType);
+	m_vertexCount = 24;
 
 	// Set the number of indices in the index array.
 	m_indexCount = sizeof(indices) / sizeof(uint16_t);
@@ -282,7 +277,7 @@ bool OpenGLGraphicsManager::InitializeBuffers()
 
 	// Bind the vertex buffer and load the vertex (position and color) data into the vertex buffer.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
-	glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(VertexType), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(float), vvvv, GL_STATIC_DRAW);
 
 	// Enable the two vertex array attributes.
 	glEnableVertexAttribArray(0);  // Vertex position.
@@ -290,11 +285,12 @@ bool OpenGLGraphicsManager::InitializeBuffers()
 
 	// Specify the location and format of the position portion of the vertex buffer.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(VertexType), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
 
 	// Specify the location and format of the color portion of the vertex buffer.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
-	glVertexAttribPointer(1, 3, GL_FLOAT, false, sizeof(VertexType), (char*)NULL + (3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0 );//假装复用顶点数据
 
 	// Generate an ID for the index buffer.
 	glGenBuffers(1, &m_indexBufferId);
@@ -420,10 +416,10 @@ bool OpenGLGraphicsManager::InitializeShader(const char* vsFilename, const char*
 	glAttachShader(m_shaderProgram, m_fragmentShader);
 
 	// Bind the shader input variables.
-	glBindAttribLocation(m_shaderProgram, 0, "inputPosition");
+	/*glBindAttribLocation(m_shaderProgram, 0, "inputPosition");
 	glBindAttribLocation(m_shaderProgram, 1, "inputColor");
-
-	// Link the shader program.
+*/
+// Link the shader program.
 	glLinkProgram(m_shaderProgram);
 
 	// Check the status of the link.
@@ -436,4 +432,4 @@ bool OpenGLGraphicsManager::InitializeShader(const char* vsFilename, const char*
 	}
 
 	return true;
-}
+}}

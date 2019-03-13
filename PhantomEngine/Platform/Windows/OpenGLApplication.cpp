@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <tchar.h>
 #include "OpenGLApplication.h"
+#include "GraphicsManager.h"
 #include "glad/glad_wgl.h"
 
 using namespace Phantom;
-
 static LRESULT CALLBACK TmpWndProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uiMsg)
@@ -113,7 +113,8 @@ void OpenGLApplication::Finalize()
 void OpenGLApplication::Tick()
 {
     WindowsApplication::Tick();
-    
+	g_pGraphicsManager->Clear();
+	g_pGraphicsManager->Draw();
     // Present the back buffer to the screen since rendering is complete.
     SwapBuffers(m_hDC);
 }

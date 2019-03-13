@@ -15,6 +15,8 @@ namespace Phantom {
 	    virtual void Finalize();
 
 	    virtual void Tick();
+		virtual void Clear() {}
+		virtual void Draw() {}
 
     private:
         HRESULT CreateDescriptorHeaps();
