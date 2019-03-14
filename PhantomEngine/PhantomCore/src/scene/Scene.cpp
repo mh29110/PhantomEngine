@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "SceneObjectVertexArray.h"
 #include "SceneOjbectTypeDef.h"
+#include "SceneBaseNode.h"
 
 using namespace Phantom;
 using namespace std;
@@ -24,6 +25,10 @@ const float carr[] = {
 		 1.0f, 0.5f, 1.0f };
 Phantom::Scene::Scene()
 {
+	SceneNode<SceneObjectMesh> *root = new SceneNode<SceneObjectMesh>();
+	
+
+
 	m_pMesh = new SceneObjectMesh();
 	SceneObjectVertexArray* sov = new SceneObjectVertexArray("", 0U, VertexDataType::kVertexDataTypeFloat3, (const char *)varr);
 	m_pMesh->AddVertexArray(std::move(*sov));

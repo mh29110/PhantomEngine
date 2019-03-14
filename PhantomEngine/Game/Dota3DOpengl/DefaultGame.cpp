@@ -14,8 +14,10 @@
 #include "Image.h"
 #include "BmpParser.h"
 #include "utility.hpp"
+#include "OpenGEX.h"
 
 
 namespace Phantom {
 	InputManager*    g_pInputManager    = static_cast<InputManager*>(new InputManager);
 }
+
