@@ -12,7 +12,22 @@ namespace Phantom {
     private:
         void ConvertOddlStructureToSceneNode(const ODDL::Structure& structure, std::unique_ptr<SceneBaseNode>& base_node)
         {
-           
+			std::unique_ptr <SceneBaseNode> node ;
+			switch (structure.GetStructureType()) {
+			default:
+				node = std::make_unique<SceneBaseNode>(structure.GetStructureName());
+				std::cout << structure.GetStructureName() << "=== name "<< std::endl;
+				break;
+			}
+			const ODDL::Structure* sub_structure = structure.GetFirstSubnode();
+			while (sub_structure)
+			{
+				ConvertOddlStructureToSceneNode(*sub_structure, node);
+
+				sub_structure = sub_structure->Next();
+			}
+
+			base_node->AppendChild(std::move(node));
         }
 
     public:

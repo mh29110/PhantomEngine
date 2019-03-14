@@ -66,6 +66,5 @@ int main(int argc, char** argv) {
     // g_pMemoryManager->Finalize();
 	g_pApp->Finalize();
 	g_pAssetLoader->Finalize();
-
 	return 0;
 }
