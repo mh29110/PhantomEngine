@@ -21,4 +21,3 @@ if(OS_WINDOWS)
                         )
 endif()
 
-target_include_directories(Dota3DWindows PRIVATE "${PROJECT_SOURCE_DIR}/External/src/glad/include")

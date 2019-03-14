@@ -259,7 +259,8 @@ bool OpenGLGraphicsManager::InitializeBuffers()
 	auto& scene = g_pSceneManager->GetSceneForRendering();
 
 	uint16_t indices[] = { 1, 2, 3, 3, 2, 6, 6, 7, 3, 3, 0, 1, 0, 3, 7, 7, 6, 4, 4, 6, 5, 0, 7, 4, 1, 0, 4, 1, 4, 5, 2, 1, 5, 2, 5, 6 };
-	float * vvvv = (float *)scene.m_pVertexArray->m_pData;
+	float * vvvv = (float *)scene.m_pMesh->GetVertexPropertyArray(0).GetData();
+	float * cccc = (float *)scene.m_pMesh->GetVertexPropertyArray(1).GetData();
 	// Set the number of vertices in the vertex array.
 	m_vertexCount = 24;
 
@@ -281,20 +282,21 @@ bool OpenGLGraphicsManager::InitializeBuffers()
 
 	// Enable the two vertex array attributes.
 	glEnableVertexAttribArray(0);  // Vertex position.
-	glEnableVertexAttribArray(1);  // Vertex color.
-
 	// Specify the location and format of the position portion of the vertex buffer.
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
 	glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-
+	// Generate an ID for the vertex buffer.
+	GLuint colorBufferId;
+	glGenBuffers(1, &colorBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, colorBufferId);
+	glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(float), cccc, GL_STATIC_DRAW);
 	// Specify the location and format of the color portion of the vertex buffer.
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
-	glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0 );//假装复用顶点数据
+	glBindBuffer(GL_ARRAY_BUFFER, colorBufferId);
+	glEnableVertexAttribArray(1);  // Vertex color.
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0 );
 
 	// Generate an ID for the index buffer.
 	glGenBuffers(1, &m_indexBufferId);
-
 	// Bind the index buffer and load the index data into it.
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * sizeof(uint16_t), indices, GL_STATIC_DRAW);

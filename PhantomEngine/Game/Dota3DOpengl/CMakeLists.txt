@@ -34,5 +34,3 @@ endif()
 add_custom_command(TARGET Dota3DOpengl PRE_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy_directory
 ${CMAKE_SOURCE_DIR}/Assets   $<TARGET_FILE_DIR:Dota3DOpengl>)
-
-target_include_directories(Dota3DOpengl PRIVATE "${PROJECT_SOURCE_DIR}/External/src/glad/include")

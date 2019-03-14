@@ -26,23 +26,6 @@ namespace std {
 }
 #endif
 
-#ifndef HAVE_CLAMP
-namespace std {
-    template<class T>
-    const T& clamp( const T& v, const T& lo, const T& hi )
-    {
-        return clamp( v, lo, hi, std::less<T>() );
-    }
-
-    template<class T, class Compare>
-    const T& clamp( const T& v, const T& lo, const T& hi, Compare comp )
-    {
-        return assert( !comp(hi, lo) ),
-            comp(v, lo) ? lo : comp(hi, v) ? hi : v;
-    }
-}
-#endif
-
 namespace Phantom {
     template <typename T>
     T endian_native_unsigned_int(T net_number)

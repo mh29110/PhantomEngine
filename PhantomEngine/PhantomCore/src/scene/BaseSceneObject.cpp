@@ -1,9 +1,2 @@
-#include "BaseSceneObject.h"
+#include "SceneBaseObject.h"
 using namespace Phantom;
-BaseSceneObject::BaseSceneObject()
-{
-}
-
-BaseSceneObject::~BaseSceneObject()
-{
-}
