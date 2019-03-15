@@ -1,6 +1,11 @@
 
 add_executable(OgexParserTest OgexParserTest.cpp)
-target_link_libraries(OgexParserTest PhantomCore ${OPENGEX_LIBRARY} ${OPENDDL_LIBRARY} )
+target_link_libraries(OgexParserTest 
+						PhantomCore 
+						${OPENGEX_LIBRARY} 
+						${OPENDDL_LIBRARY} 
+				    	${EXTRA_LIBS}  # mac库
+						)
 
 #add_executable(SceneObjectTest SceneObjectTest.cpp)
 #target_link_libraries(SceneObjectTest Common ${XG_LIBRARY})

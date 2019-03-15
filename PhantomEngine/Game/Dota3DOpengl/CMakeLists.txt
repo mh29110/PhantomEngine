@@ -21,15 +21,16 @@ if(OS_WINDOWS)
 							${OPENDDL_LIBRARY}
                         )
 elseif(OS_MACOS)
-	add_executable(Dota3DOpengl DefaultGame.cpp WindowsOpen123GLApplicationConfig.cpp)
+	add_executable(Dota3DOpengl DefaultGame.cpp MacOpenGLApplicationConfig.cpp)
     target_link_libraries(Dota3DOpengl 
                             PhantomCore
                             PlatformInterface
-                            libglfw3.a
                             OpenGLRHI
 					    	${OPENGL_LIBRARIES} 
         					libc++.dylib
 					    	${EXTRA_LIBS}
+                            ${OPENGEX_LIBRARY} 
+                            ${OPENDDL_LIBRARY}
                         )
 endif()
 # copy resource to execute dir (debug directory)

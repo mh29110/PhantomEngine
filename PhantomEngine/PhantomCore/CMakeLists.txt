@@ -8,7 +8,7 @@ file (GLOB_RECURSE  SOURCES
 					"${DIR_LIB_SRCS}/*.cpp"
 					${PROJECT_SOURCE_DIR}/Dependencies/src/glad/src/glad.c
 					)
-# message("My source files: " ${SOURCES})
+message("My source files: " ${SOURCES})
 
 # 生成链接库
 add_library (PhantomCore 
