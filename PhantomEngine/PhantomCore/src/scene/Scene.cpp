@@ -2,6 +2,7 @@
 #include "SceneObjectVertexArray.h"
 #include "SceneOjbectTypeDef.h"
 #include "SceneBaseNode.h"
+#include "OpengexParser.h"
 
 using namespace Phantom;
 using namespace std;
@@ -25,9 +26,10 @@ const float carr[] = {
 		 1.0f, 0.5f, 1.0f };
 Phantom::Scene::Scene()
 {
-	SceneNode<SceneObjectMesh> *root = new SceneNode<SceneObjectMesh>();
-	
+	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/Example.ogex");
 
+	OpengexParser paser;
+	std::unique_ptr<SceneBaseNode> root = paser.Parse(ogex_text);
 
 	m_pMesh = new SceneObjectMesh();
 	SceneObjectVertexArray* sov = new SceneObjectVertexArray("", 0U, VertexDataType::kVertexDataTypeFloat3, (const char *)varr);

@@ -17,8 +17,8 @@ if(OS_WINDOWS)
                             PlatformInterface
 							${OPENGL_LIBRARIES} 
                             OpenGLRHI
-							 #${OPENDDL_LIBRARY}
-							 #${OPENGEX_LIBRARY}
+							${OPENGEX_LIBRARY} 
+							${OPENDDL_LIBRARY}
                         )
 elseif(OS_MACOS)
 	add_executable(Dota3DOpengl DefaultGame.cpp WindowsOpen123GLApplicationConfig.cpp)

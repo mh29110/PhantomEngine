@@ -7,6 +7,7 @@
 #include "GfxConfiguration.h"
 #include "IApplication.h"
 #include "Scene.h"
+#include <unordered_map>
 
 const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
 const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
@@ -24,6 +25,7 @@ namespace Phantom{
 extern AssetLoadManager* g_pAssetLoader;
 extern SceneManager* g_pSceneManager;
 extern IApplication* g_pApp;
+extern std::unordered_map<std::string, std::shared_ptr<SceneBaseObject>> g_SceneObjects;
 
 static void OutputShaderErrorMessage(unsigned int shaderId, const char* shaderFilename)
 {
@@ -257,8 +259,16 @@ bool OpenGLGraphicsManager::SetShaderParameters(mat4x4  worldMatrix, mat4x4  vie
 bool OpenGLGraphicsManager::InitializeBuffers()
 {
 	auto& scene = g_pSceneManager->GetSceneForRendering();
-
 	uint16_t indices[] = { 1, 2, 3, 3, 2, 6, 6, 7, 3, 3, 0, 1, 0, 3, 7, 7, 6, 4, 4, 6, 5, 0, 7, 4, 1, 0, 4, 1, 4, 5, 2, 1, 5, 2, 5, 6 };
+	unordered_map<std::string, std::shared_ptr<SceneBaseObject>>::iterator iter;
+	iter = g_SceneObjects.find("geometry1");
+	if (iter != g_SceneObjects.end())
+	{
+		cout << (*iter).first << " " << (*iter).second << endl;
+	}
+	//--- mesh ---- ²ð½â---------
+	//const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
+	//----mesh ---- ½áÊø---------
 	float * vvvv = (float *)scene.m_pMesh->GetVertexPropertyArray(0).GetData();
 	float * cccc = (float *)scene.m_pMesh->GetVertexPropertyArray(1).GetData();
 	// Set the number of vertices in the vertex array.
