@@ -8,6 +8,7 @@
 #include "IApplication.h"
 #include "Scene.h"
 #include <unordered_map>
+#include "SceneObjectGeometry.h"
 
 const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
 const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
@@ -264,18 +265,20 @@ bool OpenGLGraphicsManager::InitializeBuffers()
 	iter = g_SceneObjects.find("geometry1");
 	if (iter != g_SceneObjects.end())
 	{
-		cout << (*iter).first << " " << (*iter).second << endl;
+		cout << (*iter).first << " " << iter->second << endl;
 	}
-	//--- mesh ---- ²ð½â---------
-	//const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
-	//----mesh ---- ½áÊø---------
+	//test 1111
 	float * vvvv = (float *)scene.m_pMesh->GetVertexPropertyArray(0).GetData();
 	float * cccc = (float *)scene.m_pMesh->GetVertexPropertyArray(1).GetData();
-	// Set the number of vertices in the vertex array.
 	m_vertexCount = 24;
-
-	// Set the number of indices in the index array.
 	m_indexCount = sizeof(indices) / sizeof(uint16_t);
+	//test 1111
+
+	//--- mesh ---- ²ð½â---------
+	auto p = iter->second;
+	auto pGeometry = dynamic_pointer_cast<SceneObjectGeometry>(p);
+	const auto& pMesh = pGeometry->GetMesh().lock();
+	const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
 	// Allocate an OpenGL vertex array object.
 	glGenVertexArrays(1, &m_vertexArrayId);
