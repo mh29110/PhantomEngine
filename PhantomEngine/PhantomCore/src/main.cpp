@@ -2,7 +2,9 @@
 #include "interface/IApplication.h"
 #include "GraphicsManager.h"
 #include "AssetLoadManager.h"
+#include "BehaviourManager.h"
 #include "SceneManager.h"
+#include "InputManager.h"
 // #include "MemoryManager.h"
 #include "Timer.h"
 
@@ -15,6 +17,8 @@ namespace Phantom {
     //extern MemoryManager*   g_pMemoryManager;
     extern GraphicsManager* g_pGraphicsManager;
     extern SceneManager* g_pSceneManager;
+    extern BehaviourManager* g_pBehaviourManager;
+    extern InputManager* g_pInputManager;
 }
 
 int main(int argc, char** argv) {
@@ -42,6 +46,14 @@ int main(int argc, char** argv) {
 		printf("Graphics Manager Initialize failed, will exit now.");
 		return ret;
 	}
+	if ((ret = g_pBehaviourManager->Initialize()) != 0) {
+		printf("g_pBehaviourManager  Initialize failed, will exit now.");
+		return ret;
+	}
+	if ((ret = g_pInputManager->Initialize()) != 0) {
+		printf("g_pInputManager  Initialize failed, will exit now.");
+		return ret;
+	}
 
 	Timer timer;
 	float timeCount = 0.0f;
@@ -50,8 +62,11 @@ int main(int argc, char** argv) {
 		g_pApp->Tick();
 		float now = timer.ElapsedMillis();
         // g_pMemoryManager->Tick();
-        g_pGraphicsManager->Tick();
 		g_pAssetLoader->Tick();
+		g_pSceneManager->Tick();
+        g_pGraphicsManager->Tick();
+		g_pBehaviourManager->Tick();
+		g_pInputManager->Tick();
 
 		frames++;
 		if (timer.Elapsed() - timeCount > 1.0f)

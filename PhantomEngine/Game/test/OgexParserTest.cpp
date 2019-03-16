@@ -12,6 +12,7 @@ using namespace OGEX;
 
 namespace Phantom {
 	AssetLoadManager*     g_pAssetLoader = static_cast<AssetLoadManager*>(new AssetLoadManager);
+	std::unordered_map<std::string, std::shared_ptr<SceneBaseObject>> g_SceneObjects;
 }
 
 int main(int , char** )

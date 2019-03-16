@@ -1,5 +1,8 @@
 #pragma once
 #include "IRuntimeModule.h"
+#include "mat4.h"
+#include "vector.h"
+#include "camera.h"
 
 
 namespace Phantom {
@@ -15,6 +18,12 @@ namespace Phantom {
 
 		virtual void Clear() = 0;
 		virtual void Draw() = 0;
+	private:
+		void CalculateCameraMatrix();
+
+		void UpdateConstants();
+	protected:
+	
 	};
 	extern GraphicsManager* g_pGraphicsManager;
 }

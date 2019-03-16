@@ -1,6 +1,7 @@
 #include <iostream>
 #include "InputManager.h"
 #include "GraphicsManager.h"
+#include "BehaviourManager.h"
 
 using namespace Phantom;
 using namespace std;
@@ -27,6 +28,7 @@ void InputManager::UpArrowKeyDown()
     {
         m_bUpKeyPressed = true;
     }
+	g_pBehaviourManager->OnUpKeyDown();
 }
 
 void InputManager::UpArrowKeyUp()
@@ -35,6 +37,7 @@ void InputManager::UpArrowKeyUp()
     cerr << "[InputManager] Up Arrow Key Up!" << endl;
 #endif
     m_bUpKeyPressed = false;
+	g_pBehaviourManager->OnUpKeyUp();
 }
 
 void InputManager::DownArrowKeyDown()
@@ -46,6 +49,7 @@ void InputManager::DownArrowKeyDown()
     {
         m_bDownKeyPressed = true;
     }
+	g_pBehaviourManager->OnDownKeyDown();
 }
 
 void InputManager::DownArrowKeyUp()
@@ -54,6 +58,7 @@ void InputManager::DownArrowKeyUp()
     cerr << "[InputManager] Down Arrow Key Up!" << endl;
 #endif
     m_bDownKeyPressed = false;
+	g_pBehaviourManager->OnDownKeyUp();
 }
 
 void InputManager::LeftArrowKeyDown()
@@ -65,6 +70,7 @@ void InputManager::LeftArrowKeyDown()
     {
         m_bLeftKeyPressed = true;
     }
+	g_pBehaviourManager->OnLeftKeyDown();
 }
 
 void InputManager::LeftArrowKeyUp()
@@ -73,6 +79,7 @@ void InputManager::LeftArrowKeyUp()
     cerr << "[InputManager] Left Arrow Key Up!" << endl;
 #endif
     m_bLeftKeyPressed = false;
+	g_pBehaviourManager->OnLeftKeyUp();
 }
 
 void InputManager::RightArrowKeyDown()
@@ -84,6 +91,7 @@ void InputManager::RightArrowKeyDown()
     {
         m_bRightKeyPressed = true;
     }
+	g_pBehaviourManager->OnRightKeyDown();
 }
 
 void InputManager::RightArrowKeyUp()
@@ -92,6 +100,7 @@ void InputManager::RightArrowKeyUp()
     cerr << "[InputManager] Right Arrow Key Up!" << endl;
 #endif
     m_bRightKeyPressed = false;
+	g_pBehaviourManager->OnRightKeyUp();
 }
 
 void InputManager::AsciiKeyDown(char keycode)

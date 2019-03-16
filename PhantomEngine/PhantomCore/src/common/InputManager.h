@@ -27,6 +27,10 @@ namespace Phantom {
             void LeftMouseButtonUp();
             void LeftMouseDrag(int deltaX, int deltaY);
 
+			bool GetUpKeyPressed() { return m_bUpKeyPressed; }
+			bool GetDownKeyPressed() { return m_bDownKeyPressed; }
+			bool GetLeftKKeyPressed() { return m_bLeftKeyPressed; }
+			bool GetRightKeyPressed() { return m_bRightKeyPressed; }
         protected:
             bool m_bUpKeyPressed    = false;
             bool m_bDownKeyPressed  = false;
