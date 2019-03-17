@@ -2,9 +2,6 @@
 #import <OpenGL/gl.h>
 
 #import "GraphicsManager.h"
-namespace Phantom {
-    extern GraphicsManager* g_pGraphicsManager;
-}
 
 @implementation GLView
 
@@ -13,8 +10,8 @@ namespace Phantom {
 
     [_openGLContext makeCurrentContext];
 
-    // Phantom::g_pGraphicsManager->Clear();
-    // Phantom::g_pGraphicsManager->Draw();
+    Phantom::g_pGraphicsManager->Clear();
+    Phantom::g_pGraphicsManager->Draw();
 
     [_openGLContext flushBuffer];
 }

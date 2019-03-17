@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 	unsigned int  frames = 0;
 	while (!g_pApp->IsQuit()) {
 		g_pApp->Tick();
-		float now = timer.ElapsedMillis();
+		//float now = timer.ElapsedMillis();
         // g_pMemoryManager->Tick();
 		g_pAssetLoader->Tick();
 		g_pSceneManager->Tick();

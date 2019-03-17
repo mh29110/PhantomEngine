@@ -9,4 +9,3 @@
 @property (nonatomic, strong) NSOpenGLPixelFormat* pixelFormat;
 
 @end
-

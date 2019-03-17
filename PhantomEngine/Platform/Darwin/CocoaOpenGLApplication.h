@@ -1,5 +1,8 @@
 #pragma once
 #include "CocoaApplication.h"
+#ifdef __OBJC__
+#include "GLView.h"
+#endif
 
 namespace Phantom {
     class CocoaOpenGLApplication : public CocoaApplication {
@@ -10,6 +13,14 @@ namespace Phantom {
         virtual int Initialize();
         virtual void Finalize();
         virtual void Tick();
+
+    protected:
+        virtual void OnDraw();
+
+    private:
+#ifdef __OBJC__
+        GLView* m_pGlView;
+#endif
     };
 }
 

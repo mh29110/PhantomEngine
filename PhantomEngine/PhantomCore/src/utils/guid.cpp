@@ -21,7 +21,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#define  GUID_WINDOWS //todo 临时过编译
+#ifdef OS_WINDOWS
+	#define  GUID_WINDOWS //todo 临时过编译
+#else
+	#define GUID_CFUUID
+#endif
+
+
+
 #include <cstring>
 #include "guid.hpp"
 

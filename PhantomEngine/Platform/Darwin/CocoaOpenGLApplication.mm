@@ -11,15 +11,20 @@ int CocoaOpenGLApplication::Initialize()
 {
     int result = 0;
 
-    result = CocoaApplication::Initialize();
+    CocoaApplication::CreateMainWindow();
 
     if (!result) {
         NSOpenGLPixelFormatAttribute attrs[] = {
+            NSOpenGLPFAAccelerated,
             NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
             NSOpenGLPFAColorSize,32,
-            NSOpenGLPFADepthSize,16,
+            NSOpenGLPFADepthSize,24,
+            NSOpenGLPFAStencilSize,8,
             NSOpenGLPFADoubleBuffer,
             NSOpenGLPFAAccelerated,
+            NSOpenGLPFAMultisample,
+            NSOpenGLPFASampleBuffers,1,
+            NSOpenGLPFASamples,4, // 4x MSAA
             0
         };
 
@@ -37,7 +42,7 @@ int CocoaOpenGLApplication::Initialize()
 
         [m_pWindow setContentView:pGLView];
     }
-
+    result = BaseApplication::Initialize();
     return result;
 }
 
@@ -50,5 +55,9 @@ void CocoaOpenGLApplication::Tick()
 {
     CocoaApplication::Tick();
     [[m_pWindow contentView] setNeedsDisplay:YES];
+}
+
+void CocoaOpenGLApplication::OnDraw()
+{
 }
 

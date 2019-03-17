@@ -25,7 +25,7 @@ void Phantom::GraphicsManager::Tick()
 void Phantom::GraphicsManager::CalculateCameraMatrix() {
 	shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
 	// Set the field of view and screen aspect ratio.
-	float fieldOfView = PI / 4.0f;
+	//float fieldOfView = PI / 4.0f;
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
 
 	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/

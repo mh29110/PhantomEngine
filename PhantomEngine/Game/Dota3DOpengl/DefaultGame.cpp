@@ -10,7 +10,7 @@
 #include "AssetLoadManager.h"
 #include "InputManager.h"
 #include "Image.h"
-#include "BmpParser.h"
+#include "BMPParser.h"
 #include "utility.hpp"
 #include "OpenGEX.h"
 

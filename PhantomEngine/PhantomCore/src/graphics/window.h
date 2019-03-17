@@ -16,7 +16,6 @@ namespace Phantom { namespace graphics {
 		const char *m_Title;
 		int m_Width, m_Height;
 		GLFWwindow *m_Window;
-		bool m_Closed;
 	public:
 		Window(const char *name, int width, int height);
 		virtual~Window();

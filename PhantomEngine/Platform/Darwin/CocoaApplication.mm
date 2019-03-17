@@ -34,6 +34,7 @@ void CocoaApplication::CreateMainWindow()
     [NSApp setDelegate: appDelegate];
     [NSApp activateIgnoringOtherApps:YES];
     [NSApp finishLaunching];
+    
 
     NSInteger style = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |
                       NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
@@ -43,6 +44,7 @@ void CocoaApplication::CreateMainWindow()
     [m_pWindow makeKeyAndOrderFront:nil];
     id winDelegate = [WindowDelegate new];
     [m_pWindow setDelegate:winDelegate];
+    [m_pWindow makeKeyAndOrderFront:m_pWindow];
 }
 
 void CocoaApplication::Finalize()

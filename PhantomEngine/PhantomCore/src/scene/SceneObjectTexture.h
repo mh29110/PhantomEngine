@@ -2,7 +2,7 @@
 #include "SceneBaseObject.h"
 #include "mat4.h"
 #include "Image.h"
-#include "BmpParser.h"
+#include "BMPParser.h"
 #include "AssetLoadManager.h"
 
 namespace Phantom {

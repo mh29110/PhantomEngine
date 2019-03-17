@@ -32,8 +32,8 @@ namespace Phantom {
 
 	bool OpenGLGraphicsManager::InitializeBuffers()
 	{
-		auto& scene = g_pSceneManager->GetSceneForRendering();
-		uint16_t indices[] = { 1, 2, 3, 3, 2, 6, 6, 7, 3, 3, 0, 1, 0, 3, 7, 7, 6, 4, 4, 6, 5, 0, 7, 4, 1, 0, 4, 1, 4, 5, 2, 1, 5, 2, 5, 6 };
+		//auto& scene = g_pSceneManager->GetSceneForRendering();
+		
 		unordered_map<std::string, std::shared_ptr<SceneBaseObject>>::iterator iter;
 		iter = g_SceneObjects.find("geometry15");
 		if (iter != g_SceneObjects.end())
@@ -329,7 +329,7 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::Draw()
 	{
-		static float rotateAngle = 0.0f;
+//        static float rotateAngle = 0.0f;
 		shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
 		// Update world matrix to rotate the model
 		/*rotateAngle += PI / 120;

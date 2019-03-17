@@ -1,6 +1,6 @@
 #include <unordered_map>
 #include "OpenGEX.h"
-#include "portable.h"
+#include "Portable.h"
 #include "SceneParser.h"
 #include "SceneGeometryNode.h"
 #include "SceneObjectGeometry.h"
