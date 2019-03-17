@@ -17,7 +17,7 @@ typedef int32_t four_char_enum;
 #define ENUM(e) enum class e : four_char_enum 
 
 
-//#ifndef OS_MACOS // 已知mac没有
+#ifdef OS_MACOS // mac上用standard 11
 namespace std {
     template<typename T, typename... Args>
     std::unique_ptr<T> make_unique(Args&&... args)
@@ -25,7 +25,7 @@ namespace std {
             return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 }
-//#endif
+#endif
 
 
 namespace Phantom {

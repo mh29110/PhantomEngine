@@ -24,6 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
+#include "projectConfig.h"
+#ifdef OS_WINDOWS
+#define  GUID_WINDOWS //todo ¡Ÿ ±π˝±‡“Î
+#else
+#define GUID_CFUUID
+#endif
+
+
 #ifdef GUID_ANDROID
 #include <thread>
 #include <jni.h>
