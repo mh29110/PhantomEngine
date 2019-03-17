@@ -4,6 +4,7 @@
 #include "SceneGeometryNode.h"
 #include "SceneObjectGeometry.h"
 #include "camera.h"
+#include <unordered_map>
 namespace Phantom{
 
 class Scene
