@@ -44,7 +44,6 @@ void CocoaApplication::CreateMainWindow()
     [m_pWindow makeKeyAndOrderFront:nil];
     id winDelegate = [WindowDelegate new];
     [m_pWindow setDelegate:winDelegate];
-    [m_pWindow makeKeyAndOrderFront:m_pWindow];
 }
 
 void CocoaApplication::Finalize()

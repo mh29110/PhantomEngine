@@ -1,7 +1,10 @@
 #import "GLView.h"
-#import <OpenGL/gl.h>
+#include <OpenGL/gl.h>
 
-#import "GraphicsManager.h"
+#include "GraphicsManager.h"
+#include "InputManager.h"
+
+using namespace Phantom;
 
 @implementation GLView
 
@@ -10,8 +13,8 @@
 
     [_openGLContext makeCurrentContext];
 
-    Phantom::g_pGraphicsManager->Clear();
-    Phantom::g_pGraphicsManager->Draw();
+    g_pGraphicsManager->Clear();
+    g_pGraphicsManager->Draw();
 
     [_openGLContext flushBuffer];
 }
@@ -62,5 +65,29 @@
     [super dealloc];
 }
 
-@end
+- (void)mouseDown:(NSEvent *)theEvent {
+    if ([theEvent type] == NSEventTypeLeftMouseDown)
+    {
+        g_pInputManager->LeftMouseButtonDown();
+    }
+}
 
+- (void)mouseUp:(NSEvent *)theEvent {
+    if ([theEvent type] == NSEventTypeLeftMouseUp)
+    {
+        g_pInputManager->LeftMouseButtonUp();
+    }
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    if ([theEvent type] == NSEventTypeLeftMouseDragged)
+    {
+        g_pInputManager->LeftMouseDrag([theEvent deltaX], [theEvent deltaY]);
+    }
+}
+
+- (void)scrollWheel:(NSEvent *)theEvent {
+        g_pInputManager->LeftMouseDrag([theEvent deltaX], [theEvent deltaY]);
+}
+
+@end
