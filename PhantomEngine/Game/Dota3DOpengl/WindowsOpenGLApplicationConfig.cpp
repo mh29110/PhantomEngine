@@ -17,6 +17,5 @@ namespace Phantom {
 	SceneManager*     g_pSceneManager     = static_cast<SceneManager*>(new SceneManager);
 	BehaviourManager*     g_pBehaviourManager = static_cast<BehaviourManager*>(new BehaviourManager);
 
-	std::unordered_map<std::string, std::shared_ptr<SceneBaseObject>> g_SceneObjects;
 }
 

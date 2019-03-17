@@ -1,13 +1,15 @@
 #include "SceneManager.h"
 #include <iostream>
+#include "AssetLoadManager.h"
+#include "OpengexParser.h"
 using namespace std;
 using namespace Phantom;
 
 int Phantom::SceneManager::Initialize()
 {
 	int result = 0;
-
-	m_pScene = make_shared<Scene>();
+	m_pScene = make_shared<Scene>("init scene");
+	LoadScene();
 	return result;
 }
 
@@ -29,4 +31,18 @@ void Phantom::SceneManager::Tick()
 const Scene & SceneManager::GetSceneForRendering()
 {
 	return *m_pScene;
+}
+
+bool Phantom::SceneManager::LoadScene()
+{
+	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/aili.ogex");
+	if (ogex_text.empty()) {
+		return false;
+	}
+	OpengexParser paser;
+	m_pScene = paser.Parse( ogex_text);
+	if (!m_pScene) {
+		return false;
+	}
+	return true;
 }

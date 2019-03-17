@@ -17,6 +17,7 @@ namespace Phantom {
 		const Scene& GetSceneForRendering();
 	protected:
 		std::shared_ptr<Scene>  m_pScene;
+		bool LoadScene();
 	};
 	extern SceneManager* g_pSceneManager;
 }

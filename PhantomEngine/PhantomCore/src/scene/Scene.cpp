@@ -7,13 +7,9 @@
 using namespace Phantom;
 using namespace std;
 
-Phantom::Scene::Scene()
+
+Phantom::Scene::Scene(const char * name):SceneGraph(new SceneBaseNode(name))
 {
-	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/aili.ogex");
-
-	OpengexParser paser;
-	std::unique_ptr<SceneBaseNode> root = paser.Parse(ogex_text);
-
 	camera = make_shared<CameraNode>();
 }
 

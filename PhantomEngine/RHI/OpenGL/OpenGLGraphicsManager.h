@@ -21,7 +21,6 @@ namespace Phantom {
 
 		bool InitializeBuffers();
 		void RenderBuffers();
-		void CalculateCameraPosition();
 		bool InitializeShader(const char* vsFilename, const char* fsFilename);
 
 	private:

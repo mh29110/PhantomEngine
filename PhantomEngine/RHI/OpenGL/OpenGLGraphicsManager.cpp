@@ -28,139 +28,138 @@ namespace Phantom {
 	extern AssetLoadManager* g_pAssetLoader;
 	extern SceneManager* g_pSceneManager;
 	extern IApplication* g_pApp;
-	extern std::unordered_map<std::string, std::shared_ptr<SceneBaseObject>> g_SceneObjects;
 
 	bool OpenGLGraphicsManager::InitializeBuffers()
 	{
-		//auto& scene = g_pSceneManager->GetSceneForRendering();
-		
-		unordered_map<std::string, std::shared_ptr<SceneBaseObject>>::iterator iter;
-		iter = g_SceneObjects.find("geometry15");
-		if (iter != g_SceneObjects.end())
+		auto& scene = g_pSceneManager->GetSceneForRendering();
+		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>> Geometries = scene.Geometries;
+		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>>::iterator iter;
+		for (iter = Geometries.begin(); iter != Geometries.end(); iter++)
 		{
-			cout << (*iter).first << " " << iter->second << endl;
-		}
-		//--- mesh ---- 拆解---------
-		auto p = iter->second;
-		auto pGeometry = dynamic_pointer_cast<SceneObjectGeometry>(p);
-		const auto& pMesh = pGeometry->GetMesh().lock();//lock详解
-		const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
+			if(iter->first != "geometry15") continue;
+			//--- mesh ---- 拆解---------
+			auto p = iter->second;
+			auto pGeometry = dynamic_pointer_cast<SceneObjectGeometry>(p);
+			const auto& pMesh = pGeometry->GetMesh().lock();//lock详解
+			const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
-		// Allocate an OpenGL vertex array object.
-		glGenVertexArrays(1, &m_vertexArrayId);
-		// Bind the vertex array object to store all the buffers and vertex attributes we create here.
-		glBindVertexArray(m_vertexArrayId);
+			// Allocate an OpenGL vertex array object.
+			glGenVertexArrays(1, &m_vertexArrayId);
+			// Bind the vertex array object to store all the buffers and vertex attributes we create here.
+			glBindVertexArray(m_vertexArrayId);
 
-		GLuint vertexBufferId;
+			GLuint vertexBufferId;
 
-		// Generate an ID for the vertex buffer.
-		for (GLuint i = 0; i < vertexPropertiesCount; i++)
-		{
-			if (i > 1) break;
-			const SceneObjectVertexArray & vProArr = pMesh->GetVertexPropertyArray(i);
-			const auto vProArrSize = vProArr.GetDataSize();
-			const auto vProArrData = vProArr.GetData();
-
-			glGenBuffers(1, &vertexBufferId);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
-			glBufferData(GL_ARRAY_BUFFER, vProArrSize, vProArrData, GL_STATIC_DRAW);
-
-			glEnableVertexAttribArray(i);
-			switch (vProArr.GetDataType()) {
-			case VertexDataType::kVertexDataTypeFloat1:
-				glVertexAttribPointer(i, 1, GL_FLOAT, false, 0, 0);
-				break;
-			case VertexDataType::kVertexDataTypeFloat2:
-				glVertexAttribPointer(i, 2, GL_FLOAT, false, 0, 0);
-				break;
-			case VertexDataType::kVertexDataTypeFloat3:
-				glVertexAttribPointer(i, 3, GL_FLOAT, false, 0, 0);
-				break;
-			case VertexDataType::kVertexDataTypeFloat4:
-				glVertexAttribPointer(i, 4, GL_FLOAT, false, 0, 0);
-				break;
-#if !defined(OS_ANDROID) && !defined(OS_WEBASSEMBLY)
-			case VertexDataType::kVertexDataTypeDouble1:
-				glVertexAttribPointer(i, 1, GL_DOUBLE, false, 0, 0);
-				break;
-			case VertexDataType::kVertexDataTypeDouble2:
-				glVertexAttribPointer(i, 2, GL_DOUBLE, false, 0, 0);
-				break;
-			case VertexDataType::kVertexDataTypeDouble3:
-				glVertexAttribPointer(i, 3, GL_DOUBLE, false, 0, 0);
-				break;
-			case VertexDataType::kVertexDataTypeDouble4:
-				glVertexAttribPointer(i, 4, GL_DOUBLE, false, 0, 0);
-				break;
-#endif
-			default:
-				assert(0);
-			}
-			//#todo buff id 需要统计管理，以备释放切换场景释放
-		}
-
-		const auto indexGroupCount = pMesh->GetIndexGroupCount();
-
-		uint32_t  mode;
-		switch (pMesh->GetPrimitiveType())
-		{
-		case PrimitiveType::kPrimitiveTypePointList:
-			mode = GL_POINTS;
-			break;
-		case PrimitiveType::kPrimitiveTypeLineList:
-			mode = GL_LINES;
-			break;
-		case PrimitiveType::kPrimitiveTypeLineStrip:
-			mode = GL_LINE_STRIP;
-			break;
-		case PrimitiveType::kPrimitiveTypeTriList:
-			mode = GL_TRIANGLES;
-			break;
-		case PrimitiveType::kPrimitiveTypeTriStrip:
-			mode = GL_TRIANGLE_STRIP;
-			break;
-		case PrimitiveType::kPrimitiveTypeTriFan:
-			mode = GL_TRIANGLE_FAN;
-			break;
-		default:
-			// ignore
-			break;
-		}
-		for (GLuint i = 0 ; i < indexGroupCount; i++)
-		{
-			// Generate an ID for the index buffer.
-			glGenBuffers(1, &m_indexBufferId);
-		
-			const SceneObjectIndexArray& index_array = pMesh->GetIndexArray(i);
-			const auto index_array_size = index_array.GetDataSize();
-			const auto index_array_data = index_array.GetData();
-
-			// Bind the index buffer and load the index data into it.
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_array_size, index_array_data, GL_STATIC_DRAW);
-			// Set the number of indices in the index array.
-			int32_t indexCount = static_cast<int32_t>(index_array.GetIndexCount());
-			m_indexCount = indexCount;
-			uint32_t type;
-			switch (index_array.GetIndexType())
+			// Generate an ID for the vertex buffer.
+			for (GLuint i = 0; i < vertexPropertiesCount; i++)
 			{
-			case IndexDataType::kIndexDataTypeInt8:
-				type = GL_UNSIGNED_BYTE;
+				if (i > 1) break;
+				const SceneObjectVertexArray & vProArr = pMesh->GetVertexPropertyArray(i);
+				const auto vProArrSize = vProArr.GetDataSize();
+				const auto vProArrData = vProArr.GetData();
+
+				glGenBuffers(1, &vertexBufferId);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+				glBufferData(GL_ARRAY_BUFFER, vProArrSize, vProArrData, GL_STATIC_DRAW);
+
+				glEnableVertexAttribArray(i);
+				switch (vProArr.GetDataType()) {
+				case VertexDataType::kVertexDataTypeFloat1:
+					glVertexAttribPointer(i, 1, GL_FLOAT, false, 0, 0);
+					break;
+				case VertexDataType::kVertexDataTypeFloat2:
+					glVertexAttribPointer(i, 2, GL_FLOAT, false, 0, 0);
+					break;
+				case VertexDataType::kVertexDataTypeFloat3:
+					glVertexAttribPointer(i, 3, GL_FLOAT, false, 0, 0);
+					break;
+				case VertexDataType::kVertexDataTypeFloat4:
+					glVertexAttribPointer(i, 4, GL_FLOAT, false, 0, 0);
+					break;
+#if !defined(OS_ANDROID) && !defined(OS_WEBASSEMBLY)
+				case VertexDataType::kVertexDataTypeDouble1:
+					glVertexAttribPointer(i, 1, GL_DOUBLE, false, 0, 0);
+					break;
+				case VertexDataType::kVertexDataTypeDouble2:
+					glVertexAttribPointer(i, 2, GL_DOUBLE, false, 0, 0);
+					break;
+				case VertexDataType::kVertexDataTypeDouble3:
+					glVertexAttribPointer(i, 3, GL_DOUBLE, false, 0, 0);
+					break;
+				case VertexDataType::kVertexDataTypeDouble4:
+					glVertexAttribPointer(i, 4, GL_DOUBLE, false, 0, 0);
+					break;
+#endif
+				default:
+					assert(0);
+				}
+				//#todo buff id 需要统计管理，以备释放切换场景释放
+			}
+
+			const auto indexGroupCount = pMesh->GetIndexGroupCount();
+
+			uint32_t  mode;
+			switch (pMesh->GetPrimitiveType())
+			{
+			case PrimitiveType::kPrimitiveTypePointList:
+				mode = GL_POINTS;
 				break;
-			case IndexDataType::kIndexDataTypeInt16:
-				type = GL_UNSIGNED_SHORT;
+			case PrimitiveType::kPrimitiveTypeLineList:
+				mode = GL_LINES;
 				break;
-			case IndexDataType::kIndexDataTypeInt32:
-				type = GL_UNSIGNED_INT;
+			case PrimitiveType::kPrimitiveTypeLineStrip:
+				mode = GL_LINE_STRIP;
+				break;
+			case PrimitiveType::kPrimitiveTypeTriList:
+				mode = GL_TRIANGLES;
+				break;
+			case PrimitiveType::kPrimitiveTypeTriStrip:
+				mode = GL_TRIANGLE_STRIP;
+				break;
+			case PrimitiveType::kPrimitiveTypeTriFan:
+				mode = GL_TRIANGLE_FAN;
 				break;
 			default:
-				// not supported by OpenGL
-				//cerr << "Error: Unsupported Index Type " << index_array << endl;
-				//cerr << "Mesh: " << *pMesh << endl;
-				//cerr << "Geometry: " << *pGeometry << endl;
-				continue;
+				// ignore
+				break;
+			}
+			for (GLuint i = 0; i < indexGroupCount; i++)
+			{
+				// Generate an ID for the index buffer.
+				glGenBuffers(1, &m_indexBufferId);
+
+				const SceneObjectIndexArray& index_array = pMesh->GetIndexArray(i);
+				const auto index_array_size = index_array.GetDataSize();
+				const auto index_array_data = index_array.GetData();
+
+				// Bind the index buffer and load the index data into it.
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_array_size, index_array_data, GL_STATIC_DRAW);
+				// Set the number of indices in the index array.
+				int32_t indexCount = static_cast<int32_t>(index_array.GetIndexCount());
+				m_indexCount = indexCount;
+				uint32_t type;
+				switch (index_array.GetIndexType())
+				{
+				case IndexDataType::kIndexDataTypeInt8:
+					type = GL_UNSIGNED_BYTE;
+					break;
+				case IndexDataType::kIndexDataTypeInt16:
+					type = GL_UNSIGNED_SHORT;
+					break;
+				case IndexDataType::kIndexDataTypeInt32:
+					type = GL_UNSIGNED_INT;
+					break;
+				default:
+					// not supported by OpenGL
+					//cerr << "Error: Unsupported Index Type " << index_array << endl;
+					//cerr << "Mesh: " << *pMesh << endl;
+					//cerr << "Geometry: " << *pGeometry << endl;
+					continue;
+				}
 			}
 		}
+		
 		
 
 		return true;
