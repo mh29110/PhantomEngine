@@ -209,37 +209,4 @@ namespace Phantom {namespace maths {
 
 	}
 
-
-
-	///////////////////////////////////////////////////////////////////////////////
-	// translate this matrix by (x, y, z)  有点晕 # todo
-	///////////////////////////////////////////////////////////////////////////////
-	mat4x4& mat4x4::translate(const vec3 & v)
-	{
-	    return translate(v.x, v.y, v.z);
-	}
-
-	mat4x4& mat4x4::translate(float x, float y, float z)
-	{
-	    elements[0] += elements[3] * x;   elements[4] += elements[7] * x;   
-	    elements[8] += elements[11]* x;   elements[12]+= elements[15]* x;
-
-	    elements[1] += elements[3] * y;   elements[5] += elements[7] * y;   
-	    elements[9] += elements[11]* y;   elements[13]+= elements[15]* y;
-
-	    elements[2] += elements[3] * z;   elements[6] += elements[7] * z;   
-	    elements[10]+= elements[11]* z;   elements[14]+= elements[15]* z;
-
-	    return *this;
-	}
-
-	
-	mat4x4& mat4x4::scale(float x, float y, float z)
-	{
-	    elements[0] *= x;   elements[4] *= x;   elements[8] *= x;   elements[12] *= x;
-	    elements[1] *= y;   elements[5] *= y;   elements[9] *= y;   elements[13] *= y;
-	    elements[2] *= z;   elements[6] *= z;   elements[10]*= z;   elements[14] *= z;
-	    return *this;
-	}
-
 }}

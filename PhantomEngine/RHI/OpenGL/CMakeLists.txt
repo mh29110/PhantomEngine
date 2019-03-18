@@ -3,12 +3,14 @@ if(OS_WINDOWS)
     
     add_library(OpenGLRHI
         OpenGLGraphicsManager.cpp
+		OpenGLShader.cpp
         ${PROJECT_SOURCE_DIR}/Dependencies/src/glad/src/glad_wgl.c
 	)
 
 elseif(OS_MACOS)
 	add_library(OpenGLRHI
         OpenGLGraphicsManager.cpp
+		OpenGLShader.cpp
         ${PROJECT_SOURCE_DIR}/Dependencies/src/glad/src/glad.c
 	)
     

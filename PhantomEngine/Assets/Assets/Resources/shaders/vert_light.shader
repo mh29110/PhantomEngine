@@ -3,16 +3,25 @@
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec4 datacolor;
 
-uniform mat4 projection_matrix;
-uniform mat4 ojbect2world_matrix = mat4(1.0);
-uniform mat4 world2view_matrix = mat4(1.0);
+
+layout(binding = 11, std140) uniform ConstantsPerBatch
+{
+    mat4 modelMatrix;
+} uboBatch;
+
+layout(binding = 10, std140) uniform ConstantsPerFrame
+{
+    mat4 viewMatrix;
+    mat4 projectionMatrix;
+    vec4 camPos;
+} uboFrame;
 
 out vec4 pos;
 out vec4 mcolor;
 
 void main()
 {
-    gl_Position = projection_matrix * world2view_matrix * ojbect2world_matrix * position;
-    pos = ojbect2world_matrix * position;
+    gl_Position = uboFrame.projectionMatrix * uboFrame.viewMatrix *  uboBatch.modelMatrix * position;
+    pos = uboBatch.modelMatrix * position;
     mcolor = datacolor;
 }

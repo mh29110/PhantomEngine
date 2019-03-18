@@ -1,6 +1,9 @@
 #pragma once
 #include "SceneBaseNode.h"
 #include "SceneObjectGeometry.h"
+#include "GfxStruct.h"
+#include "PhMaths.h"
+
 
 namespace Phantom
 {
@@ -45,6 +48,15 @@ namespace Phantom
 			else
 				return std::string("default");
 		};
+
+		const std::shared_ptr< maths::mat4x4> GetCalculatedTransform() const
+		{
+			std::shared_ptr< maths::mat4x4> result(new  maths::mat4x4());
+			maths::mat4x4 mu(1.0f);
+			mu = mu.scale(maths::vec3(1.0f,1.5f,1.0f));
+			*result = *result * mu ;
+			return result;
+		}
 
 		void LinkRigidBody(void* rigidBody)
 		{

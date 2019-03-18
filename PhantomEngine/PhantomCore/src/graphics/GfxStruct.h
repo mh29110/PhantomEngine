@@ -8,13 +8,14 @@ typedef maths::vec4 float4;
 typedef maths::vec3 float3;
 typedef maths::vec2 float2;
 typedef maths::mat4x4 mat4x4f;
-
+	class SceneGeometryNode;
 	//每渲染批次常量
 	struct ConstantsPerBatch 
 	{ 
 		maths::mat4x4 modelMatrix;
 	};
-
+	const size_t kSizeOfFrameConstantBuffer = 256;
+	const size_t kSizeOfBatchConstantBuffer = 256;
 	//渲染中每帧内固定常量
 	struct ConstantsPerFrame  
 	{

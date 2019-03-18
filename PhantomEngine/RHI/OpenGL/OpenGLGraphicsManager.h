@@ -1,5 +1,6 @@
 #pragma once
 #include "GraphicsManager.h"
+#include "OpenGLShader.h"
 #include "GfxStruct.h"
 
 namespace Phantom {
@@ -24,10 +25,15 @@ namespace Phantom {
 		void RenderBuffers();
 		bool InitializeShader(const char* vsFilename, const char* fsFilename);
 
+		virtual void SetPerFrameConstants(const ContextPerFrame& context);
+		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
+
+		virtual void bindShader();
+
 	private:
-		unsigned int m_vertexShader;
-		unsigned int m_fragmentShader;
-		unsigned int m_shaderProgram;
+		OpenGLShader * m_pShader;
+		GLuint m_uboFrame; 
+		GLuint m_uboBatch; 
 
 		const bool VSYNC_ENABLED = true;
 

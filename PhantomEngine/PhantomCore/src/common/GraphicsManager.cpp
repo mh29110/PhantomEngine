@@ -41,5 +41,18 @@ void Phantom::GraphicsManager::CalculateCameraMatrix() {
 }
 
 void Phantom::GraphicsManager::UpdateConstants() {
+	bindShader();
+
+	auto& frame = m_Frame;
+
+	for (auto& pDbc : frame.batchContexts)
+	{
+		pDbc->modelMatrix = *pDbc->node->GetCalculatedTransform();
+	}
+	//计算世界坐标转换矩阵
+	//#todo
 	CalculateCameraMatrix();
+
+	SetPerFrameConstants(frame.frameContext);
+	SetPerBatchConstants(frame.batchContexts);
 }
