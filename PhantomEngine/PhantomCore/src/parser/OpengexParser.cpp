@@ -1,5 +1,7 @@
 #include "opengexparser.h"
+#include "PhMaths.h"
 using namespace Phantom;
+using namespace maths;
 void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structure & structure, std::shared_ptr<SceneBaseNode>& base_node, Scene& scene)
 {
 	std::shared_ptr <SceneBaseNode> node;
@@ -9,6 +11,25 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
 	}
 	break;
+	case OGEX::kStructureTransform:
+	{
+		int32_t index, count;
+		const OGEX::TransformStructure& _structure = dynamic_cast<const OGEX::TransformStructure&>(structure);
+		bool object_flag = _structure.GetObjectFlag();
+		mat4x4 matrix;
+		std::shared_ptr<SceneObjectTransform> transform;
+
+		auto _key = _structure.GetStructureName();
+		count = _structure.GetTransformCount();
+		for (index = 0; index < count; index++) {
+			const float* data = _structure.GetTransform(index);
+			matrix = data;
+			
+			transform = std::make_shared<SceneObjectTransform>(matrix, object_flag);
+			base_node->AppendTransform(_key, std::move(transform));
+		}
+	}
+	return;
 	case OGEX::kStructureGeometryNode:
 	{
 		std::string _key = structure.GetStructureName();

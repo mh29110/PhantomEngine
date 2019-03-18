@@ -15,10 +15,10 @@ void Phantom::BehaviourManager::Finalize()
 void Phantom::BehaviourManager::Tick()
 {
 	if (g_pInputManager->GetUpKeyPressed()) {
-		camera.lock()->m_positionZ += 0.001f;
+		camera.lock()->m_positionZ += 0.01f;
 	}
 	if (g_pInputManager->GetDownKeyPressed()) {
-		camera.lock()->m_positionZ -= 0.001f;
+		camera.lock()->m_positionZ -= 0.01f;
 	}
 	if (g_pInputManager->GetLeftKKeyPressed()) {
 		camera.lock()->m_positionX -= 0.01f;

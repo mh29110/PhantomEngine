@@ -35,7 +35,7 @@ const Scene & SceneManager::GetSceneForRendering()
 
 bool Phantom::SceneManager::LoadScene()
 {
-	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/aili.ogex");
+	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/car.ogex");
 	if (ogex_text.empty()) {
 		return false;
 	}

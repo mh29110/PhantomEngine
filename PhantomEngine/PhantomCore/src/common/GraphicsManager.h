@@ -19,7 +19,7 @@ namespace Phantom {
 		virtual void Clear() = 0;
 		virtual void Draw() = 0;
 
-		virtual void resize(float width, float height) {};
+		virtual void resize(int32_t width, int32_t height) {};
 
 		bool Inited = false;
 	private:

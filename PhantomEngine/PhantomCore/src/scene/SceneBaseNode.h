@@ -1,17 +1,34 @@
 #pragma once 
 #include <string>
 #include "TreeNode.h"
+#include "PhMaths.h"
+#include "SceneObjectTransform.h"
 namespace Phantom {
 
 class SceneBaseNode :public TreeNode {
 protected:
 	std::string m_Name;
+	std::vector<std::shared_ptr<SceneObjectTransform>> m_Transforms;
 public:
 	SceneBaseNode() {};
 	SceneBaseNode(const char* name) { m_Name = name; };
 	SceneBaseNode(const std::string& name) { m_Name = name; };
 	SceneBaseNode(const std::string&& name) { m_Name = std::move(name); };
 	virtual ~SceneBaseNode() {};
+
+	const std::shared_ptr< maths::mat4x4> GetCalculatedTransform() const
+	{
+		std::shared_ptr< maths::mat4x4> result(new  maths::mat4x4());
+		for (auto it = m_Transforms.rbegin(); it != m_Transforms.rend(); it++)
+		{
+			*result = *result * (**it).GetMatrix();
+		}
+		return result;
+	}
+	void AppendTransform(const char* key, const std::shared_ptr<SceneObjectTransform>& transform)
+	{
+		m_Transforms.push_back(transform);
+	}
 	/*friend std::ostream& operator<<(std::ostream& out, const BaseSceneNode& node)
 		{
 			static thread_local int32_t indent = 0;

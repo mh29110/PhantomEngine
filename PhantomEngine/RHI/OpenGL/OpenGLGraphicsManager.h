@@ -17,7 +17,7 @@ namespace Phantom {
 
 		virtual void Draw();
 
-		virtual void resize(float width, float height);
+		virtual void resize(int32_t width, int32_t height);
 	private:
 		bool SetShaderParameters(maths::mat4x4  worldMatrix, maths::mat4x4  viewMatrix, maths::mat4x4  projectionMatrix);
 

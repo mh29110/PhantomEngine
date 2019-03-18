@@ -29,7 +29,11 @@ namespace Phantom { namespace maths {
 		//‘ÀÀ„
 		/*mat4x4& multiply(const & other);*/
 		mat4x4 operator * (const mat4x4& other);
-
+		mat4x4& operator=(const float* _data)
+		{
+			std::memcpy(elements, _data, sizeof(float) * 4 * 4);
+			return *this;
+		}
 		//transform matrix
 		mat4x4& translate(const vec3& v);
 		mat4x4& translate(float x, float y, float z);
@@ -45,6 +49,9 @@ namespace Phantom { namespace maths {
 		
 		friend std::ostream & operator <<(std::ostream &os, const mat4x4 & m);
 		mat4x4& scale(float x, float y, float z);
+
+		void MatrixExchangeYandZ();
+
 		// union  is  better
 		union
 		{
