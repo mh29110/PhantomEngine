@@ -11,6 +11,7 @@
 #include "SceneObjectGeometry.h"
 #include "SceneObjectVertexArray.h"
 #include "SceneObjectIndexArray.h"
+#include "GfxStruct.h"
 
 const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
 const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
@@ -31,22 +32,33 @@ namespace Phantom {
 
 	bool OpenGLGraphicsManager::InitializeBuffers()
 	{
+		uint32_t batchCounter = 0;
 		auto& scene = g_pSceneManager->GetSceneForRendering();
-		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>> Geometries = scene.Geometries;
-		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>>::iterator iter;
-		for (iter = Geometries.begin(); iter != Geometries.end(); iter++)
+		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>> geoOjbects = scene.GeometryOjbects;
+		for (const auto& iter : scene.GeometryNodes)
 		{
-			if(iter->first != "geometry15") continue;
+			const auto& pGeometryNode = iter.second.lock();
+			if (!pGeometryNode /*&& pGeometryNode->Visible()*/)
+			{
+				continue;
+			}
+			const std::string& gKey = pGeometryNode->GetSceneObjectRef();
+			auto i = geoOjbects.find(gKey);
+			if (i == geoOjbects.end())
+			{
+				continue;
+			}
+			const auto&pGeometry = i->second;
+			const auto& pMesh = pGeometry->GetMesh().lock();
+			
 			//--- mesh ---- 拆解---------
-			auto p = iter->second;
-			auto pGeometry = dynamic_pointer_cast<SceneObjectGeometry>(p);
-			const auto& pMesh = pGeometry->GetMesh().lock();//lock详解
 			const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
+			GLuint vertexArrayId;
 			// Allocate an OpenGL vertex array object.
-			glGenVertexArrays(1, &m_vertexArrayId);
+			glGenVertexArrays(1, &vertexArrayId);
 			// Bind the vertex array object to store all the buffers and vertex attributes we create here.
-			glBindVertexArray(m_vertexArrayId);
+			glBindVertexArray(vertexArrayId);
 
 			GLuint vertexBufferId;
 
@@ -123,21 +135,22 @@ namespace Phantom {
 				// ignore
 				break;
 			}
+			GLuint indexBufferId = 0;
+			int32_t indexCount = 0;
 			for (GLuint i = 0; i < indexGroupCount; i++)
 			{
 				// Generate an ID for the index buffer.
-				glGenBuffers(1, &m_indexBufferId);
+				glGenBuffers(1, &indexBufferId);
 
 				const SceneObjectIndexArray& index_array = pMesh->GetIndexArray(i);
 				const auto index_array_size = index_array.GetDataSize();
 				const auto index_array_data = index_array.GetData();
 
 				// Bind the index buffer and load the index data into it.
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_array_size, index_array_data, GL_STATIC_DRAW);
 				// Set the number of indices in the index array.
-				int32_t indexCount = static_cast<int32_t>(index_array.GetIndexCount());
-				m_indexCount = indexCount;
+				indexCount = static_cast<int32_t>(index_array.GetIndexCount());
 				uint32_t type;
 				switch (index_array.GetIndexType())
 				{
@@ -157,11 +170,18 @@ namespace Phantom {
 					//cerr << "Geometry: " << *pGeometry << endl;
 					continue;
 				}
-			}
-		}
-		
-		
 
+				auto contextPerBatch = make_shared<OpenGLContextPerDrawBatch>();
+				contextPerBatch->batchIndex = batchCounter++;
+				contextPerBatch->vao = vertexArrayId;
+				contextPerBatch->mode = mode;
+				contextPerBatch->type = type;
+				contextPerBatch->indexCount = indexCount;
+				contextPerBatch->node = pGeometryNode;
+				m_Frame.batchContexts.push_back(contextPerBatch);
+			}
+			glBindVertexArray(0);
+		}
 		return true;
 	}
 
@@ -246,7 +266,7 @@ namespace Phantom {
 
 	int OpenGLGraphicsManager::Initialize()
 	{
-		GraphicsManager::Initialize();
+		
 		int result;
 		result = gladLoadGL();//在OpenGL RHI下初始化glad ，注意各平台引用glad/(_wgl).c不同，暂在cmake中设置
 		if (!result) {
@@ -278,7 +298,7 @@ namespace Phantom {
 			InitializeShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 			InitializeBuffers();
 		}
-
+		GraphicsManager::Initialize();
 		return result;
 	}
 
@@ -292,15 +312,7 @@ namespace Phantom {
 		/*glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(1, &m_vertexBufferId);*/
 
-		// Release the index buffer.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glDeleteBuffers(1, &m_indexBufferId);
-
-		// Release the vertex array object.
-		glBindVertexArray(0);
-		glDeleteVertexArrays(1, &m_vertexArrayId);
-
-		// Detach the vertex and fragment shaders from the program.
+			// Detach the vertex and fragment shaders from the program.
 		glDetachShader(m_shaderProgram, m_vertexShader);
 		glDetachShader(m_shaderProgram, m_fragmentShader);
 
@@ -349,6 +361,11 @@ namespace Phantom {
 		glFlush();
 	}
 
+	void OpenGLGraphicsManager::resize(float width, float height)
+	{
+		glViewport(0, 0, width, height);
+	}
+
 	bool OpenGLGraphicsManager::SetShaderParameters(mat4x4  worldMatrix, mat4x4  viewMatrix, mat4x4  projectionMatrix)
 	{
 		unsigned int location;
@@ -383,12 +400,14 @@ namespace Phantom {
 	void OpenGLGraphicsManager::RenderBuffers()
 	{
 		// Bind the vertex array object that stored all the information about the vertex and index buffers.
-		glBindVertexArray(m_vertexArrayId);
 
-		// Render the vertex buffer using the index buffer.
-		glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
+		for (auto& pDbc : m_Frame.batchContexts)
+		{
+			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(*pDbc);
+			glBindVertexArray(dbc.vao);
+			glDrawElements(dbc.mode, dbc.indexCount, dbc.type, 0x00);
+		}
 		glBindVertexArray(0);
-		return;
 	}
 
 	

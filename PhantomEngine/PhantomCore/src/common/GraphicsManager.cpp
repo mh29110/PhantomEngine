@@ -8,13 +8,12 @@ float PI = 3.1415926f;
 
 int Phantom::GraphicsManager::Initialize()
 {
-	cout << "Initialize" << endl;
+	Inited = true;
 	return 0;
 }
 
 void Phantom::GraphicsManager::Finalize()
 {
-	cout << "Finalize" << endl;
 }
 
 void Phantom::GraphicsManager::Tick()

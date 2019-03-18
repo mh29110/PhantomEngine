@@ -1,6 +1,6 @@
 #pragma once
 #include "GraphicsManager.h"
-#include "mat4.h"
+#include "GfxStruct.h"
 
 namespace Phantom {
 	class OpenGLGraphicsManager : public GraphicsManager
@@ -16,6 +16,7 @@ namespace Phantom {
 
 		virtual void Draw();
 
+		virtual void resize(float width, float height);
 	private:
 		bool SetShaderParameters(maths::mat4x4  worldMatrix, maths::mat4x4  viewMatrix, maths::mat4x4  projectionMatrix);
 
@@ -30,9 +31,14 @@ namespace Phantom {
 
 		const bool VSYNC_ENABLED = true;
 
-		int     m_indexCount;
-		unsigned int m_vertexArrayId, m_indexBufferId;
-
+		struct OpenGLContextPerDrawBatch : public ContextPerDrawBatch {
+			uint32_t vao;
+			uint32_t mode;
+			uint32_t type;
+			int32_t indexCount;
+		};
 	};
+
+
 }
 

@@ -42,7 +42,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 			dynamic_cast<const OGEX::GeometryObjectStructure&>(structure);
 		std::string _key = _structure.GetStructureName();
 		auto _object = std::make_shared<SceneObjectGeometry>();
-		scene.Geometries.emplace(_key, _object);
+		scene.GeometryOjbects.emplace(_key, _object);
 
 		_object->SetVisibility(_structure.GetVisibleFlag());
 		_object->SetIfCastShadow(_structure.GetShadowFlag());
@@ -252,7 +252,7 @@ std::unique_ptr<Scene> Phantom::OpengexParser::Parse(const std::string & buf)
 		const ODDL::Structure* structure = openGexDataDescription.GetRootStructure()->GetFirstSubnode();
 		while (structure)
 		{
-			ConvertOddlStructureToSceneNode(*structure, spScene->SceneGraph,*spScene);
+			ConvertOddlStructureToSceneNode(*structure, spScene->SceneRootGraph,*spScene);
 
 			structure = structure->Next();
 		}

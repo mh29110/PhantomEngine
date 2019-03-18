@@ -1,6 +1,7 @@
 #include "WindowsApplication.h"
 #include <tchar.h>
 #include "InputManager.h"
+#include "GraphicsManager.h"
 
 using namespace Phantom;
 void  Phantom::WindowsApplication::CreateMainWindow()
@@ -124,6 +125,17 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 
 		default:
 			break;
+		}
+	}
+	break;
+	case WM_SIZE: 
+	{
+		//MoveWindow(hwndEdit, 0, 0, LOWORD(lp), HIWORD(lp), TRUE);
+		float w = LOWORD(lParam);
+		float h = HIWORD(lParam);
+		if (g_pGraphicsManager->Inited)
+		{
+			g_pGraphicsManager->resize(w, h);
 		}
 	}
 	break;

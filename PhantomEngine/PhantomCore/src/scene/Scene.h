@@ -13,9 +13,9 @@ public:
 	Scene(const char* name) ;
 	Scene() = delete;
 	virtual ~Scene();
-	std::shared_ptr<SceneBaseNode> SceneGraph;
+	std::shared_ptr<SceneBaseNode> SceneRootGraph;
 	std::unordered_multimap<std::string, std::weak_ptr<SceneGeometryNode>>      GeometryNodes;
-	std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>>       Geometries;
+	std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>>       GeometryOjbects;
 	std::shared_ptr<CameraNode>  camera;
 protected:
 };
