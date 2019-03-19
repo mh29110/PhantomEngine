@@ -9,7 +9,7 @@ namespace Phantom {
     public:
 		using BaseApplication::BaseApplication;
 
-		void Finalize() override;
+		void Shutdown() override;
 		// One cycle of the main loop
 		void Tick() override;
 

@@ -6,8 +6,8 @@ namespace Phantom {
     {
     public:
         BaseApplication(GfxConfiguration& cfg);
-        virtual int Initialize();
-        virtual void Finalize();
+        virtual int Init();
+        virtual void Shutdown();
         // One cycle of the main loop
         virtual void Tick();
 

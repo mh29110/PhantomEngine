@@ -12,8 +12,8 @@ namespace Phantom {
 	public:
 		virtual ~GraphicsManager() {};
 
-		virtual int Initialize();
-		virtual void Finalize();
+		virtual int Init();
+		virtual void Shutdown();
 
 		virtual void Tick();
 		virtual void Clear() = 0;

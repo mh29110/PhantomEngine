@@ -6,8 +6,8 @@ namespace Phantom {
     IInterface IApplication : implements IRuntimeModule
     {
     public:
-        virtual int Initialize() = 0;
-        virtual void Finalize() = 0;
+        virtual int Init() = 0;
+        virtual void Shutdown() = 0;
         // One cycle of the main loop
         virtual void Tick() = 0;
 

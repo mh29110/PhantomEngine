@@ -31,7 +31,7 @@ namespace Phantom {
 	public:
 		using WindowsApplication::WindowsApplication;
 
-		virtual int Initialize();
+		virtual int Init();
 
 		virtual void OnDraw();
 
@@ -55,11 +55,11 @@ namespace Phantom {
 	// MemoryManager*   g_pMemoryManager   = static_cast<MemoryManager*>(new MemoryManager);
 }
 
-int Phantom::TestApplication::Initialize()
+int Phantom::TestApplication::Init()
 {
 	int result;
 
-	result = WindowsApplication::Initialize();
+	result = WindowsApplication::Init();
 
 	if (result == 0) {
 		BmpParser   parser;

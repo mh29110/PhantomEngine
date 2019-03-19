@@ -9,8 +9,8 @@ namespace Phantom {
 	public:
 		virtual ~SceneManager() {};
 
-		virtual int Initialize();
-		virtual void Finalize();
+		virtual int Init();
+		virtual void Shutdown();
 
 		virtual void Tick();
 

@@ -5,8 +5,8 @@ namespace Phantom {
     class InputManager : implements IRuntimeModule
     {
         public:
-            virtual int Initialize();
-            virtual void Finalize();
+            virtual int Init();
+            virtual void Shutdown();
             virtual void Tick();
 
             // keyboard handling

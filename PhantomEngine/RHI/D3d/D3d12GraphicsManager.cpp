@@ -417,7 +417,7 @@ HRESULT Phantom::D3d12GraphicsManager::CreateGraphicsResources()
     return hr;
 }
 
-int  Phantom::D3d12GraphicsManager::Initialize()
+int  Phantom::D3d12GraphicsManager::Init()
 {
     int result = 0;
 
@@ -430,7 +430,7 @@ void Phantom::D3d12GraphicsManager::Tick()
 {
 }
 
-void Phantom::D3d12GraphicsManager::Finalize()
+void Phantom::D3d12GraphicsManager::Shutdown()
 {
     SafeRelease(&m_pFence);
     SafeRelease(&m_pVertexBuffer);

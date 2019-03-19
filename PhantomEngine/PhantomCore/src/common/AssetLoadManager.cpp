@@ -3,12 +3,12 @@
 using namespace Phantom;
 using namespace std;
 
-int AssetLoadManager::Initialize()
+int AssetLoadManager::Init()
 {
     return 0;
 }
 
-void AssetLoadManager::Finalize()
+void AssetLoadManager::Shutdown()
 {
     m_strSearchPath.clear();
 }

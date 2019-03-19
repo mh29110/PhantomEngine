@@ -13,8 +13,8 @@ namespace Phantom {
     public:
         DefaultApplication(GfxConfiguration& config);
 
-        virtual int Initialize();
-        virtual void Finalize();
+        virtual int Init();
+        virtual void Shutdown();
         // One cycle of the main loop
         virtual void Tick();
         void* GetMainWindowHandler() override;

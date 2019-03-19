@@ -5,9 +5,9 @@ using namespace Phantom;
 Phantom::DefaultApplication::DefaultApplication(GfxConfiguration& config)
             : BaseApplication(config) {};
             
-int DefaultApplication::Initialize()
+int DefaultApplication::Init()
 {
-	BaseApplication::Initialize();
+	BaseApplication::Init();
 	if (!glfwInit())
 	{
 		std::cout << "Failed to initialize GLFW!" << std::endl;
@@ -57,7 +57,7 @@ int DefaultApplication::Initialize()
 }
 void* DefaultApplication::GetMainWindowHandler(){}
 void DefaultApplication::CreateMainWindow() {}
-void DefaultApplication::Finalize()
+void DefaultApplication::Shutdown()
 {
 	glfwDestroyWindow(m_Window);
 	glfwTerminate();

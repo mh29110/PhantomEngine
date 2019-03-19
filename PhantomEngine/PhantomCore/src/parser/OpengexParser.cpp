@@ -1,5 +1,10 @@
 #include "opengexparser.h"
 #include "PhMaths.h"
+#include "SceneGeometryNode.h"
+#include "SceneObjectGeometry.h"
+#include "SceneObjectMaterial.h"
+#include "SceneObjectTexture.h"
+#include "Scene.h"
 using namespace Phantom;
 using namespace maths;
 void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structure & structure, std::shared_ptr<SceneBaseNode>& base_node, Scene& scene)
@@ -9,6 +14,20 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	case OGEX::kStructureNode:
 	{
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
+	}
+	break;
+	case OGEX::kStructureCameraNode:
+	{
+		auto _node = std::make_shared<CameraNode>(structure.GetStructureName());
+		const OGEX::CameraNodeStructure& _structure = dynamic_cast<const OGEX::CameraNodeStructure&>(structure);
+
+		// ref scene objects
+		std::string _key = _structure.GetObjectStructure()->GetStructureName();
+		//_node->AddSceneObjectRef(_key);
+
+		scene.camera =  _node;
+
+		node = _node;
 	}
 	break;
 	case OGEX::kStructureTransform:
@@ -248,7 +267,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	return;//叶子节点，跳出本次递归
 	default:
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
-		std::cout << structure.GetStructureName() << "=== name " << std::endl;
+		//std::cout << structure.GetStructureName() << "=== name " << std::endl;
 		break;
 	}
 	const ODDL::Structure* sub_structure = structure.GetFirstSubnode();

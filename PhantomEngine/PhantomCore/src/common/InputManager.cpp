@@ -6,12 +6,12 @@
 using namespace Phantom;
 using namespace std;
 
-int InputManager::Initialize()
+int InputManager::Init()
 {
     return 0;
 }
 
-void InputManager::Finalize()
+void InputManager::Shutdown()
 {
 }
 

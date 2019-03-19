@@ -208,16 +208,4 @@ namespace Phantom {namespace maths {
 		return *this;
 
 	}
-	void mat4x4::MatrixExchangeYandZ()
-	{
-		for (int32_t row_index = 0; row_index < 4; row_index++)
-		{
-			uint32_t *p, *q;
-			p = reinterpret_cast<uint32_t*>(elements + row_index * 4 + 1);
-			q = reinterpret_cast<uint32_t*>(elements + row_index * 4 + 2);
-			*p ^= *q;
-			*q ^= *p;
-			*p ^= *q;
-		}
-	}
 }}

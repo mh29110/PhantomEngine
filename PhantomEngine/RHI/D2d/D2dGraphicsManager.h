@@ -7,8 +7,8 @@ namespace Phantom {
     class D2dGraphicsManager : public GraphicsManager
     {
     public:
-        virtual int Initialize();
-        virtual void Finalize();
+        virtual int Init();
+        virtual void Shutdown();
 
         virtual void Tick();
 

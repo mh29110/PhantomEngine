@@ -46,10 +46,10 @@ void CocoaApplication::CreateMainWindow()
     [m_pWindow setDelegate:winDelegate];
 }
 
-void CocoaApplication::Finalize()
+void CocoaApplication::Shutdown()
 {
     [m_pWindow release];
-    BaseApplication::Finalize();
+    BaseApplication::Shutdown();
 }
 
 void CocoaApplication::Tick()

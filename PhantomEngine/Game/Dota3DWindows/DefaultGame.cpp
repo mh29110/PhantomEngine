@@ -19,7 +19,7 @@
 // 	public:
 // 		using CocoaOpenGLApplication::CocoaOpenGLApplication;
 
-// 		virtual int Initialize();
+// 		virtual int Init();
 
 // 		virtual void OnDraw() {}
 
@@ -34,11 +34,11 @@ namespace Phantom {
 }
 
 
-// int Phantom::TestApplication::Initialize()
+// int Phantom::TestApplication::Init()
 // {
 // 	int result;
 
-// 	result = CocoaOpenGLApplication::Initialize();
+// 	result = CocoaOpenGLApplication::Init();
 
 // 	if (result == 0) {
 // 		BmpParser   parser;

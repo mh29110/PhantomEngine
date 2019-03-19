@@ -9,8 +9,8 @@ namespace Phantom {
 	protected:
 		std::weak_ptr<CameraNode> camera;
 	public:
-		virtual int Initialize() ;
-		virtual void Finalize() ;
+		virtual int Init() ;
+		virtual void Shutdown() ;
 		virtual void Tick() ;
 
 		virtual void OnUpKeyDown() {

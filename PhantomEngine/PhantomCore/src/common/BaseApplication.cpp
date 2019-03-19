@@ -11,7 +11,7 @@ Phantom::BaseApplication::BaseApplication(GfxConfiguration& cfg)
 }
 
 // Parse command line, read configuration, initialize all sub modules
-int Phantom::BaseApplication::Initialize()
+int Phantom::BaseApplication::Init()
 {
     int result = 0;
 
@@ -21,8 +21,8 @@ int Phantom::BaseApplication::Initialize()
 }
 
 
-// Finalize all sub modules and clean up all runtime temporary files.
-void Phantom::BaseApplication::Finalize()
+// Shutdown all sub modules and clean up all runtime temporary files.
+void Phantom::BaseApplication::Shutdown()
 {
 }
 

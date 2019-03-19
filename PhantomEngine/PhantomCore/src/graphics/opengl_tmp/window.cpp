@@ -39,7 +39,7 @@ namespace Phantom { namespace graphics {
 	{
 		if (!glfwInit())
 		{
-			std::cout << "Failed to initialize GLFW!" << std::endl;
+			std::cout << "Failed to Init GLFW!" << std::endl;
 			return false;
 		}
 		//版本号 opengl3.0 (举例)
@@ -71,8 +71,8 @@ namespace Phantom { namespace graphics {
 		// must after  glfwMakeContextCurrent	
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			std::cout << "Failed to initialize GLAD" << std::endl;
-			return -1;
+			std::cout << "Failed to Init GLAD" << std::endl;
+			return false;
 		}
 
 		// std::cout << m_Width <<std::endl;

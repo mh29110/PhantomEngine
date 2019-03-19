@@ -7,8 +7,8 @@ namespace Phantom {
 	public:
 		virtual ~IRuntimeModule() {};
 
-		virtual int Initialize() = 0;
-		virtual void Finalize() = 0;
+		virtual int Init() = 0;
+		virtual void Shutdown() = 0;
 
 		virtual void Tick() = 0;
 	};

@@ -33,7 +33,7 @@ HRESULT Phantom::D2dGraphicsManager::CreateGraphicsResources()
     return hr;
 }
 
-int  Phantom::D2dGraphicsManager::Initialize()
+int  Phantom::D2dGraphicsManager::Init()
 {
     int result = 0;
 
@@ -53,7 +53,7 @@ void Phantom::D2dGraphicsManager::Tick()
 {
 }
 
-void Phantom::D2dGraphicsManager::Finalize()
+void Phantom::D2dGraphicsManager::Shutdown()
 {
     SafeRelease(&m_pRenderTarget);
     SafeRelease(&m_pFactory);

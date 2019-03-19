@@ -51,11 +51,11 @@ void  Phantom::WindowsApplication::CreateMainWindow()
 	ShowWindow(m_hWnd, SW_SHOW);
 }
 
-void Phantom::WindowsApplication::Finalize()
+void Phantom::WindowsApplication::Shutdown()
 {
 	ReleaseDC(m_hWnd, m_hDc);
 
-	BaseApplication::Finalize();
+	BaseApplication::Shutdown();
 }
 
 void Phantom::WindowsApplication::Tick()
@@ -131,8 +131,8 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 	case WM_SIZE: 
 	{
 		//MoveWindow(hwndEdit, 0, 0, LOWORD(lp), HIWORD(lp), TRUE);
-		float w = LOWORD(lParam);
-		float h = HIWORD(lParam);
+		int32_t w = LOWORD(lParam);
+		int32_t h = HIWORD(lParam);
 		if (g_pGraphicsManager->Inited)
 		{
 			g_pGraphicsManager->resize(w, h);

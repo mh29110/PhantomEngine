@@ -5,7 +5,7 @@
 using namespace std;
 using namespace Phantom;
 
-int Phantom::SceneManager::Initialize()
+int Phantom::SceneManager::Init()
 {
 	int result = 0;
 	m_pScene = make_shared<Scene>("init scene");
@@ -13,9 +13,9 @@ int Phantom::SceneManager::Initialize()
 	return result;
 }
 
-void Phantom::SceneManager::Finalize()
+void Phantom::SceneManager::Shutdown()
 {
-	cout << "Finalize" << endl;
+	cout << "Shutdown" << endl;
 }
 
 void Phantom::SceneManager::Tick()

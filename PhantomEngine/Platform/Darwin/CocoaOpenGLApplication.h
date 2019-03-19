@@ -10,8 +10,8 @@ namespace Phantom {
         CocoaOpenGLApplication(GfxConfiguration& config)
             : CocoaApplication(config) {};
 
-        virtual int Initialize();
-        virtual void Finalize();
+        virtual int Init();
+        virtual void Shutdown();
         virtual void Tick();
 
     protected:

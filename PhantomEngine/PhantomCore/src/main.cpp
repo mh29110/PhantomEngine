@@ -24,34 +24,34 @@ namespace Phantom {
 int main(int argc, char** argv) {
 	int ret;
 
-	if ((ret = g_pApp->Initialize()) != 0) {
-		printf("App Initialize failed, will exit now.");
+	if ((ret = g_pApp->Init()) != 0) {
+		printf("App Init failed, will exit now.");
 		return ret;
 	}
 	// create the main window
 	g_pApp->CreateMainWindow();
-	// if ((ret = g_pMemoryManager->Initialize()) != 0) {
-	// 	printf("Memory Manager Initialize failed, will exit now.");
+	// if ((ret = g_pMemoryManager->Init()) != 0) {
+	// 	printf("Memory Manager Init failed, will exit now.");
 	// 	return ret;
 	// }
-	if ((ret = g_pAssetLoader->Initialize()) != 0) {
+	if ((ret = g_pAssetLoader->Init()) != 0) {
 		cerr << "Failed. err =  g_pAssetLoader initialize failed , will exit now." << ret;
 		return ret;
 	}
-	if ((ret = g_pSceneManager->Initialize()) != 0) {
+	if ((ret = g_pSceneManager->Init()) != 0) {
 		cerr << "Failed. err =  g_pSceneManager initialize failed , will exit now." << ret;
 		return ret;
 	}
-	if ((ret = g_pGraphicsManager->Initialize()) != 0) {
-		printf("Graphics Manager Initialize failed, will exit now.");
+	if ((ret = g_pGraphicsManager->Init()) != 0) {
+		printf("Graphics Manager Init failed, will exit now.");
 		return ret;
 	}
-	if ((ret = g_pBehaviourManager->Initialize()) != 0) {
-		printf("g_pBehaviourManager  Initialize failed, will exit now.");
+	if ((ret = g_pBehaviourManager->Init()) != 0) {
+		printf("g_pBehaviourManager  Init failed, will exit now.");
 		return ret;
 	}
-	if ((ret = g_pInputManager->Initialize()) != 0) {
-		printf("g_pInputManager  Initialize failed, will exit now.");
+	if ((ret = g_pInputManager->Init()) != 0) {
+		printf("g_pInputManager  Init failed, will exit now.");
 		return ret;
 	}
 
@@ -77,9 +77,14 @@ int main(int argc, char** argv) {
 		}
 	}
 
-    g_pGraphicsManager->Finalize();
-    // g_pMemoryManager->Finalize();
-	g_pApp->Finalize();
-	g_pAssetLoader->Finalize();
+    g_pGraphicsManager->Shutdown();
+    // g_pMemoryManager->Shutdown();
+	g_pApp->Shutdown();
+	g_pAssetLoader->Shutdown();
+	delete g_pGraphicsManager;
+	delete g_pAssetLoader;
+	delete g_pInputManager;
+	delete g_pBehaviourManager;
+	delete g_pApp;
 	return 0;
 }

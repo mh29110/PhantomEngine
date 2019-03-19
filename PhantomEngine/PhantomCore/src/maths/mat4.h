@@ -14,6 +14,7 @@
 // 4x4 matrix
 ///////////////////////////////////////////////////////////////////////////
 namespace Phantom { namespace maths {
+	static float invf4X4(int i, int j, const float matrix[16]);
 	struct  mat4x4 {
 		mat4x4(float diagonal);
 		mat4x4();
@@ -50,7 +51,7 @@ namespace Phantom { namespace maths {
 		friend std::ostream & operator <<(std::ostream &os, const mat4x4 & m);
 		mat4x4& scale(float x, float y, float z);
 
-		void MatrixExchangeYandZ();
+	
 
 		// union  is  better
 		union
@@ -58,6 +59,54 @@ namespace Phantom { namespace maths {
 			float elements[4 * 4];
 			vec4 columns[4];
 		};
+
+		//逆矩阵，主要用于视图矩阵逆变化 ； 如果是正交矩阵<三单位垂直>可简化为转置矩阵
+		void InverseMatrix4X4f()
+		{
+			float inv[16];
+			double D = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					inv[j * 4 + i] = invf4X4(i, j, elements);
+				}
+			}
+			for (int k = 0; k < 4; k++) {
+				float s = elements[k] * inv[k * 4];
+				D += s;
+			}
+			if (D == 0) D = 0.00001;//todo should return when 0; 
+			D = 1.0 / D;
+			for (int i = 0; i < 16; i++)
+			{
+				elements[i] = static_cast<float>(inv[i] * D);
+			}
+		}
 	};
+// -----静态方案
+	static float invf4X4(int i, int j, const float matrix[16])
+	{
+		int pre_i = ((i == 0) ? 3 : i - 1);
+		int next_i = ((i + 1 == 4) ? 0 : i + 1);
+		int next_next_i = ((i + 2 >= 4) ? i - 2 : i + 2);
+		int pre_j = ((j == 0) ? 3 : j - 1);
+		int next_j = ((j + 1 == 4) ? 0 : j + 1);
+		int next_next_j = ((j + 2 >= 4) ? j - 2 : j + 2);
+		int o = i - j < 0 ? j - i : i - j;
+
+#define e(a, b) matrix[(a)*4 + (b)]
+		float inv =
+			+e(next_i, next_j)*e(next_next_i, next_next_j)*e(pre_i, pre_j)
+			+ e(next_i, next_next_j)*e(next_next_i, pre_j)*e(pre_i, next_j)
+			+ e(next_i, pre_j)*e(next_next_i, next_j)*e(pre_i, next_next_j)
+			- e(next_i, next_j)*e(next_next_i, pre_j)*e(pre_i, next_next_j)
+			- e(next_i, next_next_j)*e(next_next_i, next_j)*e(pre_i, pre_j)
+			- e(next_i, pre_j)*e(next_next_i, next_next_j)*e(pre_i, next_j);
+
+		return (o & 0x1) ? -inv : inv;
+#undef e
+	}
+	
 } }
 

@@ -11,8 +11,8 @@ namespace Phantom {
     class D3d12GraphicsManager : public GraphicsManager
     {
     public:
-       	virtual int Initialize();
-	    virtual void Finalize();
+       	virtual int Init();
+	    virtual void Shutdown();
 
 	    virtual void Tick();
 		virtual void Clear() {}

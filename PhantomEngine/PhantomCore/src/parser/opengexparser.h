@@ -2,13 +2,11 @@
 #include "OpenGEX.h"
 #include "Portable.h"
 #include "SceneParser.h"
-#include "SceneGeometryNode.h"
-#include "SceneObjectGeometry.h"
-#include "SceneObjectMaterial.h"
-#include "SceneObjectTexture.h"
-#include "Scene.h"
+
 
 namespace Phantom {
+	class SceneBaseNode;
+	class Scene;
     class OpengexParser : implements SceneParser
     {
     private:

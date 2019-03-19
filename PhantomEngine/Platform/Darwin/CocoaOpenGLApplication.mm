@@ -7,7 +7,7 @@
 
 using namespace Phantom;
 
-int CocoaOpenGLApplication::Initialize()
+int CocoaOpenGLApplication::Init()
 {
     int result = 0;
 
@@ -42,13 +42,13 @@ int CocoaOpenGLApplication::Initialize()
 
         [m_pWindow setContentView:pGLView];
     }
-    result = BaseApplication::Initialize();
+    result = BaseApplication::Init();
     return result;
 }
 
-void CocoaOpenGLApplication::Finalize()
+void CocoaOpenGLApplication::Shutdown()
 {
-    CocoaApplication::Finalize();
+    CocoaApplication::Shutdown();
 }
 
 void CocoaOpenGLApplication::Tick()

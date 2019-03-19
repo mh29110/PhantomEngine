@@ -184,7 +184,7 @@ namespace Phantom {
 
 
 
-	int OpenGLGraphicsManager::Initialize()
+	int OpenGLGraphicsManager::Init()
 	{
 		
 		int result;
@@ -218,11 +218,13 @@ namespace Phantom {
 			InitializeShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 			InitializeBuffers();
 		}
-		GraphicsManager::Initialize();
+		GraphicsManager::Init();
+		glGenBuffers(1, &m_uboBatch);
+		glGenBuffers(1, &m_uboFrame);
 		return result;
 	}
 
-	void OpenGLGraphicsManager::Finalize()
+	void OpenGLGraphicsManager::Shutdown()
 	{
 		// Disable the two vertex array attributes.
 		glDisableVertexAttribArray(0);
@@ -309,7 +311,6 @@ namespace Phantom {
 		m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
 
 		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);
-		glGenBuffers(1, &m_uboFrame);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrame);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 ¶ÔÆë  £¬ gpu¿é¶ÁÈ¡ todo
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -318,19 +319,18 @@ namespace Phantom {
 	void OpenGLGraphicsManager::SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches)
 	{
 		uint8_t * pBuffer = new uint8_t[kSizeOfBatchConstantBuffer* batches.size()];
-		for (auto & pBatch:batches)
+		for (auto & pBatch : batches)
 		{
 			const ConstantsPerBatch& constants = static_cast<ConstantsPerBatch&>(*pBatch);
 			memcpy(pBuffer + pBatch->batchIndex * kSizeOfBatchConstantBuffer, &constants, kSizeOfBatchConstantBuffer);
 		}
-
-		glGenBuffers(1, &m_uboBatch);
+		
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboBatch);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfBatchConstantBuffer*batches.size(), pBuffer, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-
 		delete[] pBuffer;
+		pBuffer = nullptr;
 	}
 
 }

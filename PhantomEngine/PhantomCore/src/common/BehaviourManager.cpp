@@ -2,13 +2,13 @@
 #include "SceneManager.h"
 #include "InputManager.h"
 
-int Phantom::BehaviourManager::Initialize()
+int Phantom::BehaviourManager::Init()
 {
 	camera = g_pSceneManager->GetSceneForRendering().camera;
 	return 0;
 }
 
-void Phantom::BehaviourManager::Finalize()
+void Phantom::BehaviourManager::Shutdown()
 {
 }
 

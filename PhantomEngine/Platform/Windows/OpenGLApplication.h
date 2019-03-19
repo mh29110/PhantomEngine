@@ -6,8 +6,8 @@ namespace Phantom {
     public:
         using WindowsApplication::WindowsApplication;
 
-        int Initialize() override;
-        void Finalize() override;
+        int Init() override;
+        void Shutdown() override;
         void Tick() override;
 
         void CreateMainWindow() override;
