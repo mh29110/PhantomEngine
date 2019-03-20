@@ -1,0 +1,1 @@
+libjpeg : https://github.com/LuaDist/libjpeg  

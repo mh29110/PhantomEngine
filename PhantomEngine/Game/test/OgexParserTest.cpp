@@ -18,15 +18,14 @@ namespace Phantom {
 int main(int , char** )
 {
 
-    string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/Example.ogex");
+    string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/car.ogex");
 
 	OpengexParser paser;
-	std::unique_ptr<SceneBaseNode> root = paser.Parse(ogex_text);
+	std::unique_ptr<Scene> root = paser.Parse(ogex_text);
 
 	cout << "Dump of Geometries" << endl;
 	cout << "---------------------------" << endl;
-	cout << *root << endl;
-
+	//cout << *root << endl;
     return 0;
 }
 
