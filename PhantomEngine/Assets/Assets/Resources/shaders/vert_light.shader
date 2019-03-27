@@ -1,15 +1,15 @@
-#version 330 core
+#version 410 core
 
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec4 datacolor;
 
 
-layout(binding = 11, std140) uniform ConstantsPerBatch
+layout( std140) uniform ConstantsPerBatch
 {
     mat4 modelMatrix;
 } uboBatch;
 
-layout(binding = 10, std140) uniform ConstantsPerFrame
+layout( std140) uniform ConstantsPerFrame
 {
     mat4 viewMatrix;
     mat4 projectionMatrix;

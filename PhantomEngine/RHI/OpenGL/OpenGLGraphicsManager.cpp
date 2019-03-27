@@ -277,14 +277,14 @@ namespace Phantom {
 		if (blockIndex != GL_INVALID_INDEX)
 		{
 			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, 10);
-			glBindBufferBase(GL_UNIFORM_BUFFER, 10, m_uboFrame);
+			glBindBufferBase(GL_UNIFORM_BUFFER, 3, m_uboFrame);
 		}
 		
 		for (auto& pDbc : m_Frame.batchContexts)
 		{
 			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(*pDbc);
 			//绑定每批次渲染时的常量
-			glBindBufferRange(GL_UNIFORM_BUFFER, 11, m_uboBatch,
+			glBindBufferRange(GL_UNIFORM_BUFFER, 2, m_uboBatch,
 				dbc.batchIndex * kSizeOfBatchConstantBuffer, kSizeOfBatchConstantBuffer);
 
 
@@ -310,6 +310,7 @@ namespace Phantom {
 		m_Frame.frameContext.viewMatrix = camera->m_viewMatrix;
 		m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
 
+        
 		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrame);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 对齐  ， gpu块读取 todo

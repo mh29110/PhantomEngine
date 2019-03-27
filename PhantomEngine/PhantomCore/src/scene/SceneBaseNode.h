@@ -1,5 +1,6 @@
 #pragma once 
 #include <string>
+#include <vector>
 #include "TreeNode.h"
 #include "PhMaths.h"
 #include "SceneObjectTransform.h"

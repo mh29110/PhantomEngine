@@ -17,6 +17,8 @@ using namespace Phantom;
     g_pGraphicsManager->Draw();
 
     [_openGLContext flushBuffer];
+    
+    //update 方法没有被调用
 }
 
 - (instancetype)initWithFrame:(NSRect)frameRect
@@ -25,13 +27,13 @@ using namespace Phantom;
 
     _openGLContext = [[NSOpenGLContext alloc] initWithFormat:_pixelFormat shareContext:nil];
 
-    [_openGLContext makeCurrentContext];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
         selector:@selector(_surfaceNeedsUpdate:)
         name:NSViewGlobalFrameDidChangeNotification
         object:self];
 
+    [_openGLContext makeCurrentContext];
     return self;
 }
 
