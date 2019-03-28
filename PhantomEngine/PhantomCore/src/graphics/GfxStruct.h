@@ -27,6 +27,7 @@ typedef maths::mat4x4 mat4x4f;
 	struct ContextPerDrawBatch:ConstantsPerBatch {
 		uint32_t batchIndex;
 		std::shared_ptr<SceneGeometryNode> node;
+		int32_t diffuseMap = -1;
 		virtual ~ContextPerDrawBatch() = default;
 	};
 

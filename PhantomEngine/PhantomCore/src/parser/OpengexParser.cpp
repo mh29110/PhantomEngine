@@ -30,6 +30,52 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		node = _node;
 	}
 	break;
+	case OGEX::kStructureMaterial:
+	{
+		const OGEX::MaterialStructure& _structure = dynamic_cast<const OGEX::MaterialStructure&>(structure);
+		const char* materialName = _structure.GetMaterialName();
+		std::string _key = _structure.GetStructureName();
+		auto material = std::make_shared<SceneObjectMaterial>();
+		material->SetName(materialName);
+
+
+		const ODDL::Structure* _sub_structure = _structure.GetFirstCoreSubnode();
+		while (_sub_structure) {
+			std::string attrib, textureName;
+			vec4  color;
+			float param;
+			switch (_sub_structure->GetStructureType())
+			{
+			case OGEX::kStructureColor:
+			{
+				attrib = dynamic_cast<const OGEX::ColorStructure*>(_sub_structure)->GetAttribString();
+				color = dynamic_cast<const OGEX::ColorStructure*>(_sub_structure)->GetColor();
+				material->SetColor(attrib, color);
+			}
+			break;
+			case OGEX::kStructureParam:
+			{
+				attrib = dynamic_cast<const OGEX::ParamStructure*>(_sub_structure)->GetAttribString();
+				param = dynamic_cast<const OGEX::ParamStructure*>(_sub_structure)->GetParam();
+				material->SetParam(attrib, param);
+			}
+			break;
+			case OGEX::kStructureTexture:
+			{
+				attrib = dynamic_cast<const OGEX::TextureStructure*>(_sub_structure)->GetAttribString();
+				textureName = dynamic_cast<const OGEX::TextureStructure*>(_sub_structure)->GetTextureName();
+				material->SetTexture(attrib, textureName);
+			}
+			break;
+			default:
+				;
+			};
+
+			_sub_structure = _sub_structure->Next();
+		}
+		scene.Materials[_key] = material;
+	}
+	return ;//leaf
 	case OGEX::kStructureTransform:
 	{
 		int32_t index, count;

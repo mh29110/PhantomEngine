@@ -57,6 +57,12 @@ namespace Phantom {namespace maths {
 	struct vec4 {
 		float x, y, z, w;
 		vec4();
+		vec4(const float * other) { 
+			x = other[0];
+			y = other[1];
+			z = other[2];
+			w = other[3];
+		};
 		vec4(const float& x, const float& y, const float& z, const float& w);
 		vec4& add(const vec4 & other);
 		vec4& subtract(const vec4 & other);

@@ -161,4 +161,5 @@ void InputManager::LeftMouseDrag(int deltaX, int deltaY)
         << deltaY << ")"
         << endl;
 #endif
+	g_pBehaviourManager->LeftMouseDrag( deltaX, deltaY);
 }

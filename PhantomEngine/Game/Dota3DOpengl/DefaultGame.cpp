@@ -1,21 +1,46 @@
-// #include "GraphicsManager.h"
-// #ifdef OS_MACOS
-// 	#include "CocoaMetalApplication.h"
-// #endif
-// #ifdef OS_WINDOWS
-// 	#include "WindowsApplication.h"
-// #endif
-// #include "OpenGL/OpenGLGraphicsManager.h"
-
 #include "AssetLoadManager.h"
-#include "InputManager.h"
+
 #include "Image.h"
 #include "BMPParser.h"
+#include "JpegParser.h"
 #include "utility.hpp"
 #include "OpenGEX.h"
-
+#include "BehaviourManager.h"
 
 namespace Phantom {
-	InputManager*    g_pInputManager    = static_cast<InputManager*>(new InputManager);
+
+
+	class TestBehaviour :public BehaviourManager
+	{
+	public:
+		virtual int Init();
+		virtual void Shutdown() {};
+		virtual void Tick() { BehaviourManager::Tick(); };
+	protected:
+	private:
+	};
+
+	int TestBehaviour::Init()
+	{
+		std::shared_ptr<Image> m_pImage;
+		std::string  m_Name = "Resources/texture/len_full.jpg";
+		Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary(m_Name.c_str());
+		std::string ext = m_Name.substr(m_Name.find_last_of("."));
+		if (ext == ".bmp")
+		{
+			BmpParser bmp_parser;
+			m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
+		}
+		else if(ext == ".jpg")
+		{
+			/*JpegParser jpeg_parser;
+			m_pImage = std::make_shared<Image>(jpeg_parser.Parse(buf));*/
+		}
+		else {
+		}
+
+		return 0;
+	}
+	BehaviourManager*     g_pBehaviourManager = static_cast<BehaviourManager*>(new TestBehaviour);
 }
 

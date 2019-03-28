@@ -19,6 +19,7 @@ if(OS_WINDOWS)
                             OpenGLRHI
 							${OPENGEX_LIBRARY} 
 							${OPENDDL_LIBRARY}
+							${JPGE_LIBRARY}
                         )
 elseif(OS_MACOS)
 message (status " == mac os executable!")
@@ -32,6 +33,7 @@ message (status " == mac os executable!")
 					    	${EXTRA_LIBS}
                             ${OPENGEX_LIBRARY} 
                             ${OPENDDL_LIBRARY}
+							${JPGE_LIBRARY}
                         )
 endif()
 # copy resource to execute dir (debug directory)

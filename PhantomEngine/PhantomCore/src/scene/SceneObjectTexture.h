@@ -36,7 +36,12 @@ namespace Phantom {
                     {
                         BmpParser bmp_parser;
                         m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
-                    }
+					}
+					else{
+						buf = g_pAssetLoader->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
+						BmpParser bmp_parser;
+						m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
+					}
                 }
             }
         

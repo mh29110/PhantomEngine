@@ -41,6 +41,7 @@ namespace Phantom {
 		virtual void OnButton1Down() {};
 		virtual void OnButton1Up() {};
 
+		virtual void LeftMouseDrag(int deltaX, int deltaY);
 	};
 
 	extern BehaviourManager* g_pBehaviourManager;

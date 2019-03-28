@@ -167,8 +167,41 @@ namespace Phantom {
 					//cerr << "Geometry: " << *pGeometry << endl;
 					continue;
 				}
-
 				auto contextPerBatch = make_shared<OpenGLContextPerDrawBatch>();
+
+				//materials
+				//const auto matName = pGeometryNode->GetMaterialRef(0);
+				const auto material = scene.GetFirstMaterial();
+				if (material) {
+					const auto & color = material->GetBaseColor();
+					if (color.ValueMap) {
+						const auto& texture = color.ValueMap->GetTextureImage();
+						const auto& textureName = color.ValueMap->GetName();
+						GLuint textureId;
+						auto iter = m_textures.find(textureName);
+						if (iter == m_textures.end())
+						{
+							glGenTextures(1, &textureId);
+							glBindTexture(GL_TEXTURE_2D, textureId);
+							glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture->Width, texture->Height,
+								0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data);
+							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+							glGenerateMipmap(GL_TEXTURE_2D);
+
+							glBindTexture(GL_TEXTURE_2D, 0);
+							m_textures[textureName] = textureId;
+						}
+						else {
+							textureId = iter->second;
+						}
+						contextPerBatch->diffuseMap = static_cast<int32_t>(textureId);
+					}
+				
+				}
+
 				contextPerBatch->batchIndex = batchCounter++;
 				contextPerBatch->vao = vertexArrayId;
 				contextPerBatch->mode = mode;
@@ -226,6 +259,8 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::Shutdown()
 	{
+		//#todo
+
 		// Disable the two vertex array attributes.
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -233,6 +268,8 @@ namespace Phantom {
 		// Release the vertex buffer.
 		/*glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(1, &m_vertexBufferId);*/
+
+		m_textures.clear();
 
 		delete m_pShader;
 	}
@@ -270,22 +307,35 @@ namespace Phantom {
 	{
 		m_pShader->bind();
 	}
+
 	void OpenGLGraphicsManager::RenderBuffers()
 	{
 		//使用ubo 获取一帧期间的常量
 		uint32_t blockIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerFrame");
 		if (blockIndex != GL_INVALID_INDEX)
 		{
-			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, 10);
-			glBindBufferBase(GL_UNIFORM_BUFFER, 3, m_uboFrame);
+			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
+			glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrame);
 		}
 		
+		uint32_t bIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerBatch");
 		for (auto& pDbc : m_Frame.batchContexts)
 		{
 			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(*pDbc);
 			//绑定每批次渲染时的常量
-			glBindBufferRange(GL_UNIFORM_BUFFER, 2, m_uboBatch,
+			glBindBufferRange(GL_UNIFORM_BUFFER, bIndex, m_uboBatch,
 				dbc.batchIndex * kSizeOfBatchConstantBuffer, kSizeOfBatchConstantBuffer);
+			//绑定纹理
+			m_pShader->setUniform1i("diffuseColor", 0);
+
+
+			glActiveTexture(GL_TEXTURE0);
+			if (dbc.diffuseMap > 0) {
+				glBindTexture(GL_TEXTURE_2D, dbc.diffuseMap);
+			}
+			else {
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
 
 
 

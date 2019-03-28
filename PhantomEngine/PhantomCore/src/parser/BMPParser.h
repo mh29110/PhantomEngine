@@ -58,6 +58,7 @@ namespace Phantom {
 				img.data = new uint8_t[img.data_size];
 
 				if (img.bitcount < 24) {
+					//只详细讨论最常见的24位图的bmp格式。
 					std::cerr << "Sorry, only true color BMP is supported at now." << std::endl;
 				}
 				else {

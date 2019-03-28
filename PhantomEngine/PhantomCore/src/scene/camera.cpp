@@ -14,11 +14,13 @@ void Phantom::CameraNode::CalculateVPMatrix()
 	}
 	else {
 		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();
-		vec3 pos(cMat.elements[12], cMat.elements[13], cMat.elements[14]);
+		cMat.elements[12] += m_positionX;
+		cMat.elements[13] += m_positionY;
+		cMat.elements[14] += m_positionZ;
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	m_projectionMatrix.perspective(90.0f, 16.0f / 9.0f, 0.01f, 1000.0f);
+	m_projectionMatrix.perspective(90.0f, 16.0f / 9.0f, 0.01f, 10000.0f);
 	
 
 

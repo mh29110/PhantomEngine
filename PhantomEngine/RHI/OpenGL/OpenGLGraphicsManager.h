@@ -4,6 +4,11 @@
 #include "GfxStruct.h"
 
 namespace Phantom {
+	enum //shader°ó¶¨µã    
+	{
+		ConstantsPerBatchBind = 10,
+		ConstantsPerFrameBind = 11
+	};
 	class OpenGLGraphicsManager : public GraphicsManager
 	{
 	public:
@@ -34,6 +39,7 @@ namespace Phantom {
 		OpenGLShader * m_pShader;
 		GLuint m_uboFrame; 
 		GLuint m_uboBatch; 
+		std::unordered_map<std::string, GLuint> m_textures;
 
 		const bool VSYNC_ENABLED = true;
 

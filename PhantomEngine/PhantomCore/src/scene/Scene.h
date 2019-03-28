@@ -1,10 +1,11 @@
 #pragma once 
+#include <unordered_map>
 #include "SceneBaseNode.h"
 #include "SceneObjectMesh.h"
 #include "SceneGeometryNode.h"
 #include "SceneObjectGeometry.h"
+#include "SceneObjectMaterial.h"
 #include "camera.h"
-#include <unordered_map>
 namespace Phantom{
 
 class Scene
@@ -16,7 +17,12 @@ public:
 	std::shared_ptr<SceneBaseNode> SceneRootGraph;
 	std::unordered_multimap<std::string, std::weak_ptr<SceneGeometryNode>>      GeometryNodes;
 	std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>>       GeometryOjbects;
+	std::unordered_map<std::string, std::shared_ptr<SceneObjectMaterial>>       Materials;
 	std::shared_ptr<CameraNode>  camera;
+
+public:
+	const std::shared_ptr<SceneObjectMaterial> GetFirstMaterial() const;
+	void LoadTextures(void);
 protected:
 };
 

@@ -1,7 +1,8 @@
 #version 410 core
 
 layout(location = 0) in vec4 position;
-layout(location = 1) in vec4 datacolor;
+layout(location = 1) in vec3 normal;
+layout(location = 1) in vec2 texcoord;
 
 
 layout( std140) uniform ConstantsPerBatch
@@ -17,11 +18,13 @@ layout( std140) uniform ConstantsPerFrame
 } uboFrame;
 
 out vec4 pos;
-out vec4 mcolor;
+out vec3 norl;
+out vec2 texc;
 
 void main()
 {
     gl_Position = uboFrame.projectionMatrix * uboFrame.viewMatrix *  uboBatch.modelMatrix * position;
     pos = uboBatch.modelMatrix * position;
-    mcolor = datacolor;
+    texc = texcoord;
+    norl = normal;
 }
