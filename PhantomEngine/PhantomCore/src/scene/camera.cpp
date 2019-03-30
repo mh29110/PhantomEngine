@@ -1,7 +1,7 @@
 #include "camera.h"
 
 using namespace Phantom::maths;
-void Phantom::CameraNode::CalculateVPMatrix()
+void Phantom::CameraNode::initViewMatrix()
 {
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
 	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/
@@ -14,14 +14,17 @@ void Phantom::CameraNode::CalculateVPMatrix()
 	}
 	else {
 		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();
-		cMat.elements[12] += m_positionX;
-		cMat.elements[13] += m_positionY;
-		cMat.elements[14] += m_positionZ;
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
 	m_projectionMatrix.perspective(90.0f, 16.0f / 9.0f, 0.01f, 10000.0f);
-	
-
-
+}
+void Phantom::CameraNode::CalculateVPMatrix()
+{
+	mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo 默认无相机没有考虑
+	cMat.elements[12] += m_positionX;
+	cMat.elements[13] += m_positionY;
+	cMat.elements[14] += m_positionZ;
+	cMat.InverseMatrix4X4f();
+	m_viewMatrix = cMat;
 }

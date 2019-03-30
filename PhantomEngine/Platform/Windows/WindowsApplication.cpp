@@ -4,6 +4,12 @@
 #include "GraphicsManager.h"
 
 using namespace Phantom;
+void Phantom::KeyCallback(InputManager * inputManager, int flags, int key, uint32_t message)
+{
+	bool pressed = message == WM_KEYDOWN || message == WM_SYSKEYDOWN;
+	inputManager->m_keyState[key] = pressed;
+
+}
 void  Phantom::WindowsApplication::CreateMainWindow()
 {
 	// get the HINSTANCE of the Console Program
@@ -101,33 +107,20 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 	// sort through and find what code to run for the message given
 	switch (message)
 	{
-	case WM_CHAR:
-	{
-		g_pInputManager->AsciiKeyDown(static_cast<char>(wParam));
-	}
-	break;
-	case WM_KEYUP:
-	{
-		switch (wParam)
+		/*case WM_CHAR:
 		{
-		case VK_LEFT:
-			g_pInputManager->LeftArrowKeyUp();
-			break;
-		case VK_RIGHT:
-			g_pInputManager->RightArrowKeyUp();
-			break;
-		case VK_UP:
-			g_pInputManager->UpArrowKeyUp();
-			break;
-		case VK_DOWN:
-			g_pInputManager->DownArrowKeyUp();
-			break;
-
-		default:
-			break;
+			g_pInputManager->AsciiKeyDown(static_cast<char>(wParam));
 		}
+		break;*/
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYDOWN:
+	case WM_SYSKEYUP:
+	{
+		KeyCallback(g_pInputManager,lParam, wParam, message);
+		break;
 	}
-	break;
+		
 	case WM_SIZE: 
 	{
 		//MoveWindow(hwndEdit, 0, 0, LOWORD(lp), HIWORD(lp), TRUE);
@@ -139,28 +132,7 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 		}
 	}
 	break;
-	case WM_KEYDOWN:
-	{
-		switch (wParam)
-		{
-		case VK_LEFT:
-			g_pInputManager->LeftArrowKeyDown();
-			break;
-		case VK_RIGHT:
-			g_pInputManager->RightArrowKeyDown();
-			break;
-		case VK_UP:
-			g_pInputManager->UpArrowKeyDown();
-			break;
-		case VK_DOWN:
-			g_pInputManager->DownArrowKeyDown();
-			break;
-
-		default:
-			break;
-		}
-	}
-	break;
+	
 	case WM_LBUTTONDOWN:
 	{
 		g_pInputManager->LeftMouseButtonDown();

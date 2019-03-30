@@ -41,6 +41,7 @@ bool Phantom::SceneManager::LoadScene()
 	}
 	OpengexParser paser;
 	m_pScene = paser.Parse( ogex_text);
+	m_pScene->camera->initViewMatrix();
 	if (!m_pScene) {
 		return false;
 	}

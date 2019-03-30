@@ -8,7 +8,19 @@ using namespace std;
 
 int InputManager::Init()
 {
+	for (int i = 0; i < MAX_KEYS; i++)
+	{
+		m_keyState[i] = false;
+	}
     return 0;
+}
+
+bool InputManager::IsKeyPressed(int keycode) const
+{
+	if (keycode >= MAX_KEYS)
+		return false;//todo assert
+
+	return m_keyState[keycode];
 }
 
 void InputManager::Shutdown()
@@ -17,126 +29,21 @@ void InputManager::Shutdown()
 
 void InputManager::Tick()
 {
+	for (int i = 0; i < MAX_KEYS; i++)
+	{
+	
+	}
 }
 
-void InputManager::UpArrowKeyDown()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Up Arrow Key Down!" << endl;
-#endif
-    if (!m_bUpKeyPressed)
-    {
-        m_bUpKeyPressed = true;
-    }
-	g_pBehaviourManager->OnUpKeyDown();
-}
-
-void InputManager::UpArrowKeyUp()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Up Arrow Key Up!" << endl;
-#endif
-    m_bUpKeyPressed = false;
-	g_pBehaviourManager->OnUpKeyUp();
-}
-
-void InputManager::DownArrowKeyDown()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Down Arrow Key Down!" << endl;
-#endif
-    if (!m_bDownKeyPressed)
-    {
-        m_bDownKeyPressed = true;
-    }
-	g_pBehaviourManager->OnDownKeyDown();
-}
-
-void InputManager::DownArrowKeyUp()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Down Arrow Key Up!" << endl;
-#endif
-    m_bDownKeyPressed = false;
-	g_pBehaviourManager->OnDownKeyUp();
-}
-
-void InputManager::LeftArrowKeyDown()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Left Arrow Key Down!" << endl;
-#endif
-    if (!m_bLeftKeyPressed)
-    {
-        m_bLeftKeyPressed = true;
-    }
-	g_pBehaviourManager->OnLeftKeyDown();
-}
-
-void InputManager::LeftArrowKeyUp()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Left Arrow Key Up!" << endl;
-#endif
-    m_bLeftKeyPressed = false;
-	g_pBehaviourManager->OnLeftKeyUp();
-}
-
-void InputManager::RightArrowKeyDown()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Right Arrow Key Down!" << endl;
-#endif
-    if(!m_bRightKeyPressed)
-    {
-        m_bRightKeyPressed = true;
-    }
-	g_pBehaviourManager->OnRightKeyDown();
-}
-
-void InputManager::RightArrowKeyUp()
-{
-#ifdef _DEBUG
-    cerr << "[InputManager] Right Arrow Key Up!" << endl;
-#endif
-    m_bRightKeyPressed = false;
-	g_pBehaviourManager->OnRightKeyUp();
-}
 
 void InputManager::AsciiKeyDown(char keycode)
 {
-#ifdef _DEBUG
-    cerr << "[InputManager] ASCII Key Down! (" << keycode << ")" << endl;
-#endif
-    switch (keycode)
-    {
-        case 'd':
-            break;
-        case 'r':
-            break;
-        case 'u':
-            break;
-        default:
-            cerr << "[InputManager] unhandled key." << endl;
-    }
+
 }
 
 void InputManager::AsciiKeyUp(char keycode)
 {
-#ifdef _DEBUG
-    cerr << "[InputManager] ASCII Key Up! (" << keycode << ")" << endl;
-#endif
-    switch (keycode)
-    {
-        case 'd':
-            break;
-        case 'r':
-            break;
-        case 'u':
-            break;
-        default:
-            cerr << "[InputManager] unhandled key." << endl;
-    }
+#
 }
 
 void InputManager::LeftMouseButtonDown()
@@ -162,4 +69,67 @@ void InputManager::LeftMouseDrag(int deltaX, int deltaY)
         << endl;
 #endif
 	g_pBehaviourManager->LeftMouseDrag( deltaX, deltaY);
+}
+
+
+
+//deprecated -------------------------------------------------------------------------
+void InputManager::UpArrowKeyDown()
+{
+	if (!m_keyState[PHANTOM_KEY_UP])
+	{
+		m_keyState[PHANTOM_KEY_UP] = true;
+	}
+	//g_pBehaviourManager->OnUpKeyDown();
+}
+
+void InputManager::UpArrowKeyUp()
+{
+	m_keyState[PHANTOM_KEY_UP] = false;
+	//g_pBehaviourManager->OnUpKeyUp();
+}
+
+void InputManager::DownArrowKeyDown()
+{
+	if (!m_keyState[PHANTOM_KEY_DOWN])
+	{
+		m_keyState[PHANTOM_KEY_DOWN] = true;
+	}
+	//g_pBehaviourManager->OnDownKeyDown();
+}
+
+void InputManager::DownArrowKeyUp()
+{
+	m_keyState[PHANTOM_KEY_DOWN] = false;
+	//g_pBehaviourManager->OnDownKeyUp();
+}
+
+void InputManager::LeftArrowKeyDown()
+{
+	if (!m_keyState[PHANTOM_KEY_LEFT])
+	{
+		m_keyState[PHANTOM_KEY_LEFT] = true;
+	}
+	//g_pBehaviourManager->OnLeftKeyDown();
+}
+
+void InputManager::LeftArrowKeyUp()
+{
+	m_keyState[PHANTOM_KEY_LEFT] = false;
+	//g_pBehaviourManager->OnLeftKeyUp();
+}
+
+void InputManager::RightArrowKeyDown()
+{
+	if (!m_keyState[PHANTOM_KEY_RIGHT])
+	{
+		m_keyState[PHANTOM_KEY_RIGHT] = true;
+	}
+	//g_pBehaviourManager->OnRightKeyDown();
+}
+
+void InputManager::RightArrowKeyUp()
+{
+	m_keyState[PHANTOM_KEY_RIGHT] = false;
+	//g_pBehaviourManager->OnRightKeyUp();
 }
