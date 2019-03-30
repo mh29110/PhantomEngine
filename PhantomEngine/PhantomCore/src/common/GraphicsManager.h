@@ -30,6 +30,7 @@ namespace Phantom {
 		virtual void bindShader() = 0;
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context) {}
+		virtual void SetPerFrameLight(const Light & light) {}
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches) {}
 	protected:
 		Frame  m_Frame;

@@ -40,5 +40,6 @@ void Phantom::GraphicsManager::UpdateConstants() {
 	CalculateCameraMatrix();
 
 	SetPerFrameConstants(frame.frameContext);
+	SetPerFrameLight(frame.light);
 	SetPerBatchConstants(frame.batchContexts);
 }

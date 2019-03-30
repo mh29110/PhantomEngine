@@ -2,9 +2,13 @@
 
 layout (location = 0) out vec4 color;
 
-uniform vec4 color_light;
-uniform vec2 light_pos;
-uniform float factor_light;
+layout( std140) uniform Light
+{
+    vec4 lightPos;
+	vec4 lightColor;
+	vec4 lightDir;
+} light;
+
 uniform sampler2D diffuseColor;
 
 in vec4 pos;
@@ -13,9 +17,13 @@ in vec2 texc;
 
 void main()
 {
-	//float intensity = factor_light * 1.0 / length(pos.xy - light_pos);
-	//color = mcolor * intensity * color_light;
 	vec4 diff = texture(diffuseColor, texc.xy);
-	color = diff;
+
+	vec3 norm = normalize(norl);
+	vec3 dir = normalize(light.lightDir.xyz);
+	float diffFactor = max(dot(norm, dir), 0.0);
+	vec4 diffuse = diffFactor * light.lightColor;
+
+	color = diff * diffuse;
 } 
 

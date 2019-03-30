@@ -3,6 +3,7 @@
 #include "mat4.h"
 #include "Image.h"
 #include "BMPParser.h"
+#include "JpegParser.h"
 #include "AssetLoadManager.h"
 
 namespace Phantom {
@@ -31,16 +32,26 @@ namespace Phantom {
                     // we should lookup if the texture has been loaded already to prevent
                     // duplicated load. This could be done in Asset Loader Manager.
                     Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary(m_Name.c_str());
+					if (buf.GetDataSize() <= 0)
+					{
+						return;
+					}
                     std::string ext = m_Name.substr(m_Name.find_last_of("."));
                     if (ext == ".bmp")
                     {
                         BmpParser bmp_parser;
                         m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
 					}
-					else{
-						buf = g_pAssetLoader->SyncOpenAndReadBinary("Resources/texture/bmp.bmp");
-						BmpParser bmp_parser;
-						m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
+					else if (ext == ".jpg")
+					{
+						JpegParser jpeg_parser;
+						m_pImage = std::make_shared<Image>(jpeg_parser.Parse(buf));
+					}
+					else {
+						//assert(); //Ìæ»»Ä¬ÈÏÕÕÆ¬
+						buf = g_pAssetLoader->SyncOpenAndReadBinary("Resources/Textures/len_full.jpg");
+						JpegParser jpeg_parser;
+						m_pImage = std::make_shared<Image>(jpeg_parser.Parse(buf));
 					}
                 }
             }

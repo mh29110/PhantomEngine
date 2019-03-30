@@ -5,11 +5,14 @@
 namespace Phantom {
 
     struct Image {
-        uint32_t Width;
-        uint32_t Height;
+        uint32_t Width;//纹理宽度
+        uint32_t Height;//纹理高度
         uint8_t* data;
-        uint32_t bitcount;
-        uint32_t pitch;
+
+		//---与位图本身的质量、在内存上的压缩格式以及内存对齐方式有关
+        uint32_t bitcount;//一个像素占用内存大小（bit数）
+        uint32_t pitch; //图形的一行占用内存大小（byte数）
+
         size_t  data_size;
         bool    compressed;
         bool    is_float;

@@ -23,7 +23,7 @@ namespace Phantom {
 	int TestBehaviour::Init()
 	{
 		std::shared_ptr<Image> m_pImage;
-		std::string  m_Name = "Resources/texture/len_full.jpg";
+		std::string  m_Name = "Resources/Textures/len_full.jpg";
 		Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary(m_Name.c_str());
 		std::string ext = m_Name.substr(m_Name.find_last_of("."));
 		if (ext == ".bmp")

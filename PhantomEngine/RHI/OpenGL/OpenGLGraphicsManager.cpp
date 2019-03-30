@@ -183,8 +183,8 @@ namespace Phantom {
 						{
 							glGenTextures(1, &textureId);
 							glBindTexture(GL_TEXTURE_2D, textureId);
-							glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture->Width, texture->Height,
-								0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data);
+							glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, texture->Width, texture->Height,
+								0, GL_RGB, GL_UNSIGNED_BYTE, texture->data);
 							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 							glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -252,8 +252,9 @@ namespace Phantom {
 			InitializeBuffers();
 		}
 		GraphicsManager::Init();
-		glGenBuffers(1, &m_uboBatch);
-		glGenBuffers(1, &m_uboFrame);
+		glGenBuffers(1, &m_uboBatchId);
+		glGenBuffers(1, &m_uboFrameId);
+		glGenBuffers(1, &m_lightId);
 		return result;
 	}
 
@@ -315,15 +316,24 @@ namespace Phantom {
 		if (blockIndex != GL_INVALID_INDEX)
 		{
 			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
-			glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrame);
+			glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
 		}
+		
+		//light 
+		uint32_t lightBlockIdx = glGetUniformBlockIndex(m_pShader->m_ShaderId, "Light");
+		if (lightBlockIdx != GL_INVALID_INDEX)
+		{
+			glUniformBlockBinding(m_pShader->m_ShaderId, lightBlockIdx, FrameLightBind);
+			glBindBufferBase(GL_UNIFORM_BUFFER, FrameLightBind, m_lightId);
+		}
+		
 		
 		uint32_t bIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerBatch");
 		for (auto& pDbc : m_Frame.batchContexts)
 		{
 			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(*pDbc);
 			//绑定每批次渲染时的常量
-			glBindBufferRange(GL_UNIFORM_BUFFER, bIndex, m_uboBatch,
+			glBindBufferRange(GL_UNIFORM_BUFFER, bIndex, m_uboBatchId,
 				dbc.batchIndex * kSizeOfBatchConstantBuffer, kSizeOfBatchConstantBuffer);
 			//绑定纹理
 			m_pShader->setUniform1i("diffuseColor", 0);
@@ -350,8 +360,17 @@ namespace Phantom {
 	bool OpenGLGraphicsManager::InitializeShader(const char* vsFilename, const char* fsFilename)
 	{
 		m_pShader = new OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
-
 		return true;
+	}
+
+	void OpenGLGraphicsManager::SetPerFrameLight(const Light & light)
+	{
+		m_Frame.light.lightPos = vec4(1000.0f, 0.0f, 0.0f,0.0f);
+		m_Frame.light.lightDir = vec4(1.0f, 0.0f, 0.0f,0.0f);
+		m_Frame.light.lightColor = vec4(255.0f, 255.0f, 0.0f,255.0f);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_lightId);
+		glBufferData(GL_UNIFORM_BUFFER, kSizeOfLigtBuffer, &light, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	void OpenGLGraphicsManager::SetPerFrameConstants(const ContextPerFrame& context)
@@ -362,7 +381,7 @@ namespace Phantom {
 
         
 		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);
-		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrame);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrameId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 对齐  ， gpu块读取 todo
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
@@ -376,7 +395,7 @@ namespace Phantom {
 			memcpy(pBuffer + pBatch->batchIndex * kSizeOfBatchConstantBuffer, &constants, kSizeOfBatchConstantBuffer);
 		}
 		
-		glBindBuffer(GL_UNIFORM_BUFFER, m_uboBatch);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_uboBatchId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfBatchConstantBuffer*batches.size(), pBuffer, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 

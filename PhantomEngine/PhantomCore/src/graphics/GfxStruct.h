@@ -8,6 +8,14 @@ typedef maths::vec4 float4;
 typedef maths::vec3 float3;
 typedef maths::vec2 float2;
 typedef maths::mat4x4 mat4x4f;
+
+	struct Light
+	{
+		float4    lightPos;   
+		float4    lightColor;  
+		float4    lightDir;   
+	};
+
 	//每渲染批次常量
 	struct ConstantsPerBatch 
 	{ 
@@ -15,6 +23,7 @@ typedef maths::mat4x4 mat4x4f;
 	};
 	const size_t kSizeOfFrameConstantBuffer = 256;
 	const size_t kSizeOfBatchConstantBuffer = 256;
+	const size_t kSizeOfLigtBuffer = 256;
 	//渲染中每帧内固定常量
 	struct ConstantsPerFrame  
 	{
@@ -39,5 +48,6 @@ typedef maths::mat4x4 mat4x4f;
 	struct Frame {
 		ContextPerFrame frameContext;
 		std::vector<std::shared_ptr<ContextPerDrawBatch>> batchContexts;
+		Light light;
 	};
 }

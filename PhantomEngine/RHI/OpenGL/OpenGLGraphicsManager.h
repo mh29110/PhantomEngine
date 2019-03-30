@@ -7,7 +7,8 @@ namespace Phantom {
 	enum //shader°ó¶¨µã    
 	{
 		ConstantsPerBatchBind = 10,
-		ConstantsPerFrameBind = 11
+		ConstantsPerFrameBind = 11,
+		FrameLightBind = 12
 	};
 	class OpenGLGraphicsManager : public GraphicsManager
 	{
@@ -31,14 +32,16 @@ namespace Phantom {
 		bool InitializeShader(const char* vsFilename, const char* fsFilename);
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context);
+		virtual void SetPerFrameLight(const Light & light);
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
 
 		virtual void bindShader();
 
 	private:
 		OpenGLShader * m_pShader;
-		GLuint m_uboFrame; 
-		GLuint m_uboBatch; 
+		GLuint m_uboFrameId; 
+		GLuint m_uboBatchId; 
+		GLuint m_lightId;
 		std::unordered_map<std::string, GLuint> m_textures;
 
 		const bool VSYNC_ENABLED = true;
