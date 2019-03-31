@@ -170,8 +170,11 @@ namespace Phantom {
 				auto contextPerBatch = make_shared<OpenGLContextPerDrawBatch>();
 
 				//materials
-				//const auto matName = pGeometryNode->GetMaterialRef(0);
-				const auto material = scene.GetFirstMaterial();
+				size_t material_index = index_array.GetMaterialIndex();
+				std::string material_key = pGeometryNode->GetMaterialRef(material_index);
+				auto material = scene.GetMaterial(material_key);
+				//const std::string & name = "material7";
+				//auto material = scene.GetMaterial(name);
 				if (material) {
 					const auto & color = material->GetBaseColor();
 					if (color.ValueMap) {

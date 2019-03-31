@@ -12,6 +12,7 @@ using namespace std;
 Phantom::Scene::Scene(const char * name):SceneRootGraph(new SceneBaseNode(name))
 {
 	//camera = make_shared<CameraNode>();
+	m_pDefaultMaterial = std::make_shared<SceneObjectMaterial>("default");
 }
 
 Phantom::Scene::~Scene()
@@ -31,5 +32,16 @@ void Phantom::Scene::LoadTextures(void)
 		{
 			ptr->LoadTextures();
 		}
+	}
+}
+
+const shared_ptr<SceneObjectMaterial> Phantom::Scene::GetMaterial(const std::string& key) const
+{
+	auto i = Materials.find(key);
+	if (i == Materials.end())
+		return m_pDefaultMaterial;
+	else
+	{
+		return i->second;
 	}
 }

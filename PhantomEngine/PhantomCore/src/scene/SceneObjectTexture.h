@@ -37,7 +37,8 @@ namespace Phantom {
 						return;
 					}
                     std::string ext = m_Name.substr(m_Name.find_last_of("."));
-                    if (ext == ".bmp")
+					//µ÷ÊÔb/w
+                    /*if (ext == ".bmp")
                     {
                         BmpParser bmp_parser;
                         m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
@@ -47,12 +48,12 @@ namespace Phantom {
 						JpegParser jpeg_parser;
 						m_pImage = std::make_shared<Image>(jpeg_parser.Parse(buf));
 					}
-					else {
+					else {*/
 						//assert(); //Ìæ»»Ä¬ÈÏÕÕÆ¬
-						buf = g_pAssetLoader->SyncOpenAndReadBinary("Textures/len_full.jpg");
+						buf = g_pAssetLoader->SyncOpenAndReadBinary("Textures/b.jpg");
 						JpegParser jpeg_parser;
 						m_pImage = std::make_shared<Image>(jpeg_parser.Parse(buf));
-					}
+					//}
                 }
             }
         
