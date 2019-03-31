@@ -29,7 +29,9 @@ int main(int argc, char** argv) {
 		return ret;
 	}
 	// create the main window
+#ifndef  OS_MACOS
 	g_pApp->CreateMainWindow();
+#endif
 	// if ((ret = g_pMemoryManager->Init()) != 0) {
 	// 	printf("Memory Manager Init failed, will exit now.");
 	// 	return ret;
@@ -72,7 +74,7 @@ int main(int argc, char** argv) {
 		if (timer.Elapsed() - timeCount > 1.0f)
 		{
 			timeCount += 1.0f;
-			std::cout << "frames === " << frames << std::endl;
+			//std::cout << "frames === " << frames << std::endl;
 			frames = 0;
 		}
 	}

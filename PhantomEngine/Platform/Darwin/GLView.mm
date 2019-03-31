@@ -13,8 +13,7 @@ using namespace Phantom;
 
     [_openGLContext makeCurrentContext];
 
-    g_pGraphicsManager->Clear();
-    g_pGraphicsManager->Draw();
+    g_pGraphicsManager->Tick();
 
     [_openGLContext flushBuffer];
     
