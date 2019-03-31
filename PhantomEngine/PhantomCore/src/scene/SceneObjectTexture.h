@@ -49,7 +49,7 @@ namespace Phantom {
 					}
 					else {
 						//assert(); //Ìæ»»Ä¬ÈÏÕÕÆ¬
-						buf = g_pAssetLoader->SyncOpenAndReadBinary("Resources/Textures/len_full.jpg");
+						buf = g_pAssetLoader->SyncOpenAndReadBinary("Textures/len_full.jpg");
 						JpegParser jpeg_parser;
 						m_pImage = std::make_shared<Image>(jpeg_parser.Parse(buf));
 					}
