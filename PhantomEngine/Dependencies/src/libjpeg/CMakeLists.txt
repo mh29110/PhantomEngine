@@ -35,6 +35,8 @@ set ( SRC jmemnobs.c jaricom.c jcapimin.c jcapistd.c jcarith.c jccoefct.c jccolo
   jidctflt.c jidctfst.c jidctint.c jquant1.c jquant2.c jutils.c jmemmgr.c cderror.h 
   cdjpeg.h jdct.h jinclude.h jmemsys.h jpegint.h jversion.h transupp.h )
 
+
+//这里经常不起效，会只编译动态库
 if ( BUILD_STATIC )
   add_library ( jpeg STATIC ${SRC} ${HEADERS} )
 else ()

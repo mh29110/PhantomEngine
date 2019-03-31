@@ -22,6 +22,9 @@ if(OS_WINDOWS)
 							${JPGE_LIBRARY}
                         )
 elseif(OS_MACOS)
+
+#MESSAGE( STATUS "jpeg: " ${JPGE_LIBRARY} )
+
 	add_executable(Dota3DOpengl DefaultGame.cpp MacOpenGLApplicationConfig.cpp)
     target_link_libraries(Dota3DOpengl 
                             PhantomCore
@@ -32,7 +35,7 @@ elseif(OS_MACOS)
 					    	${EXTRA_LIBS}
                             ${OPENGEX_LIBRARY} 
                             ${OPENDDL_LIBRARY}
-							${JPGE_LIBRARY}
+                            ${JPGE_LIBRARY}
                         )
 endif()
 # copy resource to execute dir (debug directory)

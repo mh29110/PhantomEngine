@@ -3,7 +3,7 @@ mkdir Dependencies/build/libjpeg
 pushd Dependencies/build/libjpeg
 # rm -rf *
 cmake -DCMAKE_INSTALL_PREFIX=../../Darwin  ../../src/libjpeg
-cmake --build . --config release --target install
+cmake --build . --config debug --target install
 popd
 
 pause
