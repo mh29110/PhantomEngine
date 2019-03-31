@@ -15,6 +15,7 @@
 #include "GfxConfiguration.h"
 #include "IApplication.h"
 #include "BehaviourManager.h"
+#include "InputManager.h"
 
 namespace Phantom {
 	//ÅäÖÃ³ÌÐò¼¯ÃüÃû¿Õ¼äÄÚ¹ÜÀíÆ÷µÄÈ«¾Ö±äÁ¿
@@ -25,8 +26,7 @@ namespace Phantom {
     GraphicsManager* g_pGraphicsManager = static_cast<GraphicsManager*>(new OpenGLGraphicsManager);
     AssetLoadManager*     g_pAssetLoader     = static_cast<AssetLoadManager*>(new AssetLoadManager);
 	SceneManager*     g_pSceneManager     = static_cast<SceneManager*>(new SceneManager);
-	BehaviourManager*     g_pBehaviourManager = static_cast<BehaviourManager*>(new BehaviourManager);
+    InputManager* g_pInputManager = static_cast<InputManager* >(new InputManager);
 
-	std::unordered_map<std::string, std::shared_ptr<SceneBaseObject>> g_SceneObjects;
 }
 

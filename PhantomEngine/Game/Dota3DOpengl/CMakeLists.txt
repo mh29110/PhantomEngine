@@ -22,7 +22,6 @@ if(OS_WINDOWS)
 							${JPGE_LIBRARY}
                         )
 elseif(OS_MACOS)
-message (status " == mac os executable!")
 	add_executable(Dota3DOpengl DefaultGame.cpp MacOpenGLApplicationConfig.cpp)
     target_link_libraries(Dota3DOpengl 
                             PhantomCore

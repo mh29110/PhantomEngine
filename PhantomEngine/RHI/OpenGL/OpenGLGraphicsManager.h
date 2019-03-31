@@ -2,6 +2,7 @@
 #include "GraphicsManager.h"
 #include "OpenGLShader.h"
 #include "GfxStruct.h"
+#include <unordered_map>
 
 namespace Phantom {
 	enum //shader°ó¶¨µã    
