@@ -54,6 +54,8 @@ namespace Phantom {
 				//setting
 			img.Width = cinfo.output_width;
 			img.Height = cinfo.output_height;
+
+			cinfo.data_precision;
 		
 			jpeg_finish_decompress(&cinfo);
 

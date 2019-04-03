@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.1)
-set (CMAKE_C_STANDARD 11)
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_C_STANDARD 17)
+set (CMAKE_CXX_STANDARD 17)
 
 # Check platforms
 IF(UNIX)
@@ -73,13 +73,21 @@ find_library(OPENDDL_LIBRARY OpenDDL PATHS ${PHANTOM_DEPENDENCIES_LIBRARY_PATH} 
 find_library(OPENGEX_LIBRARY OpenGEX PATHS ${PHANTOM_DEPENDENCIES_LIBRARY_PATH} NO_CMAKE_FIND_ROOT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
 
 
-#find_library(JPGE_LIBRARY jpeg PATHS ${PHANTOM_DEPENDENCIES_LIBRARY_PATH} NO_CMAKE_FIND_ROOT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
-#mac 有毛病，mac老是会无视设置编译链接动态库，libjpeg.a写死 + brew 安装libjpeg 后无法复现，后续观察。#todo
-if(OS_MACOS)
-    set(JPGE_LIBRARY libjpeg.a)
+# 查找libjpeg库,优先使用静态库
+if(MSVC)
+    set( JPEG_NAMES jpeg-static )
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+    set( JPEG_NAMES libjpeg.a)
+endif()
+find_library(JPGE_LIBRARY jpeg PATHS ${PHANTOM_DEPENDENCIES_LIBRARY_PATH} NO_CMAKE_FIND_ROOT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+if(JPEG_FOUND)
+    message(STATUS "JPEG_INCLUDE_DIR=${JPEG_INCLUDE_DIR}")
+    message(STATUS "JPEG_LIBRARIES=${JPEG_LIBRARIES}")  
 endif()
 
-MESSAGE( STATUS "jpeg: " ${PHANTOM_DEPENDENCIES_LIBRARY_PATH} )
+
+
+MESSAGE( STATUS "jpeg: " ${JPGE_LIBRARY} )
 
 
 # --------------------------------dependencies  end-------------------------------------

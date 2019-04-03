@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2012 LuaDist.
+﻿# Copyright (C) 2007-2012 LuaDist.
 # Created by Peter Kapec, David Manura
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
 # For details see the COPYRIGHT file distributed with LuaDist.
@@ -8,7 +8,7 @@ project ( libjpeg C )
 cmake_minimum_required ( VERSION 2.8 )
 include ( cmake/dist.cmake )
 
-OPTION(BUILD_STATIC ON)
+option(BUILD_STATIC ON)
 OPTION(BUILD_EXECUTABLES ON)
 OPTION(BUILD_TESTS ON)
 
@@ -36,12 +36,12 @@ set ( SRC jmemnobs.c jaricom.c jcapimin.c jcapistd.c jcarith.c jccoefct.c jccolo
   cdjpeg.h jdct.h jinclude.h jmemsys.h jpegint.h jversion.h transupp.h )
 
 
-//这里经常不起效，会只编译动态库
-if ( BUILD_STATIC )
+#这里经常不起效，会只编译动态库
+#if ( BUILD_STATIC )
   add_library ( jpeg STATIC ${SRC} ${HEADERS} )
-else ()
-  add_library ( jpeg ${SRC} ${HEADERS} )
-endif()
+#else ()
+  #add_library ( jpeg ${SRC} ${HEADERS} )
+#endif()
 
 if ( BUILD_EXECUTABLES )
   add_executable ( cjpeg cdjpeg.c cjpeg.c rdbmp.c rdgif.c rdppm.c rdrle.c rdtarga.c 
