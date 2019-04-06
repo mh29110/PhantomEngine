@@ -15,7 +15,6 @@ namespace Phantom {
 		void CalculateVPMatrix();
 		float m_positionX = 0, m_positionY = 0, m_positionZ = 5;
 		float m_rotationX = 0, m_rotationY = 0, m_rotationZ = 0;
-
 	};
 
 }

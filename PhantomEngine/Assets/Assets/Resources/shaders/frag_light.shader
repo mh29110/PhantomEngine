@@ -24,6 +24,6 @@ void main()
 	float diffFactor = max(dot(norm, dir), 0.0);
 	vec4 diffuse = diffFactor * light.lightColor;
 
-	color = diff * diffuse;
+	color = diff ;
 } 
 

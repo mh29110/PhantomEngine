@@ -58,11 +58,9 @@ namespace Phantom {
 			glBindVertexArray(vertexArrayId);
 
 			GLuint vertexBufferId;
-
 			// Generate an ID for the vertex buffer.
 			for (GLuint i = 0; i < vertexPropertiesCount; i++)
 			{
-				if (i > 1) break;
 				const SceneObjectVertexArray & vProArr = pMesh->GetVertexPropertyArray(i);
 				const auto vProArrSize = vProArr.GetDataSize();
 				const auto vProArrData = vProArr.GetData();
@@ -168,7 +166,6 @@ namespace Phantom {
 					continue;
 				}
 				auto contextPerBatch = make_shared<OpenGLContextPerDrawBatch>();
-
 				//materials
 				//const auto matName = pGeometryNode->GetMaterialRef(0);
 				const auto material = scene.GetFirstMaterial();
@@ -241,11 +238,10 @@ namespace Phantom {
 				//默认值是GL_CCW，它代表逆时针，GL_CW代表顺时针顺序。
 				glFrontFace(GL_CCW);
 
+
 				// Enable back face culling.
 				glEnable(GL_CULL_FACE);
 				glCullFace(GL_BACK);
-
-				
 			}
 
 			InitializeShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);

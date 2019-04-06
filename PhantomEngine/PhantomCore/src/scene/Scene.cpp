@@ -11,7 +11,7 @@ using namespace std;
 
 Phantom::Scene::Scene(const char * name):SceneRootGraph(new SceneBaseNode(name))
 {
-	//camera = make_shared<CameraNode>();
+	camera = make_shared<CameraNode>();
 }
 
 Phantom::Scene::~Scene()

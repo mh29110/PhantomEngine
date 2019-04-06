@@ -25,6 +25,6 @@ void main()
 {
     gl_Position = uboFrame.projectionMatrix * uboFrame.viewMatrix *  uboBatch.modelMatrix * position;
     pos = uboBatch.modelMatrix * position;
-    texc = texcoord;
+    texc = vec2 (texcoord.x , 1-texcoord.y);
     norl = normal;
 }
