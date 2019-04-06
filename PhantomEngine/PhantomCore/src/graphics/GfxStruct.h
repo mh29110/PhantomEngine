@@ -40,8 +40,14 @@ typedef maths::mat4x4 mat4x4f;
 		virtual ~ContextPerDrawBatch() = default;
 	};
 
+	//每帧所需纹理id
+	struct texturesForFrame
+	{
+		int32_t skybox = -1;
+	};
+
 	//渲染每帧的上下文
-	struct ContextPerFrame : ConstantsPerFrame {
+	struct ContextPerFrame : ConstantsPerFrame,texturesForFrame {
 	};
 
 	//每帧的数据集合
@@ -50,4 +56,5 @@ typedef maths::mat4x4 mat4x4f;
 		std::vector<std::shared_ptr<ContextPerDrawBatch>> batchContexts;
 		Light light;
 	};
+
 }

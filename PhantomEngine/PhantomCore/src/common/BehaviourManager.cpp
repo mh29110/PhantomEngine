@@ -14,20 +14,21 @@ void Phantom::BehaviourManager::Shutdown()
 
 void Phantom::BehaviourManager::Tick()
 {
+	float factor = 100.0f;
 	//todo remove to a reAttachCamera function when scene camera change.
 	camera = g_pSceneManager->GetSceneForRendering().camera;
 
 	if (g_pInputManager->GetUpKeyPressed()) {
-		camera.lock()->m_positionZ += 0.1f;
+		camera.lock()->m_positionZ += 0.1f*factor;
 	}
 	if (g_pInputManager->GetDownKeyPressed()) {
-		camera.lock()->m_positionZ -= 0.1f;
+		camera.lock()->m_positionZ -= 0.1f*factor;
 	}
 	if (g_pInputManager->GetLeftKKeyPressed()) {
-		camera.lock()->m_positionX -= 0.1f;
+		camera.lock()->m_positionX -= 0.1f*factor;
 	}
 	if (g_pInputManager->GetRightKeyPressed()) {
-		camera.lock()->m_positionX += 0.1f;
+		camera.lock()->m_positionX += 0.1f*factor;
 	}
 }
 

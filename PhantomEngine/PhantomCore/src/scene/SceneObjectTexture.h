@@ -36,11 +36,11 @@ namespace Phantom {
 					{
 						return;
 					}
-                    std::string ext = m_Name.substr(m_Name.find_last_of("."));
-                    if (ext == ".bmp")
-                    {
-                        BmpParser bmp_parser;
-                        m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
+					std::string ext = m_Name.substr(m_Name.find_last_of("."));
+					if (ext == ".bmp")
+					{
+						BmpParser bmp_parser;
+						m_pImage = std::make_shared<Image>(bmp_parser.Parse(buf));
 					}
 					else if (ext == ".jpg")
 					{

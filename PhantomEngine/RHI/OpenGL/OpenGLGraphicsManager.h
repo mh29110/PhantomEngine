@@ -24,22 +24,28 @@ namespace Phantom {
 
 		virtual void Draw();
 
+		virtual void DrawSkyBox();
+
 		virtual void resize(int32_t width, int32_t height);
+
+	protected:
 	private:
 		bool SetShaderParameters(maths::mat4x4  worldMatrix, maths::mat4x4  viewMatrix, maths::mat4x4  projectionMatrix);
 
-		bool InitializeBuffers();
 		void RenderBuffers();
-		bool InitializeShader(const char* vsFilename, const char* fsFilename);
+		bool InitializeBuffers();
+		bool InitializeShader();
+		bool initializeSkyBox();
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context);
 		virtual void SetPerFrameLight(const Light & light);
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
 
-		virtual void bindShader();
+		virtual void bindCommonShader();
 
 	private:
 		OpenGLShader * m_pShader;
+		OpenGLShader* m_skyboxShader;
 		GLuint m_uboFrameId; 
 		GLuint m_uboBatchId; 
 		GLuint m_lightId;
@@ -53,6 +59,8 @@ namespace Phantom {
 			uint32_t type;
 			int32_t indexCount;
 		};
+
+		OpenGLContextPerDrawBatch m_skyboxContext;
 	};
 
 

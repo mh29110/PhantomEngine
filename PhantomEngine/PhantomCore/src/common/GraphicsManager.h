@@ -19,6 +19,9 @@ namespace Phantom {
 		virtual void Clear() = 0;
 		virtual void Draw() = 0;
 
+		// sky box
+		virtual void DrawSkyBox() {}
+
 		virtual void resize(int32_t width, int32_t height) {};
 
 		bool Inited = false;
@@ -27,7 +30,7 @@ namespace Phantom {
 
 		void UpdateConstants();
 
-		virtual void bindShader() = 0;
+		virtual void bindCommonShader() = 0;
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context) {}
 		virtual void SetPerFrameLight(const Light & light) {}

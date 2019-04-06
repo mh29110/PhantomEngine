@@ -16,6 +16,40 @@
 const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
 const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
 
+const char SKYBOX_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_vert.shader";
+const char SKYBOX_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_frag.shader";
+
+static const float skyboxVertices[] = {
+		1.0f,  1.0f,  1.0f,  // 0
+	   -1.0f,  1.0f,  1.0f,  // 1
+		1.0f, -1.0f,  1.0f,  // 2
+		1.0f,  1.0f, -1.0f,  // 3
+	   -1.0f,  1.0f, -1.0f,  // 4
+		1.0f, -1.0f, -1.0f,  // 5
+	   -1.0f, -1.0f,  1.0f,  // 6
+	   -1.0f, -1.0f, -1.0f   // 7
+};
+
+static const uint8_t skyboxIndices[] = {
+	4, 7, 5,
+	5, 3, 4,
+
+	6, 7, 4,
+	4, 1, 6,
+
+	5, 2, 0,
+	0, 3, 5,
+
+	6, 1, 0,
+	0, 2, 6,
+
+	4, 3, 0,
+	0, 1, 4,
+
+	7, 6, 5,
+	5, 6, 2
+};
+
 using namespace std;
 using namespace Phantom::maths;
 
@@ -47,7 +81,7 @@ namespace Phantom {
 			}
 			const auto&pGeometry = i->second;
 			const auto& pMesh = pGeometry->GetMesh().lock();
-			
+
 			//--- mesh ---- 拆解---------
 			const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
@@ -196,7 +230,7 @@ namespace Phantom {
 						}
 						contextPerBatch->diffuseMap = static_cast<int32_t>(textureId);
 					}
-				
+
 				}
 
 				contextPerBatch->batchIndex = batchCounter++;
@@ -216,37 +250,37 @@ namespace Phantom {
 
 	int OpenGLGraphicsManager::Init()
 	{
-		
+
 		int result;
 		result = gladLoadGL();//在OpenGL RHI下初始化glad ，注意各平台引用glad/(_wgl).c不同，暂在cmake中设置
 		if (!result) {
 			cerr << "OpenGL load failed!" << endl;
 			result = -1;
 		}
-		else {
-			result = 0;
-			cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded" << endl;
+		result = 0;
+		cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded" << endl;
 
-			if (GLAD_GL_VERSION_3_0) {
-				// Set the depth buffer to be entirely cleared to 1.0 values.
-				glClearDepth(1.0f);
+		if (GLAD_GL_VERSION_3_0) {
+			// Set the depth buffer to be entirely cleared to 1.0 values.
+			glClearDepth(1.0f);
 
-				// Enable depth testing.
-				glEnable(GL_DEPTH_TEST);
+			// Enable depth testing.
+			glEnable(GL_DEPTH_TEST);
 
-				// Set the polygon winding to front facing for the right handed system.
-				//默认值是GL_CCW，它代表逆时针，GL_CW代表顺时针顺序。
-				glFrontFace(GL_CCW);
+			// Set the polygon winding to front facing for the right handed system.
+			//默认值是GL_CCW，它代表逆时针，GL_CW代表顺时针顺序。
+			glFrontFace(GL_CCW);
 
 
-				// Enable back face culling.
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK);
-			}
-
-			InitializeShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
-			InitializeBuffers();
+			// Enable back face culling.
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 		}
+
+
+		InitializeShader();
+		InitializeBuffers();
+		initializeSkyBox();
 		GraphicsManager::Init();
 		glGenBuffers(1, &m_uboBatchId);
 		glGenBuffers(1, &m_uboFrameId);
@@ -269,6 +303,7 @@ namespace Phantom {
 		m_textures.clear();
 
 		delete m_pShader;
+		delete m_skyboxShader;
 	}
 
 	void OpenGLGraphicsManager::Tick()
@@ -279,6 +314,10 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::Clear()
 	{
+		for (GLenum err; (err = glGetError()) != GL_NO_ERROR;)
+		{
+			printf("gl error = %d", err);
+		}
 		// Set the color to clear the screen to.
 		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
 		// Clear the screen and depth buffer.
@@ -287,12 +326,133 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::Draw()
 	{
-	
-
 		// Render the model using the color shader.
 		RenderBuffers();
+		DrawSkyBox();
 		m_pShader->unbind();
 		glFlush();
+	}
+
+	bool OpenGLGraphicsManager::initializeSkyBox()
+	{
+		auto const  & scene = g_pSceneManager->GetSceneForRendering();
+		const auto material = scene.GetFirstMaterial();
+		if (!material) return false;
+		const auto & color = material->GetBaseColor();
+		if (!color.ValueMap) return false;
+		const auto& texture = color.ValueMap->GetTextureImage();
+
+		uint32_t texture_id;
+		const uint32_t kMaxMipLevels = 10;
+		glGenTextures(1, &texture_id);
+		GLenum target;
+#if defined(OS_WEBASSEMBLY)
+		target = GL_TEXTURE_2D_ARRAY;
+#else
+		target = GL_TEXTURE_CUBE_MAP;
+#endif
+		glBindTexture(target, texture_id);
+		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(target, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, kMaxMipLevels);
+		glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		for (uint32_t i = 0; i < 6; i++)
+		{
+			GLenum format;
+			if (texture->bitcount == 24)
+			{
+				format = GL_RGB;
+			}
+			else
+			{
+				format = GL_RGBA;
+			}
+
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, texture->Width, texture->Height,
+				0, format, GL_UNSIGNED_BYTE, texture->data);
+		}
+
+		m_textures["SkyBox"] = texture_id;
+		m_Frame.frameContext.skybox = texture_id;
+		glBindTexture(target, 0);
+
+		// skybox VAO
+		uint32_t skyboxVAO, skyboxVBO[2];
+		glGenVertexArrays(1, &skyboxVAO);
+		glGenBuffers(2, skyboxVBO);
+		glBindVertexArray(skyboxVAO);
+		// vertex buffer
+		glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO[0]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// index buffer
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxVBO[1]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skyboxIndices), skyboxIndices, GL_STATIC_DRAW);
+
+		glBindVertexArray(0);
+
+
+		m_skyboxContext.vao = skyboxVAO;
+		m_skyboxContext.mode = GL_TRIANGLES;
+		m_skyboxContext.type = GL_UNSIGNED_BYTE;
+		m_skyboxContext.indexCount = sizeof(skyboxIndices) / sizeof(skyboxIndices[0]);
+		return true;
+	}
+
+	//在最后绘制,实际绘制的面积小性能更好。在shader里面强制其深度为1.0（就是最远）。
+	//将深度测试条件从小于改为小于等于。因为在帧开始的时候深度缓冲区被清为1.0，所以只有没有绘制场景物体的部分会保持1.0，
+	//也就是只有那些场景物体没有覆盖的地方会被天空盒覆盖。
+	void OpenGLGraphicsManager::DrawSkyBox()
+	{
+		m_skyboxShader->bind();
+		int32_t texture_id = m_Frame.frameContext.skybox;
+		m_skyboxShader->setUniform1i("skybox", 0);
+		int loc = glGetUniformLocation(m_skyboxShader->m_ShaderId,"skybox");
+		if (loc < 0)
+		{
+			printf("Uniform: %d not found.\n", loc);
+		}
+		glActiveTexture(GL_TEXTURE0);
+		GLenum target;
+#if defined(OS_WEBASSEMBLY)
+		target = GL_TEXTURE_2D_ARRAY;
+#else
+		target = GL_TEXTURE_CUBE_MAP;
+#endif
+		glBindTexture(target, texture_id);
+
+		// Prepare & Bind per frame constant buffer
+		//uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
+
+		//if (blockIndex == GL_INVALID_INDEX)
+		//{
+		//	// the shader does not use "ConstantsPerFrame"
+		//	// simply return here
+		//	return;
+		//}
+		//glUniformBlockBinding(m_skyboxShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);//frame'ubo bind constant position
+
+		//glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
+		GLint OldCullFaceMode;
+		glGetIntegerv(GL_CULL_FACE_MODE, &OldCullFaceMode);
+
+		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+		glCullFace(GL_FRONT);
+		glBindVertexArray(m_skyboxContext.vao);
+		glDrawElements(m_skyboxContext.mode, m_skyboxContext.indexCount, m_skyboxContext.type, 0x00);
+		glBindVertexArray(0);
+		glDepthFunc(GL_LESS); // set depth function back to default
+		glCullFace(OldCullFaceMode);
+		m_skyboxShader->unbind();
+
+
+
 	}
 
 	void OpenGLGraphicsManager::resize(int32_t width, int32_t height)
@@ -300,7 +460,7 @@ namespace Phantom {
 		glViewport(0, 0, width, height);
 	}
 
-	void OpenGLGraphicsManager::bindShader()
+	void OpenGLGraphicsManager::bindCommonShader()
 	{
 		m_pShader->bind();
 	}
@@ -314,7 +474,7 @@ namespace Phantom {
 			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
 			glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
 		}
-		
+
 		//light 
 		uint32_t lightBlockIdx = glGetUniformBlockIndex(m_pShader->m_ShaderId, "Light");
 		if (lightBlockIdx != GL_INVALID_INDEX)
@@ -322,8 +482,8 @@ namespace Phantom {
 			glUniformBlockBinding(m_pShader->m_ShaderId, lightBlockIdx, FrameLightBind);
 			glBindBufferBase(GL_UNIFORM_BUFFER, FrameLightBind, m_lightId);
 		}
-		
-		
+
+
 		uint32_t bIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerBatch");
 		for (auto& pDbc : m_Frame.batchContexts)
 		{
@@ -351,19 +511,22 @@ namespace Phantom {
 		glBindVertexArray(0);
 	}
 
-	
 
-	bool OpenGLGraphicsManager::InitializeShader(const char* vsFilename, const char* fsFilename)
+
+	bool OpenGLGraphicsManager::InitializeShader()
 	{
-		m_pShader = new OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
+		m_pShader = new  OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
+		m_skyboxShader =  new OpenGLShader(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
 		return true;
 	}
 
+	
+
 	void OpenGLGraphicsManager::SetPerFrameLight(const Light & light)
 	{
-		m_Frame.light.lightPos = vec4(1000.0f, 0.0f, 0.0f,0.0f);
-		m_Frame.light.lightDir = vec4(1.0f, 0.0f, 0.0f,0.0f);
-		m_Frame.light.lightColor = vec4(255.0f, 255.0f, 0.0f,255.0f);
+		m_Frame.light.lightPos = vec4(1000.0f, 0.0f, 0.0f, 0.0f);
+		m_Frame.light.lightDir = vec4(1.0f, 0.0f, 0.0f, 0.0f);
+		m_Frame.light.lightColor = vec4(255.0f, 255.0f, 0.0f, 255.0f);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_lightId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfLigtBuffer, &light, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -375,7 +538,7 @@ namespace Phantom {
 		m_Frame.frameContext.viewMatrix = camera->m_viewMatrix;
 		m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
 
-        
+
 		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrameId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 对齐  ， gpu块读取 todo
@@ -390,7 +553,7 @@ namespace Phantom {
 			const ConstantsPerBatch& constants = static_cast<ConstantsPerBatch&>(*pBatch);
 			memcpy(pBuffer + pBatch->batchIndex * kSizeOfBatchConstantBuffer, &constants, kSizeOfBatchConstantBuffer);
 		}
-		
+
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboBatchId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfBatchConstantBuffer*batches.size(), pBuffer, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);

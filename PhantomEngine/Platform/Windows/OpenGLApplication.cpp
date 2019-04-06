@@ -113,7 +113,6 @@ void OpenGLApplication::Shutdown()
 void OpenGLApplication::Tick()
 {
     WindowsApplication::Tick();
-	g_pGraphicsManager->Tick();
     // Present the back buffer to the screen since rendering is complete.
     SwapBuffers(m_hDC);
 }

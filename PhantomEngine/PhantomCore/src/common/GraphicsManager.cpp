@@ -20,6 +20,7 @@ void Phantom::GraphicsManager::Tick()
 {
 	UpdateConstants();
 	Draw();
+	
 }
 void Phantom::GraphicsManager::CalculateCameraMatrix() {
 	shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
@@ -27,7 +28,7 @@ void Phantom::GraphicsManager::CalculateCameraMatrix() {
 }
 
 void Phantom::GraphicsManager::UpdateConstants() {
-	bindShader();
+	bindCommonShader();
 
 	auto& frame = m_Frame;
 
