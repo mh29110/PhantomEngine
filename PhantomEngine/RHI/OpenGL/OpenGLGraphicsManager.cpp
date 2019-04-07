@@ -282,10 +282,8 @@ namespace Phantom {
 			//默认值是GL_CCW，它代表逆时针，GL_CW代表顺时针顺序。
 			glFrontFace(GL_CCW);
 
-
-			// Enable back face culling.
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
 		}
 
 		InitializeShader();
@@ -315,7 +313,6 @@ namespace Phantom {
 
 		delete m_pShader;
 		delete m_skyboxShader;
-		delete m_cubeShader;
 	}
 
 	void OpenGLGraphicsManager::Tick()
@@ -339,7 +336,7 @@ namespace Phantom {
 	void OpenGLGraphicsManager::Draw()
 	{
 		// Render the model using the color shader.
-		RenderBuffers();
+		//RenderBuffers();
 		DrawSkyBox();
 		m_pShader->unbind();
 		glFlush();
@@ -352,35 +349,58 @@ namespace Phantom {
 
 		//==============================================
 		static const float skyboxVertices[] = {
-			  1.0f,  1.0f,  1.0f,  // 0
-		-1.0f,  1.0f,  1.0f,  // 1
-		 1.0f, -1.0f,  1.0f,  // 2
-		 1.0f,  1.0f, -1.0f,  // 3
-		-1.0f,  1.0f, -1.0f,  // 4
-		 1.0f, -1.0f, -1.0f,  // 5
-		-1.0f, -1.0f,  1.0f,  // 6
-		-1.0f, -1.0f, -1.0f   // 7
+			// positions          
+		  -1.0f,  1.0f, -1.0f,
+		  -1.0f, -1.0f, -1.0f,
+		   1.0f, -1.0f, -1.0f,
+		   1.0f, -1.0f, -1.0f,
+		   1.0f,  1.0f, -1.0f,
+		  -1.0f,  1.0f, -1.0f,
+
+		  -1.0f, -1.0f,  1.0f,
+		  -1.0f, -1.0f, -1.0f,
+		  -1.0f,  1.0f, -1.0f,
+		  -1.0f,  1.0f, -1.0f,
+		  -1.0f,  1.0f,  1.0f,
+		  -1.0f, -1.0f,  1.0f,
+
+		   1.0f, -1.0f, -1.0f,
+		   1.0f, -1.0f,  1.0f,
+		   1.0f,  1.0f,  1.0f,
+		   1.0f,  1.0f,  1.0f,
+		   1.0f,  1.0f, -1.0f,
+		   1.0f, -1.0f, -1.0f,
+
+		  -1.0f, -1.0f,  1.0f,
+		  -1.0f,  1.0f,  1.0f,
+		   1.0f,  1.0f,  1.0f,
+		   1.0f,  1.0f,  1.0f,
+		   1.0f, -1.0f,  1.0f,
+		  -1.0f, -1.0f,  1.0f,
+
+		  -1.0f,  1.0f, -1.0f,
+		   1.0f,  1.0f, -1.0f,
+		   1.0f,  1.0f,  1.0f,
+		   1.0f,  1.0f,  1.0f,
+		  -1.0f,  1.0f,  1.0f,
+		  -1.0f,  1.0f, -1.0f,
+
+		  -1.0f, -1.0f, -1.0f,
+		  -1.0f, -1.0f,  1.0f,
+		   1.0f, -1.0f, -1.0f,
+		   1.0f, -1.0f, -1.0f,
+		  -1.0f, -1.0f,  1.0f,
+		   1.0f, -1.0f,  1.0f
 		};
-
-		static const uint8_t skyboxIndices[] = {
-			4, 7, 5,
-			5, 3, 4,
-
-			6, 7, 4,
-			4, 1, 6,
-
-			5, 2, 0,
-			0, 3, 5,
-
-			6, 1, 0,
-			0, 2, 6,
-
-			4, 3, 0,
-			0, 1, 4,
-
-			7, 6, 5,
-			5, 6, 2
-		};
+		unsigned int skyboxVAO, skyboxVBO;
+		glGenVertexArrays(1, &skyboxVAO);
+		glGenBuffers(1, &skyboxVBO);
+		glBindVertexArray(skyboxVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	
 		GLenum target;
 #if defined(OS_WEBASSEMBLY)
 		target = GL_TEXTURE_2D_ARRAY;
@@ -390,8 +410,8 @@ namespace Phantom {
 		uint32_t texture_id;
 		glGenTextures(1, &texture_id);
 		glBindTexture(target, texture_id);
-		std::string names[] = {"Textures/front.jpg","Textures/back.jpg","Textures/left.jpg",
-								"Textures/right.jpg" ,"Textures/top.jpg","Textures/bottom.jpg" };
+		vector<std::string> names = { "Textures/right.jpg","Textures/left.jpg","Textures/top.jpg",
+								"Textures/bottom.jpg" ,"Textures/front.jpg","Textures/back.jpg" };
 		for (int picIdx = 0; picIdx < 6; picIdx++)
 		{
 			Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary(names[picIdx].c_str());
@@ -399,77 +419,29 @@ namespace Phantom {
 			auto imgptr = std::make_shared<Image>(parser.Parse(buf));
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + picIdx, 0, GL_RGB, imgptr->Width, imgptr->Height,
 				0, GL_RGB, GL_UNSIGNED_BYTE, imgptr->data);
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			//glTexParameteri(target, GL_TEXTURE_BASE_LEVEL, 0);
-			//glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, kMaxMipLevels);
-			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		}
-
+		
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		for (GLenum err; (err = glGetError()) != GL_NO_ERROR;)
 		{
 			printf("gl error = %d", err);
 		}
 
-
 		m_textures["SkyBox"] = texture_id;
 		m_Frame.frameContext.skybox = texture_id;
-
-		// skybox VAO
-		uint32_t skyboxVAO, skyboxVBO[2];
-		glGenVertexArrays(1, &skyboxVAO);
-		glGenBuffers(2, skyboxVBO);
-		glBindVertexArray(skyboxVAO);
-		// vertex buffer
-		glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO[0]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		// index buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxVBO[1]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skyboxIndices), skyboxIndices, GL_STATIC_DRAW);
-
-		glBindVertexArray(0);
+		m_skyboxShader->bind();
+		m_skyboxShader->setUniform1i("skybox", 0);
+		
 
 		m_skyboxContext.vao = skyboxVAO;
 		m_skyboxContext.mode = GL_TRIANGLES;
 		m_skyboxContext.type = GL_UNSIGNED_BYTE;
-		m_skyboxContext.indexCount = sizeof(skyboxIndices) / sizeof(skyboxIndices[0]);
+		m_skyboxContext.indexCount = 36;
 		
-
-
-
-		// cube VAO
-		unsigned int cubeVAO, cubeVBO;
-		glGenVertexArrays(1, &cubeVAO);
-		glGenBuffers(1, &cubeVBO);
-		glBindVertexArray(cubeVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-		m_cubeVAOID = cubeVAO;
-
-
-		Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary("Textures/back.jpg");
-		JpegParser parser;
-		auto imgptr = std::make_shared<Image>(parser.Parse(buf));
-		GLuint cubeTexture;
-		glGenTextures(1, &cubeTexture);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgptr->Width, imgptr->Height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgptr->data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		m_textures["cube"] = cubeTexture;
 
 	
 		return true;
@@ -480,20 +452,7 @@ namespace Phantom {
 	//也就是只有那些场景物体没有覆盖的地方会被天空盒覆盖。
 	void OpenGLGraphicsManager::DrawSkyBox()
 	{
-		m_cubeShader->bind();
-		m_cubeShader->setUniform1i("texture1", 0);
-		m_cubeShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
-		m_cubeShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
-		m_cubeShader->setUniformMat4("model", m_Frame.batchContexts[0]->modelMatrix);
-	
-		glBindVertexArray(m_cubeVAOID);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_textures["cube"]);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-
-
-		m_skyboxShader->bind();
+		
 		 //Prepare & Bind per frame constant buffer
 		//uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
 
@@ -507,36 +466,30 @@ namespace Phantom {
 		//glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
 
 
+		/*glCullFace(GL_BACK);
+		glDepthFunc(GL_LESS);
 		GLint OldCullFaceMode;
 		glGetIntegerv(GL_CULL_FACE_MODE, &OldCullFaceMode);
 		GLint OldDepthFuncMode;
 		glGetIntegerv(GL_DEPTH_FUNC, &OldDepthFuncMode);
-		glCullFace(GL_FRONT);
+		glCullFace(GL_FRONT);*/
 		glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
-
+		m_skyboxShader->bind();
 		int32_t texture_id = m_Frame.frameContext.skybox;
-		int loc = glGetUniformLocation(m_skyboxShader->m_ShaderId, "skybox");
-		if (loc < 0)
-		{
-			printf("Uniform: %d not found.\n", loc);
-		}
-		mat4x4 m1 = m_Frame.frameContext.viewMatrix;
+
+		m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
+		m_skyboxShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
 
 		glBindVertexArray(m_skyboxContext.vao);
-		m_skyboxShader->setUniform1i("skybox", 0);
-		m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
-		m_skyboxShader->setUniformMat4("view", m1);
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-		glDrawElements(m_skyboxContext.mode, m_skyboxContext.indexCount, m_skyboxContext.type, 0x00);
+		//glDrawElements(m_skyboxContext.mode, m_skyboxContext.indexCount, m_skyboxContext.type, 0x00);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
-
-		glCullFace(OldCullFaceMode);
+		glDepthFunc(GL_LESS);
+		/*glCullFace(OldCullFaceMode);
 		glDepthFunc(OldDepthFuncMode);
-		m_skyboxShader->unbind();
-
-
+		m_skyboxShader->unbind();*/
 	}
 
 	void OpenGLGraphicsManager::resize(int32_t width, int32_t height)
@@ -601,7 +554,6 @@ namespace Phantom {
 	{
 		m_pShader = new  OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 		m_skyboxShader =  new OpenGLShader(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
-		m_cubeShader =  new OpenGLShader("Resources/shaders/cubevs.shader", "Resources/shaders/cubefs.shader");
 
 		return true;
 	}

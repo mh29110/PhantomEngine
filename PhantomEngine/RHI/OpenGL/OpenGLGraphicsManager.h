@@ -42,12 +42,9 @@ namespace Phantom {
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
 
 		virtual void bindCommonShader();
-
 	private:
 		OpenGLShader * m_pShader;
 		OpenGLShader* m_skyboxShader;
-		OpenGLShader* m_cubeShader; 
-		GLuint m_cubeVAOID;
 		GLuint m_uboFrameId; 
 		GLuint m_uboBatchId; 
 		GLuint m_lightId;
