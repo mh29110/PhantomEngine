@@ -336,7 +336,7 @@ namespace Phantom {
 	void OpenGLGraphicsManager::Draw()
 	{
 		// Render the model using the color shader.
-		//RenderBuffers();
+		RenderBuffers();
 		DrawSkyBox();
 		m_pShader->unbind();
 		glFlush();
