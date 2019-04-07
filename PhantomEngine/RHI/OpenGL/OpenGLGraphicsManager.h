@@ -46,6 +46,8 @@ namespace Phantom {
 	private:
 		OpenGLShader * m_pShader;
 		OpenGLShader* m_skyboxShader;
+		OpenGLShader* m_cubeShader; 
+		GLuint m_cubeVAOID;
 		GLuint m_uboFrameId; 
 		GLuint m_uboBatchId; 
 		GLuint m_lightId;

@@ -30,9 +30,7 @@ void Phantom::GraphicsManager::CalculateCameraMatrix() {
 void Phantom::GraphicsManager::UpdateConstants() {
 	bindCommonShader();
 
-	auto& frame = m_Frame;
-
-	for (auto& pDbc : frame.batchContexts)
+	for (auto& pDbc : m_Frame.batchContexts)
 	{
 		pDbc->modelMatrix = *pDbc->node->GetCalculatedTransform();
 	}
@@ -40,7 +38,7 @@ void Phantom::GraphicsManager::UpdateConstants() {
 	//#todo
 	CalculateCameraMatrix();
 
-	SetPerFrameConstants(frame.frameContext);
-	SetPerFrameLight(frame.light);
-	SetPerBatchConstants(frame.batchContexts);
+	SetPerFrameConstants(m_Frame.frameContext);
+	SetPerFrameLight(m_Frame.light);
+	SetPerBatchConstants(m_Frame.batchContexts);
 }

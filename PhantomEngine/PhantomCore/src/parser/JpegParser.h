@@ -23,17 +23,17 @@ namespace Phantom {
 			// 用jpeg_read_header获得jpg信息
 			jpeg_read_header(&cinfo, TRUE);
 			/* 源信息 */
-			printf("image_width    = %d\n", cinfo.image_width);
-			printf("image_height   = %d\n", cinfo.image_height);
+			/*printf("image_width    = %d\n", cinfo.image_width);
+			printf("image_height   = %d\n", cinfo.image_height);*/
 
 			// 设置解压参数,比如放大、缩小
 		  // 启动解压：jpeg_start_decompress
 			jpeg_start_decompress(&cinfo);
 
 			/* 输出的图像信息 */
-			printf("output_width   = %d\n", cinfo.output_width);
+			/*printf("output_width   = %d\n", cinfo.output_width);
 			printf("output_height  = %d\n", cinfo.output_height);
-			printf("output_components = %d\n", cinfo.output_components);
+			printf("output_components = %d\n", cinfo.output_components);*/
 
 			//设置一行的数据buffer
 			int row_stride = cinfo.output_width* cinfo.output_components;

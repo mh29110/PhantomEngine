@@ -18,36 +18,49 @@ const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
 
 const char SKYBOX_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_vert.shader";
 const char SKYBOX_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_frag.shader";
+float cubeVertices[] = {
+	// positions          // texture Coords
+		-50.0f, -50.0f, -50.0f,  0.0f, 0.0f,
+	 50.0f, -50.0f, -50.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+	-50.0f,  50.0f, -50.0f,  0.0f, 1.0f,
+	-50.0f, -50.0f, -50.0f,  0.0f, 0.0f,
 
-static const float skyboxVertices[] = {
-		1.0f,  1.0f,  1.0f,  // 0
-	   -1.0f,  1.0f,  1.0f,  // 1
-		1.0f, -1.0f,  1.0f,  // 2
-		1.0f,  1.0f, -1.0f,  // 3
-	   -1.0f,  1.0f, -1.0f,  // 4
-		1.0f, -1.0f, -1.0f,  // 5
-	   -1.0f, -1.0f,  1.0f,  // 6
-	   -1.0f, -1.0f, -1.0f   // 7
-};
+	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+	 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f,  50.0f,  1.0f, 1.0f,
+	 50.0f,  50.0f,  50.0f,  1.0f, 1.0f,
+	-50.0f,  50.0f,  50.0f,  0.0f, 1.0f,
+	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
 
-static const uint8_t skyboxIndices[] = {
-	4, 7, 5,
-	5, 3, 4,
+	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
 
-	6, 7, 4,
-	4, 1, 6,
+	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+	 50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
 
-	5, 2, 0,
-	0, 3, 5,
+	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+	 50.0f, -50.0f, -50.0f,  1.0f, 1.0f,
+	 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
+	 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
+	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
 
-	6, 1, 0,
-	0, 2, 6,
-
-	4, 3, 0,
-	0, 1, 4,
-
-	7, 6, 5,
-	5, 6, 2
+	-50.0f,  50.0f, -50.0f,  0.0f, 1.0f,
+	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+	-50.0f,  50.0f,  50.0f,  0.0f, 0.0f,
+	-50.0f,  50.0f, -50.0f,  0.0f, 1.0f
 };
 
 using namespace std;
@@ -246,8 +259,6 @@ namespace Phantom {
 		return true;
 	}
 
-
-
 	int OpenGLGraphicsManager::Init()
 	{
 
@@ -277,10 +288,10 @@ namespace Phantom {
 			glCullFace(GL_BACK);
 		}
 
-
 		InitializeShader();
 		InitializeBuffers();
 		initializeSkyBox();
+		
 		GraphicsManager::Init();
 		glGenBuffers(1, &m_uboBatchId);
 		glGenBuffers(1, &m_uboFrameId);
@@ -304,6 +315,7 @@ namespace Phantom {
 
 		delete m_pShader;
 		delete m_skyboxShader;
+		delete m_cubeShader;
 	}
 
 	void OpenGLGraphicsManager::Tick()
@@ -335,50 +347,75 @@ namespace Phantom {
 
 	bool OpenGLGraphicsManager::initializeSkyBox()
 	{
-		auto const  & scene = g_pSceneManager->GetSceneForRendering();
-		const auto material = scene.GetFirstMaterial();
-		if (!material) return false;
-		const auto & color = material->GetBaseColor();
-		if (!color.ValueMap) return false;
-		const auto& texture = color.ValueMap->GetTextureImage();
+		
 
-		uint32_t texture_id;
-		const uint32_t kMaxMipLevels = 10;
-		glGenTextures(1, &texture_id);
+
+		//==============================================
+		static const float skyboxVertices[] = {
+			  1.0f,  1.0f,  1.0f,  // 0
+		-1.0f,  1.0f,  1.0f,  // 1
+		 1.0f, -1.0f,  1.0f,  // 2
+		 1.0f,  1.0f, -1.0f,  // 3
+		-1.0f,  1.0f, -1.0f,  // 4
+		 1.0f, -1.0f, -1.0f,  // 5
+		-1.0f, -1.0f,  1.0f,  // 6
+		-1.0f, -1.0f, -1.0f   // 7
+		};
+
+		static const uint8_t skyboxIndices[] = {
+			4, 7, 5,
+			5, 3, 4,
+
+			6, 7, 4,
+			4, 1, 6,
+
+			5, 2, 0,
+			0, 3, 5,
+
+			6, 1, 0,
+			0, 2, 6,
+
+			4, 3, 0,
+			0, 1, 4,
+
+			7, 6, 5,
+			5, 6, 2
+		};
 		GLenum target;
 #if defined(OS_WEBASSEMBLY)
 		target = GL_TEXTURE_2D_ARRAY;
 #else
 		target = GL_TEXTURE_CUBE_MAP;
 #endif
+		uint32_t texture_id;
+		glGenTextures(1, &texture_id);
 		glBindTexture(target, texture_id);
-		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(target, GL_TEXTURE_BASE_LEVEL, 0);
-		glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, kMaxMipLevels);
-		glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-		for (uint32_t i = 0; i < 6; i++)
+		std::string names[] = {"Textures/front.jpg","Textures/back.jpg","Textures/left.jpg",
+								"Textures/right.jpg" ,"Textures/top.jpg","Textures/bottom.jpg" };
+		for (int picIdx = 0; picIdx < 6; picIdx++)
 		{
-			GLenum format;
-			if (texture->bitcount == 24)
-			{
-				format = GL_RGB;
-			}
-			else
-			{
-				format = GL_RGBA;
-			}
-
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, texture->Width, texture->Height,
-				0, format, GL_UNSIGNED_BYTE, texture->data);
+			Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary(names[picIdx].c_str());
+			JpegParser parser;
+			auto imgptr = std::make_shared<Image>(parser.Parse(buf));
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + picIdx, 0, GL_RGB, imgptr->Width, imgptr->Height,
+				0, GL_RGB, GL_UNSIGNED_BYTE, imgptr->data);
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			//glTexParameteri(target, GL_TEXTURE_BASE_LEVEL, 0);
+			//glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, kMaxMipLevels);
+			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		}
+
+		for (GLenum err; (err = glGetError()) != GL_NO_ERROR;)
+		{
+			printf("gl error = %d", err);
+		}
+
 
 		m_textures["SkyBox"] = texture_id;
 		m_Frame.frameContext.skybox = texture_id;
-		glBindTexture(target, 0);
 
 		// skybox VAO
 		uint32_t skyboxVAO, skyboxVBO[2];
@@ -397,11 +434,44 @@ namespace Phantom {
 
 		glBindVertexArray(0);
 
-
 		m_skyboxContext.vao = skyboxVAO;
 		m_skyboxContext.mode = GL_TRIANGLES;
 		m_skyboxContext.type = GL_UNSIGNED_BYTE;
 		m_skyboxContext.indexCount = sizeof(skyboxIndices) / sizeof(skyboxIndices[0]);
+		
+
+
+
+		// cube VAO
+		unsigned int cubeVAO, cubeVBO;
+		glGenVertexArrays(1, &cubeVAO);
+		glGenBuffers(1, &cubeVBO);
+		glBindVertexArray(cubeVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		m_cubeVAOID = cubeVAO;
+
+
+		Buffer buf = g_pAssetLoader->SyncOpenAndReadBinary("Textures/back.jpg");
+		JpegParser parser;
+		auto imgptr = std::make_shared<Image>(parser.Parse(buf));
+		GLuint cubeTexture;
+		glGenTextures(1, &cubeTexture);
+		glBindTexture(GL_TEXTURE_2D, cubeTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgptr->Width, imgptr->Height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgptr->data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		m_textures["cube"] = cubeTexture;
+
+	
 		return true;
 	}
 
@@ -410,24 +480,21 @@ namespace Phantom {
 	//也就是只有那些场景物体没有覆盖的地方会被天空盒覆盖。
 	void OpenGLGraphicsManager::DrawSkyBox()
 	{
-		m_skyboxShader->bind();
-		int32_t texture_id = m_Frame.frameContext.skybox;
-		m_skyboxShader->setUniform1i("skybox", 0);
-		int loc = glGetUniformLocation(m_skyboxShader->m_ShaderId,"skybox");
-		if (loc < 0)
-		{
-			printf("Uniform: %d not found.\n", loc);
-		}
+		m_cubeShader->bind();
+		m_cubeShader->setUniform1i("texture1", 0);
+		m_cubeShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
+		m_cubeShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
+		m_cubeShader->setUniformMat4("model", m_Frame.batchContexts[0]->modelMatrix);
+	
+		glBindVertexArray(m_cubeVAOID);
 		glActiveTexture(GL_TEXTURE0);
-		GLenum target;
-#if defined(OS_WEBASSEMBLY)
-		target = GL_TEXTURE_2D_ARRAY;
-#else
-		target = GL_TEXTURE_CUBE_MAP;
-#endif
-		glBindTexture(target, texture_id);
+		glBindTexture(GL_TEXTURE_2D, m_textures["cube"]);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
 
-		// Prepare & Bind per frame constant buffer
+
+		m_skyboxShader->bind();
+		 //Prepare & Bind per frame constant buffer
 		//uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
 
 		//if (blockIndex == GL_INVALID_INDEX)
@@ -437,20 +504,37 @@ namespace Phantom {
 		//	return;
 		//}
 		//glUniformBlockBinding(m_skyboxShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);//frame'ubo bind constant position
-
 		//glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
+
+
 		GLint OldCullFaceMode;
 		glGetIntegerv(GL_CULL_FACE_MODE, &OldCullFaceMode);
-
-		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+		GLint OldDepthFuncMode;
+		glGetIntegerv(GL_DEPTH_FUNC, &OldDepthFuncMode);
 		glCullFace(GL_FRONT);
+		glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
+
+		int32_t texture_id = m_Frame.frameContext.skybox;
+		int loc = glGetUniformLocation(m_skyboxShader->m_ShaderId, "skybox");
+		if (loc < 0)
+		{
+			printf("Uniform: %d not found.\n", loc);
+		}
+		mat4x4 m1 = m_Frame.frameContext.viewMatrix;
+
 		glBindVertexArray(m_skyboxContext.vao);
+		m_skyboxShader->setUniform1i("skybox", 0);
+		m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
+		m_skyboxShader->setUniformMat4("view", m1);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
 		glDrawElements(m_skyboxContext.mode, m_skyboxContext.indexCount, m_skyboxContext.type, 0x00);
 		glBindVertexArray(0);
-		glDepthFunc(GL_LESS); // set depth function back to default
-		glCullFace(OldCullFaceMode);
-		m_skyboxShader->unbind();
 
+		glCullFace(OldCullFaceMode);
+		glDepthFunc(OldDepthFuncMode);
+		m_skyboxShader->unbind();
 
 
 	}
@@ -517,6 +601,8 @@ namespace Phantom {
 	{
 		m_pShader = new  OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 		m_skyboxShader =  new OpenGLShader(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
+		m_cubeShader =  new OpenGLShader("Resources/shaders/cubevs.shader", "Resources/shaders/cubefs.shader");
+
 		return true;
 	}
 
