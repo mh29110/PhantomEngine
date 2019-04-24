@@ -159,7 +159,7 @@ namespace Phantom {
 		// mouse handling
 		void LeftMouseButtonDown();
 		void LeftMouseButtonUp();
-		void LeftMouseDrag(int deltaX, int deltaY);
+		void LeftMouseDrag(int newX, int newY);
 
 		bool GetUpKeyPressed() { return m_keyState[PHANTOM_KEY_UP]; }
 		bool GetDownKeyPressed() { return m_keyState[PHANTOM_KEY_DOWN]; }

@@ -156,7 +156,8 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 		if (pThis->m_bInDrag) {
 			int pos_x = GET_X_LPARAM(lParam);
 			int pos_y = GET_Y_LPARAM(lParam);
-			g_pInputManager->LeftMouseDrag(pos_x - pThis->m_iPreviousX, pos_y - pThis->m_iPreviousY);
+			//delta    g_pInputManager->LeftMouseDrag(pos_x - pThis->m_iPreviousX, pos_y - pThis->m_iPreviousY);
+			g_pInputManager->LeftMouseDrag(pos_x, pos_y);
 		}
 		break;
 		// this message is read when the window is closed

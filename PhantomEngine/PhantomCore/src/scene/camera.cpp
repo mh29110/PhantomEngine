@@ -1,6 +1,9 @@
 #include "camera.h"
+#include "AngleUtils.h"
+#include <math.h>
 
 using namespace Phantom::maths;
+
 void Phantom::CameraNode::initViewMatrix()
 {
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
@@ -8,32 +11,76 @@ void Phantom::CameraNode::initViewMatrix()
 	if (m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
 		//摄像机位置；  LookAt位置， Up方向  
-		m_viewMatrix.LookAtMatrixBuild(vec3(m_positionX, 0, m_positionZ),
-			vec3(0, 0, 0),
-			vec3(0, 1, 0));
+		m_viewMatrix.LookAtMatrixBuild(Position, Front, UP);
+
 	}
 	else {
 		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	m_projectionMatrix.perspective(90.0f, 16.0f / 9.0f, 0.01f, 10000.0f);
+	m_projectionMatrix.perspective(toDegrees(Zoom), 16.0f / 9.0f, 0.01f, 10000.0f);
 }
 void Phantom::CameraNode::CalculateVPMatrix()
 {
-	if (m_Transforms.size() == 0) {
+	if (true||m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
 		//摄像机位置；  LookAt位置， Up方向  
-		m_viewMatrix.LookAtMatrixBuild(vec3(m_positionX, 0, m_positionZ),
-			vec3(0, 0, 0),
-			vec3(0, 1, 0));
+		m_viewMatrix.LookAtMatrixBuild(Position, Front, UP);
 	}
 	else {
 		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo 默认无相机没有考虑
-		cMat.elements[12] += m_positionX;
-		cMat.elements[13] += m_positionY;
-		cMat.elements[14] += m_positionZ;
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
+	m_projectionMatrix.perspective(toDegrees(Zoom) ,16.0f / 9.0f, 0.01f, 10000.0f);
+}
+
+void Phantom::CameraNode::ProcessKeyboard(CameraDirection direction, float deltaTime)
+{
+	float velocity =  deltaTime;
+	vec3 movation;
+	if (direction == FORWARD) {
+		movation = Front * velocity;
+		Position += movation;
+	}
+	if (direction == BACKWARD) {
+		movation = Front * velocity;
+        Position -= movation;
+	}
+	if (direction == LEFT) {
+		movation = Right * velocity;
+		Position -= movation;
+	}
+	if (direction == RIGHT) {
+		movation = Right * velocity;
+		Position += movation;
+	}
+          
+}
+
+void Phantom::CameraNode::ProcessMouseMovement(float xoffset, float yoffset)
+{
+	xoffset*=0.1f;
+	yoffset*=0.1f;
+	Yaw += xoffset;
+	Pitch += yoffset;
+
+	/*if (Pitch > 89.0f)
+		Pitch = 89.0f;
+	if (Pitch < -89.0f)
+		Pitch = -89.0f;*/
+	// Update Front, Right and Up Vectors using the updated Euler angles
+	updateCameraVectors();
+}
+
+void Phantom::CameraNode::updateCameraVectors()
+{
+	vec3 front;
+	front.x = cos(toRadians(Yaw)) * cos(toRadians(Pitch));
+	front.y = sin(toRadians(Pitch));
+	front.z = sin(toRadians(Yaw))* cos(toRadians(Pitch));
+	Front = front.normalize();
+	Right = Front.crossProduct(WorldUp).normalize();  //为了算UP，Up可能是垂直于右方向的任意方向。
+	UP = Right.crossProduct(Front).normalize();
 }

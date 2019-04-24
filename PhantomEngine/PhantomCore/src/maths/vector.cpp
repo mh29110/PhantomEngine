@@ -148,6 +148,11 @@ namespace Phantom {
 			return multiply(other);
 		}
 
+		vec3 & vec3::operator*(const float & velocity)
+		{
+			return vec3(x*velocity, y*velocity, z*velocity);
+		}
+
 		vec3 operator+(const vec3 & left, const vec3 & right)
 		{
 			return vec3(left.x + right.x, left.y + right.y, left.z + right.z);
@@ -160,6 +165,7 @@ namespace Phantom {
 		{
 			return left.x*right.x + left.y*right.y + left.z * right.z;
 		}
+
 
 		vec3 vec3::operator-(const vec3 & right)
 		{

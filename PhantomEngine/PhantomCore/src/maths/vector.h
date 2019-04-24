@@ -42,6 +42,7 @@ namespace Phantom {namespace maths {
 		friend vec3 operator +(const vec3& left, const vec3&right);
 		friend vec3 operator -(const vec3& left, const vec3&right);
 		friend float operator *(const vec3& left, const vec3&right);
+		vec3& operator * (const float & velocity);
 		vec3 operator -( const vec3&right);
 
 		bool operator==(const vec3& other);
@@ -50,6 +51,7 @@ namespace Phantom {namespace maths {
 		vec3& operator+=(const vec3& other);
 		vec3& operator-=(const vec3& other);
 		float operator*=(const vec3& other);
+
 
 		friend std::ostream& operator<<(std::ostream& stream, const vec3& vector);
 	};
