@@ -1,3 +1,4 @@
+#include <iostream>
 #include "camera.h"
 #include "AngleUtils.h"
 #include <math.h>
@@ -11,7 +12,7 @@ void Phantom::CameraNode::initViewMatrix()
 	if (m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
 		//摄像机位置；  LookAt位置， Up方向  
-		m_viewMatrix.LookAtMatrixBuild(Position, Front, UP);
+		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front, UP);
 
 	}
 	else {
@@ -26,7 +27,7 @@ void Phantom::CameraNode::CalculateVPMatrix()
 	if (true||m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
 		//摄像机位置；  LookAt位置， Up方向  
-		m_viewMatrix.LookAtMatrixBuild(Position, Front, UP);
+		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front,  UP);
 	}
 	else {
 		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo 默认无相机没有考虑
@@ -65,6 +66,12 @@ void Phantom::CameraNode::ProcessMouseMovement(float xoffset, float yoffset)
 	yoffset*=0.1f;
 	Yaw += xoffset;
 	Pitch += yoffset;
+#ifdef _DEBUG
+	std::cerr << "[camera] camera angle::! ("
+		<< xoffset << ","
+		<< yoffset << ")"
+		<< std::endl;
+#endif
 
 	/*if (Pitch > 89.0f)
 		Pitch = 89.0f;

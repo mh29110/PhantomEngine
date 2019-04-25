@@ -157,7 +157,7 @@ namespace Phantom {
 		bool IsKeyPressed(int keycode) const;
 
 		// mouse handling
-		void LeftMouseButtonDown();
+		void LeftMouseButtonDown(float x,float y);
 		void LeftMouseButtonUp();
 		void LeftMouseDrag(int newX, int newY);
 

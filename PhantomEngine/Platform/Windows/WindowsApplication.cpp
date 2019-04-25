@@ -135,10 +135,10 @@ LRESULT CALLBACK Phantom::WindowsApplication::WindowProc(HWND hWnd, UINT message
 	
 	case WM_LBUTTONDOWN:
 	{
-		g_pInputManager->LeftMouseButtonDown();
 		pThis->m_bInDrag = true;
 		pThis->m_iPreviousX = GET_X_LPARAM(lParam);
 		pThis->m_iPreviousY = GET_Y_LPARAM(lParam);
+		g_pInputManager->LeftMouseButtonDown(pThis->m_iPreviousX,pThis->m_iPreviousY);
 	}
 	break;
 	case WM_LBUTTONUP:

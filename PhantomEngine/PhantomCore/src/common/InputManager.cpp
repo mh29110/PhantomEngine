@@ -46,8 +46,10 @@ void InputManager::AsciiKeyUp(char keycode)
 #
 }
 
-void InputManager::LeftMouseButtonDown()
+void InputManager::LeftMouseButtonDown(float x, float y)
 {
+	m_mousePosition.x = x;
+	m_mousePosition.y = y;
 #ifdef _DEBUG
     cerr << "[InputManager] Left Mouse Button Down!" << endl;
 #endif
@@ -62,17 +64,18 @@ void InputManager::LeftMouseButtonUp()
 
 void InputManager::LeftMouseDrag(int newX, int newY)
 {
-#ifdef _DEBUG
-    cerr << "[InputManager] Left Mouse Dragged! (" 
-        << newX << ","
-        << newY << ")"
-        << endl;
-#endif
+
 	int deltaX = newX - m_mousePosition.x;
 	int deltaY = newY - m_mousePosition.y;
 	m_mousePosition.x = newX;
 	m_mousePosition.y = newY;
 	g_pBehaviourManager->LeftMouseDrag( deltaX, deltaY);
+#ifdef _DEBUG
+	/*cerr << "[InputManager] Left Mouse Dragged! ("
+		<< deltaX << ","
+		<< deltaY << ")"
+		<< endl;*/
+#endif
 }
 
 
