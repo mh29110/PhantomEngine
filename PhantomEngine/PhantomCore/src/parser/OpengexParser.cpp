@@ -1,6 +1,7 @@
 #include "opengexparser.h"
 #include "PhMaths.h"
 #include "SceneGeometryNode.h"
+#include "SceneLightNode.h"
 #include "SceneObjectGeometry.h"
 #include "SceneObjectMaterial.h"
 #include "SceneObjectTexture.h"
@@ -14,6 +15,24 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	case OGEX::kStructureNode:
 	{
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
+	}
+	break;
+	case OGEX::kStructureLightNode:
+	{
+		auto _node = std::make_shared<SceneLightNode>(structure.GetStructureName());
+
+		//**red**  前面少写了& ， 析构失败。 。。。。。
+		const OGEX::LightNodeStructure&/*必须&*/ _structure = dynamic_cast<const OGEX::LightNodeStructure&>(structure);
+
+		_node->SetCastShadow(_structure.GetShadowFlag());
+
+		// ref scene objects
+		std::string _key = _structure.GetObjectStructure()->GetStructureName();
+		_node->AddSceneObjectRef(_key);
+
+		scene.LightNodes.emplace(_key, _node);
+
+		node = _node;
 	}
 	break;
 	case OGEX::kStructureCameraNode:
@@ -122,6 +141,17 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		node = _node;
 	}
 	break;
+	case OGEX::kStructureLightObject:
+	{
+		const OGEX::LightObjectStructure& _structure = dynamic_cast<const OGEX::LightObjectStructure&>(structure);
+		std::string _key = _structure.GetStructureName();
+		std::shared_ptr<SceneObjectLight> light;
+
+			light = std::make_shared<SceneObjectDirectLight>();
+
+		scene.Lights[_key] = light;
+	}
+	return;
 	case OGEX::kStructureGeometryObject:
 	{
 		const OGEX::GeometryObjectStructure& _structure =
