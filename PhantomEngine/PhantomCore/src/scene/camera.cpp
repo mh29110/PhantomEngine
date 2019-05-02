@@ -20,7 +20,7 @@ void Phantom::CameraNode::initViewMatrix()
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	m_projectionMatrix.perspective(toDegrees(Zoom), 16.0f / 9.0f, 0.01f, 10000.0f);
+	m_projectionMatrix.perspective(Zoom, 16.0f / 9.0f, 0.01f, 10000.0f);
 }
 void Phantom::CameraNode::CalculateVPMatrix()
 {
@@ -34,7 +34,7 @@ void Phantom::CameraNode::CalculateVPMatrix()
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	m_projectionMatrix.perspective(toDegrees(Zoom) ,16.0f / 9.0f, 0.01f, 10000.0f);
+	m_projectionMatrix.perspective(Zoom ,16.0f / 9.0f, 0.01f, 10000.0f);
 }
 
 void Phantom::CameraNode::ProcessKeyboard(CameraDirection direction, float deltaTime)

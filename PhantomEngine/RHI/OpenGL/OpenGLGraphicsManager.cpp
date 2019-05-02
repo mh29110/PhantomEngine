@@ -346,7 +346,6 @@ namespace Phantom {
 	{
 		
 
-
 		//==============================================
 		static const float skyboxVertices[] = {
 			// positions          
@@ -466,19 +465,15 @@ namespace Phantom {
 		//glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
 
 
-		/*glCullFace(GL_BACK);
-		glDepthFunc(GL_LESS);
-		GLint OldCullFaceMode;
-		glGetIntegerv(GL_CULL_FACE_MODE, &OldCullFaceMode);
-		GLint OldDepthFuncMode;
-		glGetIntegerv(GL_DEPTH_FUNC, &OldDepthFuncMode);
-		glCullFace(GL_FRONT);*/
+		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
 		m_skyboxShader->bind();
 		int32_t texture_id = m_Frame.frameContext.skybox;
 
 		m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
 		m_skyboxShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
+
+
 
 		glBindVertexArray(m_skyboxContext.vao);
 		glActiveTexture(GL_TEXTURE0);
@@ -487,9 +482,7 @@ namespace Phantom {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);
-		/*glCullFace(OldCullFaceMode);
-		glDepthFunc(OldDepthFuncMode);
-		m_skyboxShader->unbind();*/
+		glDepthMask(GL_TRUE);
 	}
 
 	void OpenGLGraphicsManager::resize(int32_t width, int32_t height)
