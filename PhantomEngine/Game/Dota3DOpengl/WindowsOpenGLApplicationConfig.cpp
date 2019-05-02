@@ -10,7 +10,7 @@
 #include "InputManager.h"
 namespace Phantom {
 	//配置程序集命名空间内管理器的全局变量
-    GfxConfiguration config(8, 8, 8, 8, 24, 8, 0, 960, 540, "Game  (Windows OpenGL)");
+    GfxConfiguration config(8, 8, 8, 8, 24, 8, 0, 960, 540, "Phantom Game  (Windows OpenGL)");
     IApplication* g_pApp                = static_cast<IApplication*>(new OpenGLApplication(config));
     GraphicsManager* g_pGraphicsManager = static_cast<GraphicsManager*>(new OpenGLGraphicsManager);
     AssetLoadManager*     g_pAssetLoader     = static_cast<AssetLoadManager*>(new AssetLoadManager);

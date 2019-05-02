@@ -282,8 +282,8 @@ namespace Phantom {
 			//默认值是GL_CCW，它代表逆时针，GL_CW代表顺时针顺序。
 			glFrontFace(GL_CCW);
 
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK);
+			/*glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);*/
 		}
 
 		InitializeShader();
@@ -401,11 +401,7 @@ namespace Phantom {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	
 		GLenum target;
-#if defined(OS_WEBASSEMBLY)
-		target = GL_TEXTURE_2D_ARRAY;
-#else
 		target = GL_TEXTURE_CUBE_MAP;
-#endif
 		uint32_t texture_id;
 		glGenTextures(1, &texture_id);
 		glBindTexture(target, texture_id);

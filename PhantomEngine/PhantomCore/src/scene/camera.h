@@ -23,13 +23,13 @@ namespace Phantom {
 		const float ZOOM = 30.0f;
 	public:
 		CameraNode() :	UP(0, 1, 0), 
-						Position(0, 0, 5), 
+						Position(0, 5, 5), 
 						Front(0, 0, 1),
 						WorldUp(0,1,0),
 						Right(-1,0,0), Zoom(ZOOM),Yaw(YAW),Pitch(PITCH)
 						{};
 		CameraNode(const char* name) : UP(0, 1, 0),
-			Position(0, 0, 5),
+			Position(0, 5, 5),
 			Front(0, 0, 1),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM), Yaw(YAW), Pitch(PITCH)
@@ -37,7 +37,7 @@ namespace Phantom {
 			m_Name = name;
 		};
 		CameraNode(const std::string& name) : UP(0, 1, 0),
-			Position(0, 0, 5),
+			Position(0, 5, 5),
 			Front(0, 0, 1),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM), Yaw(YAW), Pitch(PITCH)
@@ -45,7 +45,7 @@ namespace Phantom {
 			m_Name = name;
 		};
 		CameraNode(const std::string&& name) : UP(0, 1, 0),
-			Position(0, 0, 5),
+			Position(0, 5, 5),
 			Front(0, 0, 1),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM) , Yaw(YAW), Pitch(PITCH)

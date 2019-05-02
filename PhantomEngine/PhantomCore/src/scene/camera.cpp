@@ -64,8 +64,8 @@ void Phantom::CameraNode::ProcessMouseMovement(float xoffset, float yoffset)
 {
 	xoffset*=0.1f;
 	yoffset*=0.1f;
-	Yaw += xoffset;
-	Pitch += yoffset;
+	Yaw -= xoffset;
+	Pitch -= yoffset;
 #ifdef _DEBUG
 	std::cerr << "[camera] camera angle::! ("
 		<< xoffset << ","
