@@ -33,8 +33,11 @@ public:
 
 public:
 	const std::shared_ptr<SceneObjectMaterial> GetFirstMaterial() const;
+	const std::shared_ptr<SceneObjectMaterial> GetMaterial(const std::string&  matName) const;
 	void LoadTextures(void);
 protected:
+private:
+	std::shared_ptr<SceneObjectMaterial> m_pDefaultMat;
 };
 
 }

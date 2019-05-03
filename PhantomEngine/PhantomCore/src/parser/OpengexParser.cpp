@@ -128,6 +128,12 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		_node->AddSceneObjectRef(_key);
 
 		// ref materials
+		/* parser sample 
+		MaterialRef (index = 0) {ref {$material20}}
+		MaterialRef (index = 1) {ref {$material5}}
+		MaterialRef (index = 2) {ref {$material7}}
+		MaterialRef (index = 3) {ref {$material16}}
+		*/
 		auto materials = _structure.GetMaterialStructureArray();
 		auto materials_count = materials.GetElementCount();
 		for (auto i = 0; i < materials_count; i++)

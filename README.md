@@ -1,6 +1,12 @@
 # PhantomEngine
 A game engine
 
+
+# 更新计划
+## 灯光
+## 场景物体动态管理
+## 前向渲染实现（渲染批次管理）
+
 #  develop
 ## windows 开发环境
 1. 下载源码到本地目录

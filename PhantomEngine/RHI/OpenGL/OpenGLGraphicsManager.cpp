@@ -214,8 +214,11 @@ namespace Phantom {
 				}
 				auto contextPerBatch = make_shared<OpenGLContextPerDrawBatch>();
 				//materials
-				//const auto matName = pGeometryNode->GetMaterialRef(0);
-				const auto material = scene.GetFirstMaterial();
+				/*const*/ auto material_index = index_array.GetMaterialIndex();
+				material_index = 0;//不太懂3dmax的材质管理，先默认采用Geomatry挂的第一个材质。
+
+				const auto& matName = pGeometryNode->GetMaterialRef(material_index);
+				const auto material = scene.GetMaterial(matName);
 				if (material) {
 					const auto & color = material->GetBaseColor();
 					if (color.ValueMap) {
