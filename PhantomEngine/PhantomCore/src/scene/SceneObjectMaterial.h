@@ -102,48 +102,53 @@ namespace Phantom {
 
             void SetTexture(const std::string& attrib, const std::string& textureName) 
             { 
+				// 3dmax导出时用了绝对地址，截断到Textures目录来映射项目贴图目录。
+				const std::string textureStr = "Textures";
+				int textureBeginIndex = textureName.find(textureStr);
+				const std::string realTextureName = textureName.substr(textureBeginIndex);
+
                 if(attrib == "diffuse") {
-                    m_BaseColor = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_BaseColor = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "specular") {
-                    m_Specular = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Specular = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "specular_power") {
-                    m_SpecularPower = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_SpecularPower = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "emission") {
-                    m_Emission = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Emission = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "opacity") {
-                    m_Opacity = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Opacity = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "transparency") {
-                    m_Transparency = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Transparency = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "normal") {
-                    m_Normal = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Normal = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "metallic") {
-                    m_Metallic = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Metallic = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "roughness") {
-                    m_Roughness = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Roughness = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "ao") {
-                    m_AmbientOcclusion = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_AmbientOcclusion = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
 
                 else if(attrib == "height") {
-                    m_Height = std::make_shared<SceneObjectTexture>(textureName); 
+                    m_Height = std::make_shared<SceneObjectTexture>(realTextureName);
                 }
             }
 

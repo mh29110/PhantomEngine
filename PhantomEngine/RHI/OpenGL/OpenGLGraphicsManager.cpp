@@ -1,6 +1,7 @@
 #include "glad/glad.h"
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include "OpenGLGraphicsManager.h"
 #include "AssetLoadManager.h"
 #include "SceneManager.h"
@@ -523,7 +524,6 @@ namespace Phantom {
 			//绑定纹理
 			m_pShader->setUniform1i("diffuseColor", 0);
 
-
 			glActiveTexture(GL_TEXTURE0);
 			if (dbc.diffuseMap > 0) {
 				glBindTexture(GL_TEXTURE_2D, dbc.diffuseMap);
@@ -531,7 +531,6 @@ namespace Phantom {
 			else {
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
-
 
 
 			glBindVertexArray(dbc.vao);
@@ -551,12 +550,19 @@ namespace Phantom {
 	}
 
 	
+	static float factor = 0.0f;
 
 	void OpenGLGraphicsManager::SetPerFrameLight(const Light & light)
 	{
-		m_Frame.light.lightPos = vec4(1000.0f, 0.0f, 0.0f, 0.0f);
-		m_Frame.light.lightDir = vec4(1.0f, 0.0f, 0.0f, 0.0f);
-		m_Frame.light.lightColor = vec4(255.0f, 255.0f, 0.0f, 255.0f);
+		//来个日出日落
+		float tempX = cos(factor);
+		float tempY = sin(factor);
+		factor += 0.003f;
+
+		m_Frame.light.lightPos = vec4(0.0f, 200.0f, 0.0f, 0.0f);//当前平行光下没有用到
+		m_Frame.light.lightDir = vec4(tempX, tempY, 0.0f, 0.0f);
+		m_Frame.light.lightColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+
 		glBindBuffer(GL_UNIFORM_BUFFER, m_lightId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfLigtBuffer, &light, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);

@@ -17,6 +17,9 @@ in vec2 texc;
 
 void main()
 {
+	float ambientStrength = 0.1f;
+    vec4 ambient = ambientStrength * light.lightColor;
+
 	vec4 diff = texture(diffuseColor, texc.xy);
 
 	vec3 norm = normalize(norl);
@@ -24,6 +27,6 @@ void main()
 	float diffFactor = max(dot(norm, dir), 0.0);
 	vec4 diffuse = diffFactor * light.lightColor;
 
-	color = diff ;
+	color = diff * (diffuse + ambient);
 } 
 
