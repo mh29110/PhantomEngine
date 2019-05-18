@@ -20,7 +20,7 @@ namespace Phantom {
 		const float PITCH = 0.0f;
 		const float SPEED = 2.5f;
 		const float SENSITIVITY = 0.1f;
-		const float ZOOM = 30.0f;
+		const float ZOOM = 45.0f;
 	public:
 		CameraNode() :	UP(0, 1, 0), 
 						Position(0, 50, 5), 

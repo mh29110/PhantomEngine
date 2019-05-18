@@ -2,11 +2,14 @@
 #include "camera.h"
 #include "AngleUtils.h"
 #include <math.h>
+#include "glm/glm.hpp"
+#include <glm/ext/matrix_clip_space.hpp>
 
 using namespace Phantom::maths;
 
 void Phantom::CameraNode::initViewMatrix()
 {
+	updateCameraVectors();
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
 	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/
 	if (true||m_Transforms.size() == 0) {
@@ -21,6 +24,7 @@ void Phantom::CameraNode::initViewMatrix()
 		m_viewMatrix = cMat;
 	}
 	m_projectionMatrix.perspective(Zoom, 16.0f / 9.0f, 0.01f, 10000.0f);
+
 }
 void Phantom::CameraNode::CalculateVPMatrix()
 {
@@ -35,11 +39,15 @@ void Phantom::CameraNode::CalculateVPMatrix()
 		m_viewMatrix = cMat;
 	}
 	m_projectionMatrix.perspective(Zoom ,16.0f / 9.0f, 0.01f, 10000.0f);
+	//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
+	/*glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.01f, 10000.0f);
+
+	m_projectionMatrix = &Projection[0][0];*/
 }
 
 void Phantom::CameraNode::ProcessKeyboard(CameraDirection direction, float deltaTime)
 {
-	float velocity =  deltaTime;
+	float velocity =  deltaTime*3;
 	vec3 movation;
 	if (direction == FORWARD) {
 		movation = Front * velocity;

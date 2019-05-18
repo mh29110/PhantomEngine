@@ -114,6 +114,13 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		}
 	}
 	return;
+	case OGEX::kStructureTranslation:
+	case OGEX::kStructureRotation:
+	case OGEX::kStructureScale: 
+	{
+		std::cout << " not support translation/rotation/scale" << std::endl;
+	}
+	return;
 	case OGEX::kStructureGeometryNode:
 	{
 		std::string _key = structure.GetStructureName();

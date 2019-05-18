@@ -184,7 +184,6 @@ namespace Phantom {
 			{
 				// Generate an ID for the index buffer.
 				glGenBuffers(1, &indexBufferId);
-
 				const SceneObjectIndexArray& index_array = pMesh->GetIndexArray(i);
 				const auto index_array_size = index_array.GetDataSize();
 				const auto index_array_data = index_array.GetData();
@@ -288,6 +287,7 @@ namespace Phantom {
 
 			/*glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);*/
+
 		}
 
 		InitializeShader();
@@ -532,8 +532,6 @@ namespace Phantom {
 			else {
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
-
-
 			glBindVertexArray(dbc.vao);
 			glDrawElements(dbc.mode, dbc.indexCount, dbc.type, 0x00);
 		}

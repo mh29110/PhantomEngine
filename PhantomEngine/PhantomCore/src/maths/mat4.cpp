@@ -153,18 +153,19 @@ namespace Phantom {namespace maths {
 
 		elements[0 + 3 * 4] = (left + right) / (left - right);
 		elements[1 + 3 * 4] = (bottom + top) / (bottom - top);
-		elements[2 + 3 * 4] = (far + near) / (near - far); //openGL 是near - far
+		elements[2 + 3 * 4] = (near) / (near - far); //openGL 是near - far
 
 		return *this;
 	}
 
 	mat4x4 mat4x4::perspective(float fov, float aspectRatio, float near, float far)
 	{
-		float q = 1.0f / tan(toRadians(0.5f * fov));
+		float q = 1.0f / tan(0.5*toRadians(fov));
 		float a = q / aspectRatio;
 
-		float b = (near + far) / (far - near);
-		float c = (2.0f * near * far) / (near - far);
+		float b = -1* (near + far) / (far - near);
+		//float c = (2.0f * near * far) / (near - far);
+		float c = -1*(2.0f * near * far) / (far - near);
 
 		elements[0 + 0 * 4] = a;
 		elements[1 + 1 * 4] = q;
