@@ -96,7 +96,7 @@ namespace Phantom {
 			const auto&pGeometry = i->second;
 			const auto& pMesh = pGeometry->GetMesh().lock();
 
-			//--- mesh ---- ²ğ½â---------
+			//--- mesh ---- Â²Ã°Â½Ã¢---------
 			const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
 			GLuint vertexArrayId;
@@ -148,7 +148,7 @@ namespace Phantom {
 				default:
 					assert(0);
 				}
-				//#todo buff id ĞèÒªÍ³¼Æ¹ÜÀí£¬ÒÔ±¸ÊÍ·ÅÇĞ»»³¡¾°ÊÍ·Å
+				//#todo buff id ÃÃ¨Ã’ÂªÃÂ³Â¼Ã†Â¹ÃœÃ€Ã­Â£Â¬Ã’Ã”Â±Â¸ÃŠÃÂ·Ã…Ã‡ÃÂ»Â»Â³Â¡Â¾Â°ÃŠÃÂ·Ã…
 			}
 
 			const auto indexGroupCount = pMesh->GetIndexGroupCount();
@@ -216,7 +216,7 @@ namespace Phantom {
 				auto contextPerBatch = make_shared<OpenGLContextPerDrawBatch>();
 				//materials
 				/*const*/ auto material_index = index_array.GetMaterialIndex();
-				material_index = 0;//²»Ì«¶®3dmaxµÄ²ÄÖÊ¹ÜÀí£¬ÏÈÄ¬ÈÏ²ÉÓÃGeomatry¹ÒµÄµÚÒ»¸ö²ÄÖÊ¡£
+				material_index = 0;//Â²Â»ÃŒÂ«Â¶Â®3dmaxÂµÃ„Â²Ã„Ã–ÃŠÂ¹ÃœÃ€Ã­Â£Â¬ÃÃˆÃ„Â¬ÃˆÃÂ²Ã‰Ã“ÃƒGeomatryÂ¹Ã’ÂµÃ„ÂµÃšÃ’Â»Â¸Ã¶Â²Ã„Ã–ÃŠÂ¡Â£
 
 				const auto& matName = pGeometryNode->GetMaterialRef(material_index);
 				const auto material = scene.GetMaterial(matName);
@@ -267,7 +267,7 @@ namespace Phantom {
 	{
 
 		int result;
-		result = gladLoadGL();//ÔÚOpenGL RHIÏÂ³õÊ¼»¯glad £¬×¢Òâ¸÷Æ½Ì¨ÒıÓÃglad/(_wgl).c²»Í¬£¬ÔİÔÚcmakeÖĞÉèÖÃ
+		result = gladLoadGL();//Ã”ÃšOpenGL RHIÃÃ‚Â³ÃµÃŠÂ¼Â»Â¯glad Â£Â¬Ã—Â¢Ã’Ã¢Â¸Ã·Ã†Â½ÃŒÂ¨Ã’Ã½Ã“Ãƒglad/(_wgl).cÂ²Â»ÃÂ¬Â£Â¬Ã”ÃÃ”ÃšcmakeÃ–ÃÃ‰Ã¨Ã–Ãƒ
 		if (!result) {
 			cerr << "OpenGL load failed!" << endl;
 			result = -1;
@@ -283,7 +283,7 @@ namespace Phantom {
 			glEnable(GL_DEPTH_TEST);
 
 			// Set the polygon winding to front facing for the right handed system.
-			//Ä¬ÈÏÖµÊÇGL_CCW£¬Ëü´ú±íÄæÊ±Õë£¬GL_CW´ú±íË³Ê±ÕëË³Ğò¡£
+			//Ã„Â¬ÃˆÃÃ–ÂµÃŠÃ‡GL_CCWÂ£Â¬Ã‹Ã¼Â´ÃºÂ±Ã­Ã„Ã¦ÃŠÂ±Ã•Ã«Â£Â¬GL_CWÂ´ÃºÂ±Ã­Ã‹Â³ÃŠÂ±Ã•Ã«Ã‹Â³ÃÃ²Â¡Â£
 			glFrontFace(GL_CCW);
 
 			/*glEnable(GL_CULL_FACE);
@@ -433,7 +433,7 @@ namespace Phantom {
 		m_textures["SkyBox"] = texture_id;
 		m_Frame.frameContext.skybox = texture_id;
 		m_skyboxShader->bind();
-		m_skyboxShader->setUniform1i("skybox", 0);
+		m_skyboxShader->setUniform1i("skybox", 0); //0å·çº¹ç†
 		
 
 		m_skyboxContext.vao = skyboxVAO;
@@ -446,9 +446,9 @@ namespace Phantom {
 		return true;
 	}
 
-	//ÔÚ×îºó»æÖÆ,Êµ¼Ê»æÖÆµÄÃæ»ıĞ¡ĞÔÄÜ¸üºÃ¡£ÔÚshaderÀïÃæÇ¿ÖÆÆäÉî¶ÈÎª1.0£¨¾ÍÊÇ×îÔ¶£©¡£
-	//½«Éî¶È²âÊÔÌõ¼ş´ÓĞ¡ÓÚ¸ÄÎªĞ¡ÓÚµÈÓÚ¡£ÒòÎªÔÚÖ¡¿ªÊ¼µÄÊ±ºòÉî¶È»º³åÇø±»ÇåÎª1.0£¬ËùÒÔÖ»ÓĞÃ»ÓĞ»æÖÆ³¡¾°ÎïÌåµÄ²¿·Ö»á±£³Ö1.0£¬
-	//Ò²¾ÍÊÇÖ»ÓĞÄÇĞ©³¡¾°ÎïÌåÃ»ÓĞ¸²¸ÇµÄµØ·½»á±»Ìì¿ÕºĞ¸²¸Ç¡£
+	//Ã”ÃšÃ—Ã®ÂºÃ³Â»Ã¦Ã–Ã†,ÃŠÂµÂ¼ÃŠÂ»Ã¦Ã–Ã†ÂµÃ„ÃƒÃ¦Â»Ã½ÃÂ¡ÃÃ”Ã„ÃœÂ¸Ã¼ÂºÃƒÂ¡Â£Ã”ÃšshaderÃ€Ã¯ÃƒÃ¦Ã‡Â¿Ã–Ã†Ã†Ã¤Ã‰Ã®Â¶ÃˆÃÂª1.0Â£Â¨Â¾ÃÃŠÃ‡Ã—Ã®Ã”Â¶Â£Â©Â¡Â£
+	//Â½Â«Ã‰Ã®Â¶ÃˆÂ²Ã¢ÃŠÃ”ÃŒÃµÂ¼Ã¾Â´Ã“ÃÂ¡Ã“ÃšÂ¸Ã„ÃÂªÃÂ¡Ã“ÃšÂµÃˆÃ“ÃšÂ¡Â£Ã’Ã²ÃÂªÃ”ÃšÃ–Â¡Â¿ÂªÃŠÂ¼ÂµÃ„ÃŠÂ±ÂºÃ²Ã‰Ã®Â¶ÃˆÂ»ÂºÂ³Ã¥Ã‡Ã¸Â±Â»Ã‡Ã¥ÃÂª1.0Â£Â¬Ã‹Ã¹Ã’Ã”Ã–Â»Ã“ÃÃƒÂ»Ã“ÃÂ»Ã¦Ã–Ã†Â³Â¡Â¾Â°ÃÃ¯ÃŒÃ¥ÂµÃ„Â²Â¿Â·Ã–Â»Ã¡Â±Â£Â³Ã–1.0Â£Â¬
+	//Ã’Â²Â¾ÃÃŠÃ‡Ã–Â»Ã“ÃÃ„Ã‡ÃÂ©Â³Â¡Â¾Â°ÃÃ¯ÃŒÃ¥ÃƒÂ»Ã“ÃÂ¸Â²Â¸Ã‡ÂµÃ„ÂµÃ˜Â·Â½Â»Ã¡Â±Â»ÃŒÃ¬Â¿Ã•ÂºÃÂ¸Â²Â¸Ã‡Â¡Â£
 	void OpenGLGraphicsManager::DrawSkyBox()
 	{
 		
@@ -497,8 +497,8 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::RenderBuffers()
 	{
-		//Ê¹ÓÃubo »ñÈ¡Ò»Ö¡ÆÚ¼äµÄ³£Á¿
-		uint32_t blockIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerFrame");
+		//ÃŠÂ¹Ã“Ãƒubo Â»Ã±ÃˆÂ¡Ã’Â»Ã–Â¡Ã†ÃšÂ¼Ã¤ÂµÃ„Â³Â£ÃÂ¿
+		uint32_t blockIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerFrame");//Shader.PropertyToID
 		if (blockIndex != GL_INVALID_INDEX)
 		{
 			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
@@ -518,13 +518,14 @@ namespace Phantom {
 		for (auto& pDbc : m_Frame.batchContexts)
 		{
 			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(*pDbc);
-			//°ó¶¨Ã¿Åú´ÎäÖÈ¾Ê±µÄ³£Á¿
+			//Â°Ã³Â¶Â¨ÃƒÂ¿Ã…ÃºÂ´ÃÃ¤Ã–ÃˆÂ¾ÃŠÂ±ÂµÃ„Â³Â£ÃÂ¿
 			glBindBufferRange(GL_UNIFORM_BUFFER, bIndex, m_uboBatchId,
 				dbc.batchIndex * kSizeOfBatchConstantBuffer, kSizeOfBatchConstantBuffer);
-			//°ó¶¨ÎÆÀí
-			m_pShader->setUniform1i("diffuseColor", 0);
 
-			glActiveTexture(GL_TEXTURE0);
+			//Â°Ã³Â¶Â¨ÃÃ†Ã€Ã­
+			m_pShader->setUniform1i("diffuseColor", 0);  //material.SetTexture.
+			glActiveTexture(GL_TEXTURE0);  
+
 			if (dbc.diffuseMap > 0) {
 				glBindTexture(GL_TEXTURE_2D, dbc.diffuseMap);
 			}
@@ -554,12 +555,12 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::SetPerFrameLight(const Light & light)
 	{
-		//À´¸öÈÕ³öÈÕÂä
+		//Ã€Â´Â¸Ã¶ÃˆÃ•Â³Ã¶ÃˆÃ•Ã‚Ã¤
 		float tempX = cos(factor);
 		float tempY = sin(factor);
 		factor += 0.003f;
 
-		m_Frame.light.lightPos = vec4(0.0f, 200.0f, 0.0f, 0.0f);//µ±Ç°Æ½ĞĞ¹âÏÂÃ»ÓĞÓÃµ½
+		m_Frame.light.lightPos = vec4(0.0f, 200.0f, 0.0f, 0.0f);//ÂµÂ±Ã‡Â°Ã†Â½ÃÃÂ¹Ã¢ÃÃ‚ÃƒÂ»Ã“ÃÃ“ÃƒÂµÂ½
 		m_Frame.light.lightDir = vec4(tempX, tempY, 0.0f, 0.0f);
 		m_Frame.light.lightColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
 
@@ -575,9 +576,9 @@ namespace Phantom {
 		m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
 
 
-		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);
+		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);   //MaterialPropertyBlock
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrameId);
-		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 ¶ÔÆë  £¬ gpu¿é¶ÁÈ¡ todo
+		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 Â¶Ã”Ã†Ã«  Â£Â¬ gpuÂ¿Ã©Â¶ÃÃˆÂ¡ todo
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 

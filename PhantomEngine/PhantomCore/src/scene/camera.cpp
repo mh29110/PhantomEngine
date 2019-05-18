@@ -9,7 +9,7 @@ void Phantom::CameraNode::initViewMatrix()
 {
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
 	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/
-	if (m_Transforms.size() == 0) {
+	if (true||m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
 		//摄像机位置；  LookAt位置， Up方向  
 		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front, UP);
