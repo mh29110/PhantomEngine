@@ -69,7 +69,7 @@ using namespace Phantom;
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([theEvent type] == NSEventTypeLeftMouseDown)
     {
-        g_pInputManager->LeftMouseButtonDown();
+        g_pInputManager->LeftMouseButtonDown(0.0f,0.0f);//todo
     }
 }
 

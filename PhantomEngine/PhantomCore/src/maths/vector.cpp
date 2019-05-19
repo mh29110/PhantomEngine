@@ -148,7 +148,7 @@ namespace Phantom {
 			return multiply(other);
 		}
 
-		vec3 & vec3::operator*(const float & velocity)
+		vec3  vec3::operator*(const float & velocity)
 		{
 			return vec3(x*velocity, y*velocity, z*velocity);
 		}

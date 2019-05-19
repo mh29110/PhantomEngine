@@ -2,8 +2,7 @@
 #include "camera.h"
 #include "AngleUtils.h"
 #include <math.h>
-#include "glm/glm.hpp"
-#include <glm/ext/matrix_clip_space.hpp>
+
 
 using namespace Phantom::maths;
 
