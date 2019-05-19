@@ -59,7 +59,6 @@ void CocoaApplication::Tick()
                                            inMode:NSDefaultRunLoopMode
                                           dequeue:YES])
     {
-
         switch([(NSEvent *)event type])
         {
             case NSEventTypeKeyUp:

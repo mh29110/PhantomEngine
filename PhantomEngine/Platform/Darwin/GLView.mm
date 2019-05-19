@@ -69,7 +69,8 @@ using namespace Phantom;
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([theEvent type] == NSEventTypeLeftMouseDown)
     {
-        g_pInputManager->LeftMouseButtonDown(0.0f,0.0f);//todo
+        NSPoint mp = [theEvent locationInWindow];
+        g_pInputManager->LeftMouseButtonDown(mp.x,mp.y);//todo
     }
 }
 
@@ -79,16 +80,21 @@ using namespace Phantom;
         g_pInputManager->LeftMouseButtonUp();
     }
 }
+- (void)keyDown:(NSEvent *)theEvent{
+        NSLog(@"%hu",theEvent.keyCode);
+    }
+
 
 - (void)mouseDragged:(NSEvent *)theEvent {
     if ([theEvent type] == NSEventTypeLeftMouseDragged)
     {
-        g_pInputManager->LeftMouseDrag([theEvent deltaX], [theEvent deltaY]);
+        NSPoint mp = [theEvent locationInWindow];
+        g_pInputManager->LeftMouseDrag(mp.x,mp.y);//todo
     }
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent {
-        g_pInputManager->LeftMouseDrag([theEvent deltaX], [theEvent deltaY]);
+    g_pInputManager->DownArrowKeyDown();
 }
 
 @end

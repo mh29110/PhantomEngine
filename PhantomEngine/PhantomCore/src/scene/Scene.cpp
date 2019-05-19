@@ -2,7 +2,6 @@
 #include "SceneObjectVertexArray.h"
 #include "SceneOjbectTypeDef.h"
 #include "SceneBaseNode.h"
-#include "OpengexParser.h"
 #include "BehaviourManager.h"
 
 using namespace Phantom;

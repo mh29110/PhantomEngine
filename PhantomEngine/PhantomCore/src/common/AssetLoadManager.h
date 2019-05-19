@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 #include "IRuntimeModule.h"
-#include "Buffer.h"
+#include "buffer.h"
 
 namespace Phantom {
 	class AssetLoadManager : public IRuntimeModule {

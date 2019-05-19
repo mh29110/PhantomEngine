@@ -21,15 +21,29 @@ namespace Phantom {
 		const float SPEED = 2.5f;
 		const float SENSITIVITY = 0.1f;
 		const float ZOOM = 45.0f;
+        
+        static const Phantom::maths::vec3 DEFAULT_POS;
+        
+    public:
+        Phantom::maths::vec3 UP ;
+        Phantom::maths::vec3 Position ;
+        Phantom::maths::vec3 Front;
+        Phantom::maths::vec3 WorldUp ;
+        Phantom::maths::vec3 Right ;
+        
+        float Zoom;//可响应鼠标滚轮事件 #todo
+        float Yaw = -90.0f;
+        float Pitch = 0.0f;
+		
 	public:
 		CameraNode() :	UP(0, 1, 0), 
-						Position(0, 50, 5), 
+						Position(DEFAULT_POS), 
 						Front(0, 0, 1),
 						WorldUp(0,1,0),
 						Right(-1,0,0), Zoom(ZOOM),Yaw(YAW),Pitch(PITCH)
 						{};
 		CameraNode(const char* name) : UP(0, 1, 0),
-			Position(0, 50, 5),
+			Position(DEFAULT_POS),
 			Front(0, 0, 1),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM), Yaw(YAW), Pitch(PITCH)
@@ -37,7 +51,7 @@ namespace Phantom {
 			m_Name = name;
 		};
 		CameraNode(const std::string& name) : UP(0, 1, 0),
-			Position(0, 50, 5),
+			Position(DEFAULT_POS),
 			Front(0, 0, 1),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM), Yaw(YAW), Pitch(PITCH)
@@ -45,7 +59,7 @@ namespace Phantom {
 			m_Name = name;
 		};
 		CameraNode(const std::string&& name) : UP(0, 1, 0),
-			Position(0, 50, 5),
+			Position(DEFAULT_POS),
 			Front(0, 0, 1),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM) , Yaw(YAW), Pitch(PITCH)
@@ -57,17 +71,7 @@ namespace Phantom {
 
 		void initViewMatrix();
 		void CalculateVPMatrix();
-	public:
-		Phantom::maths::vec3 Position ;
-		Phantom::maths::vec3 Front;
-		Phantom::maths::vec3 UP ;
-		Phantom::maths::vec3 Right ;
-		Phantom::maths::vec3 WorldUp ;
-
-		float Yaw = -90.0f;
-		float Pitch = 0.0f;
-
-		float Zoom;//可响应鼠标滚轮事件 #todo
+	
 		void ProcessKeyboard(CameraDirection direction, float deltaTime);
 		void ProcessMouseMovement(float xoffset, float yoffset);
 

@@ -5,7 +5,7 @@
 
 
 using namespace Phantom::maths;
-
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,500,500);
 void Phantom::CameraNode::initViewMatrix()
 {
 	updateCameraVectors();

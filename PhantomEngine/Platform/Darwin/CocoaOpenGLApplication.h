@@ -19,7 +19,7 @@ namespace Phantom {
 
     private:
 #ifdef __OBJC__
-        GLView* m_pGlView;
+        //GLView* m_pGlView;
 #endif
     };
 }
