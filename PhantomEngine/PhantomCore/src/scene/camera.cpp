@@ -8,12 +8,13 @@ using namespace Phantom::maths;
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,500,500);
 void Phantom::CameraNode::initViewMatrix()
 {
+	Yaw += 0.1f;//todo  鏈変釜bug锛屽惎鍔ㄧ涓�甯уぉ绌虹洅涓嶆覆
 	updateCameraVectors();
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
 	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/
 	if (true||m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
-		//摄像机位置；  LookAt位置， Up方向  
+		//脡茫脧帽禄煤脦禄脰脙拢禄  LookAt脦禄脰脙拢卢 Up路陆脧貌  
 		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front, UP);
 
 	}
@@ -29,11 +30,11 @@ void Phantom::CameraNode::CalculateVPMatrix()
 {
 	if (true||m_Transforms.size() == 0) {
 		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
-		//摄像机位置；  LookAt位置， Up方向  
+		//脡茫脧帽禄煤脦禄脰脙拢禄  LookAt脦禄脰脙拢卢 Up路陆脧貌  
 		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front,  UP);
 	}
 	else {
-		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo 默认无相机没有考虑
+		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo 脛卢脠脧脦脼脧脿禄煤脙禄脫脨驴录脗脟
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
@@ -95,6 +96,6 @@ void Phantom::CameraNode::updateCameraVectors()
 	front.y = sin(toRadians(Pitch));
 	front.z = sin(toRadians(Yaw))* cos(toRadians(Pitch));
 	Front = front.normalize();
-	Right = Front.crossProduct(WorldUp).normalize();  //为了算UP，Up可能是垂直于右方向的任意方向。
+	Right = Front.crossProduct(WorldUp).normalize();  //脦陋脕脣脣茫UP拢卢Up驴脡脛脺脢脟麓鹿脰卤脫脷脫脪路陆脧貌碌脛脠脦脪芒路陆脧貌隆拢
 	UP = Right.crossProduct(Front).normalize();
 }

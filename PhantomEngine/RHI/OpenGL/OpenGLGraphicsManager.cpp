@@ -14,55 +14,7 @@
 #include "SceneObjectIndexArray.h"
 #include "GfxStruct.h"
 
-const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
-const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
 
-const char SKYBOX_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_vert.shader";
-const char SKYBOX_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_frag.shader";
-float cubeVertices[] = {
-	// positions          // texture Coords
-		-50.0f, -50.0f, -50.0f,  0.0f, 0.0f,
-	 50.0f, -50.0f, -50.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
-	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
-	-50.0f,  50.0f, -50.0f,  0.0f, 1.0f,
-	-50.0f, -50.0f, -50.0f,  0.0f, 0.0f,
-
-	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
-	 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  1.0f, 1.0f,
-	 50.0f,  50.0f,  50.0f,  1.0f, 1.0f,
-	-50.0f,  50.0f,  50.0f,  0.0f, 1.0f,
-	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
-
-	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
-	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
-	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
-	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
-	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
-
-	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
-	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
-	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
-	 50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
-
-	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
-	 50.0f, -50.0f, -50.0f,  1.0f, 1.0f,
-	 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
-	 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
-	-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
-	-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
-
-	-50.0f,  50.0f, -50.0f,  0.0f, 1.0f,
-	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
-	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
-	-50.0f,  50.0f,  50.0f,  0.0f, 0.0f,
-	-50.0f,  50.0f, -50.0f,  0.0f, 1.0f
-};
 
 using namespace std;
 using namespace Phantom::maths;
@@ -74,6 +26,62 @@ namespace Phantom {
 	extern AssetLoadManager* g_pAssetLoader;
 	extern SceneManager* g_pSceneManager;
 	extern IApplication* g_pApp;
+
+
+	const char VS_SHADER_SOURCE_FILE[] = "Resources/shaders/vert_light.shader";
+	const char PS_SHADER_SOURCE_FILE[] = "Resources/shaders/frag_light.shader";
+
+	const char SKYBOX_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_vert.shader";
+	const char SKYBOX_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/skybox_frag.shader";
+
+	const char SHADOWMAP_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/shadowMap_vert.shader";
+	const char SHADOWMAP_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/shadowMap_frag.shader";
+
+	float cubeVertices[] = {
+		// positions          // texture Coords
+			-50.0f, -50.0f, -50.0f,  0.0f, 0.0f,
+		 50.0f, -50.0f, -50.0f,  1.0f, 0.0f,
+		 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+		 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+		-50.0f,  50.0f, -50.0f,  0.0f, 1.0f,
+		-50.0f, -50.0f, -50.0f,  0.0f, 0.0f,
+
+		-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+		 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
+		 50.0f,  50.0f,  50.0f,  1.0f, 1.0f,
+		 50.0f,  50.0f,  50.0f,  1.0f, 1.0f,
+		-50.0f,  50.0f,  50.0f,  0.0f, 1.0f,
+		-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+
+		-50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+		-50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+		-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+		-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+		-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+		-50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+
+		 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+		 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+		 50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+		 50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+		 50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+		 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+
+		-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+		 50.0f, -50.0f, -50.0f,  1.0f, 1.0f,
+		 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
+		 50.0f, -50.0f,  50.0f,  1.0f, 0.0f,
+		-50.0f, -50.0f,  50.0f,  0.0f, 0.0f,
+		-50.0f, -50.0f, -50.0f,  0.0f, 1.0f,
+
+		-50.0f,  50.0f, -50.0f,  0.0f, 1.0f,
+		 50.0f,  50.0f, -50.0f,  1.0f, 1.0f,
+		 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+		 50.0f,  50.0f,  50.0f,  1.0f, 0.0f,
+		-50.0f,  50.0f,  50.0f,  0.0f, 0.0f,
+		-50.0f,  50.0f, -50.0f,  0.0f, 1.0f
+	};
+
 
 	bool OpenGLGraphicsManager::InitializeBuffers()
 	{
@@ -317,6 +325,7 @@ namespace Phantom {
 
 		delete m_pShader;
 		delete m_skyboxShader;
+		delete m_pShadowMapShader;
 	}
 
 	void OpenGLGraphicsManager::Tick()
@@ -339,9 +348,12 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::Draw()
 	{
+		//shadow map pass
+		//RenderShadowMap();
+
 		// Render the model using the color shader.
-		RenderBuffers();
-		DrawSkyBox();
+        RenderBuffers();
+        DrawSkyBox();
 		m_pShader->unbind();
 		glFlush();
 	}
@@ -538,13 +550,55 @@ namespace Phantom {
 		glBindVertexArray(0);
 	}
 
+    void OpenGLGraphicsManager::RenderShadowMap()
+    {
+        m_pShadowMapShader->bind();
+        
+        BeginShadowMap();
+        
+        RenderBuffers();
+        
+        EndShadowMap();
+    }
 
+    void OpenGLGraphicsManager::BeginShadowMap()
+    {
+        // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
+        GLuint FramebufferName = 0;
+        glGenFramebuffers(1, &FramebufferName);
+        glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+        
+        // Depth texture. Slower than a depth buffer, but you can sample it later in your shader
+        GLuint depthTexture;
+        glGenTextures(1, &depthTexture);
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
+        
+        glDrawBuffer(GL_NONE); // No color buffer is drawn to.
+        
+        // Always check that our framebuffer is ok
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        {
+            std::cout << " error !!!" <<std::endl;
+        }
+    }
+    
+    void OpenGLGraphicsManager::EndShadowMap()
+    {
+        
+    }
 
 	bool OpenGLGraphicsManager::InitializeShader()
 	{
 		m_pShader = new  OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 		m_skyboxShader =  new OpenGLShader(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
-
+		m_pShadowMapShader = new OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 		return true;
 	}
 

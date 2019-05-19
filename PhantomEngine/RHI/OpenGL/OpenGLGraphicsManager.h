@@ -33,6 +33,12 @@ namespace Phantom {
 		bool SetShaderParameters(maths::mat4x4  worldMatrix, maths::mat4x4  viewMatrix, maths::mat4x4  projectionMatrix);
 
 		void RenderBuffers();
+		
+		void RenderShadowMap();
+		void BeginShadowMap();        
+        void EndShadowMap();
+
+
 		bool InitializeBuffers();
 		bool InitializeShader();
 		bool initializeSkyBox();
@@ -43,8 +49,10 @@ namespace Phantom {
 
 		virtual void bindCommonShader();
 	private:
-		OpenGLShader * m_pShader;
-		OpenGLShader* m_skyboxShader;
+		OpenGLShader*     m_pShader;
+		OpenGLShader*     m_skyboxShader;
+		OpenGLShader*     m_pShadowMapShader;
+
 		GLuint m_uboFrameId; 
 		GLuint m_uboBatchId; 
 		GLuint m_lightId;
