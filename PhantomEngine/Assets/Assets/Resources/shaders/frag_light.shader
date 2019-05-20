@@ -10,10 +10,13 @@ layout( std140) uniform Light
 } light;
 
 uniform sampler2D diffuseColor;
+uniform sampler2D shadowMap;
+
 
 in vec4 pos;
 in vec3 norl;
 in vec2 texc;
+in vec4 ShadowCoord;
 
 void main()
 {
@@ -26,6 +29,8 @@ void main()
 	vec3 dir = normalize(light.lightDir.xyz);
 	float diffFactor = max(dot(norm, dir), 0.0);
 	vec4 diffuse = diffFactor * light.lightColor;
+
+	float depth = texture( shadowMap, ShadowCoord.xy ).z;
 
 	color = diff * (diffuse + ambient);
 } 

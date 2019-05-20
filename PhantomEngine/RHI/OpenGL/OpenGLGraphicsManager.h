@@ -11,6 +11,7 @@ namespace Phantom {
 		ConstantsPerFrameBind = 11,
 		FrameLightBind = 12
 	};
+
 	class OpenGLGraphicsManager : public GraphicsManager
 	{
 	public:
@@ -30,13 +31,12 @@ namespace Phantom {
 
 	protected:
 	private:
-		bool SetShaderParameters(maths::mat4x4  worldMatrix, maths::mat4x4  viewMatrix, maths::mat4x4  projectionMatrix);
-
-		void RenderBuffers();
+		void RenderBatches();
 		
 		void RenderShadowMap();
 		void BeginShadowMap();        
         void EndShadowMap();
+		void SetShadowMap();
 
 
 		bool InitializeBuffers();
@@ -47,18 +47,20 @@ namespace Phantom {
 		virtual void SetPerFrameLight(const Light & light);
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
 
-		virtual void bindCommonShader();
+		virtual void BindShaderByType(Shader_Type st);
 	private:
-		OpenGLShader*     m_pShader;
-		OpenGLShader*     m_skyboxShader;
-		OpenGLShader*     m_pShadowMapShader;
+		std::shared_ptr<OpenGLShader>     m_pShader;
+		std::shared_ptr<OpenGLShader>     m_skyboxShader;
+		std::shared_ptr<OpenGLShader>     m_pShadowMapShader;
+		std::weak_ptr<OpenGLShader>       m_currentShader;
 
 		GLuint m_uboFrameId; 
 		GLuint m_uboBatchId; 
 		GLuint m_lightId;
+		GLuint m_shadowMapFboId;
+
 		std::unordered_map<std::string, GLuint> m_textures;
 
-		GLuint m_ShadowMapFramebufferName;
 
 		const bool VSYNC_ENABLED = true;
 

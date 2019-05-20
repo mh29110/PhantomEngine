@@ -20,6 +20,7 @@ layout( std140) uniform ConstantsPerFrame
 out vec4 pos;
 out vec3 norl;
 out vec2 texc;
+out vec4 ShadowCoord;
 
 void main()
 {
@@ -27,4 +28,5 @@ void main()
     pos = uboBatch.modelMatrix * position;
     texc = vec2 (texcoord.x , 1-texcoord.y);
     norl = normal;
+    ShadowCoord = gl_Position;
 }

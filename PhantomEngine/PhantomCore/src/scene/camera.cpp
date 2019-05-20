@@ -5,7 +5,7 @@
 
 
 using namespace Phantom::maths;
-const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,500,500);
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,50,500);
 void Phantom::CameraNode::initViewMatrix()
 {
 	Yaw += 0.1f;//todo  有个bug，启动第一帧天空盒不渲

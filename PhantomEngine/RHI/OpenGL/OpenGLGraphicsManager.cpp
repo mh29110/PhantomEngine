@@ -306,6 +306,7 @@ namespace Phantom {
 		glGenBuffers(1, &m_uboBatchId);
 		glGenBuffers(1, &m_uboFrameId);
 		glGenBuffers(1, &m_lightId);
+		glGenFramebuffers(1, &m_shadowMapFboId);
 		return result;
 	}
 
@@ -323,9 +324,6 @@ namespace Phantom {
 
 		m_textures.clear();
 
-		delete m_pShader;
-		delete m_skyboxShader;
-		delete m_pShadowMapShader;
 	}
 
 	void OpenGLGraphicsManager::Tick()
@@ -352,9 +350,10 @@ namespace Phantom {
 		RenderShadowMap();
 
 		// Render the model using the color shader.
-        bindCommonShader();
-        RenderBuffers();
-        DrawSkyBox();
+		BindShaderByType(Common_Shader);
+		SetShadowMap();
+		RenderBatches();
+		DrawSkyBox();
 		m_pShader->unbind();
 		glFlush();
 	}
@@ -503,31 +502,47 @@ namespace Phantom {
 		glViewport(0, 0, width, height);
 	}
 
-	void OpenGLGraphicsManager::bindCommonShader()
+	void OpenGLGraphicsManager::BindShaderByType(Shader_Type st)
 	{
-		m_pShader->bind();
+		switch (st)
+		{
+		case Common_Shader:
+			m_currentShader = m_pShader;
+			break;
+		case SkyBox_Shader:
+			m_currentShader = m_skyboxShader;
+			break;
+		case ShadowMap_Shader:
+			m_currentShader = m_pShadowMapShader;
+			break;
+		default:
+			std::cout << "this shader is not supported!" << std::endl;
+			break;
+		}
+		shared_ptr<OpenGLShader> curShader =  m_currentShader.lock();
+		curShader->bind();
 	}
 
-	void OpenGLGraphicsManager::RenderBuffers()
+	void OpenGLGraphicsManager::RenderBatches()
 	{
+		shared_ptr<OpenGLShader> curShader = m_currentShader.lock();
 		//Ê¹ÓÃubo »ñÈ¡Ò»Ö¡ÆÚ¼äµÄ³£Á¿
-		uint32_t blockIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerFrame");//Shader.PropertyToID
+		uint32_t blockIndex = glGetUniformBlockIndex(curShader->m_ShaderId, "ConstantsPerFrame");//Shader.PropertyToID
 		if (blockIndex != GL_INVALID_INDEX)
 		{
-			glUniformBlockBinding(m_pShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
+			glUniformBlockBinding(curShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
 			glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
 		}
 
 		//light 
-		uint32_t lightBlockIdx = glGetUniformBlockIndex(m_pShader->m_ShaderId, "Light");
+		uint32_t lightBlockIdx = glGetUniformBlockIndex(curShader->m_ShaderId, "Light");
 		if (lightBlockIdx != GL_INVALID_INDEX)
 		{
-			glUniformBlockBinding(m_pShader->m_ShaderId, lightBlockIdx, FrameLightBind);
+			glUniformBlockBinding(curShader->m_ShaderId, lightBlockIdx, FrameLightBind);
 			glBindBufferBase(GL_UNIFORM_BUFFER, FrameLightBind, m_lightId);
 		}
 
-
-		uint32_t bIndex = glGetUniformBlockIndex(m_pShader->m_ShaderId, "ConstantsPerBatch");
+		uint32_t bIndex = glGetUniformBlockIndex(curShader->m_ShaderId, "ConstantsPerBatch");
 		for (auto& pDbc : m_Frame.batchContexts)
 		{
 			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(*pDbc);
@@ -535,16 +550,13 @@ namespace Phantom {
 			glBindBufferRange(GL_UNIFORM_BUFFER, bIndex, m_uboBatchId,
 				dbc.batchIndex * kSizeOfBatchConstantBuffer, kSizeOfBatchConstantBuffer);
 
-			//°ó¶¨ÎÆÀí
-			m_pShader->setUniform1i("diffuseColor", 0);  //material.SetTexture.
-			glActiveTexture(GL_TEXTURE0);  
-
-			if (dbc.diffuseMap > 0) {
+			uint32_t diffuseIndex = glGetUniformLocation(curShader->m_ShaderId, "diffuseColor");
+			if (dbc.diffuseMap >= 0 && diffuseIndex != GL_INVALID_INDEX) {
+				m_pShader->setUniform1i("diffuseColor", 0);  //material.SetTexture.
+				glActiveTexture(GL_TEXTURE0);  
 				glBindTexture(GL_TEXTURE_2D, dbc.diffuseMap);
 			}
-			else {
-				glBindTexture(GL_TEXTURE_2D, 0);
-			}
+
 			glBindVertexArray(dbc.vao);
 			glDrawElements(dbc.mode, dbc.indexCount, dbc.type, 0x00);
 		}
@@ -553,68 +565,91 @@ namespace Phantom {
 
     void OpenGLGraphicsManager::RenderShadowMap()
     {
-        m_pShadowMapShader->bind();
+		BindShaderByType(ShadowMap_Shader);
         
         BeginShadowMap();
         
-        RenderBuffers();
+        RenderBatches();
         
         EndShadowMap();
     }
 
     void OpenGLGraphicsManager::BeginShadowMap()
     {
-        // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
-        m_ShadowMapFramebufferName = 0;
-        glGenFramebuffers(1, &m_ShadowMapFramebufferName);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowMapFramebufferName);
-        
-        // Depth texture. Slower than a depth buffer, but you can sample it later in your shader
-        GLuint depthTexture;
-        glGenTextures(1, &depthTexture);
-        glBindTexture(GL_TEXTURE_2D, depthTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
-        
-        glDrawBuffer(GL_NONE); // No color buffer is drawn to.
-        
+		//clear shadow map
+		if (m_Frame.frameContext.shadowMap != -1)
+		{
+			GLuint id = (GLuint)m_Frame.frameContext.shadowMap;
+			glDeleteTextures(1, &id);
+			m_Frame.frameContext.shadowMap = -1;
+		}
+		GLuint shadowMap;
+		glGenTextures(1, &shadowMap);
+		glActiveTexture(GL_TEXTURE0 + shadowMap);
+		glBindTexture(GL_TEXTURE_2D, shadowMap);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 512, 512, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+
+		m_Frame.frameContext.shadowMap = shadowMap;
+
+        glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFboId);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap, 0);
         // Always check that our framebuffer is ok
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         {
             std::cout << " error !!!" <<std::endl;
         }
-        
-        glViewport(0,0,1024,768);
+		glDrawBuffers(0, nullptr); // No color buffer is drawn to.
+		glDepthMask(GL_TRUE);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, 1024, 1024);
 
-        glCullFace(GL_FRONT);//todo
+		m_pShadowMapShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
+		m_pShadowMapShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
+		
+
+
     }
     
     void OpenGLGraphicsManager::EndShadowMap()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        
-        glDeleteFramebuffers(1, &m_ShadowMapFramebufferName);
-        
+
+        //glDeleteFramebuffers(1, &m_shadowMapFboId); //参考  glGenFramebuffers
+
         const GfxConfiguration& conf = g_pApp->GetConfiguration();
         glViewport(0, 0, conf.screenWidth, conf.screenHeight);
         
         glCullFace(GL_BACK); //todo
     }
 
+	void OpenGLGraphicsManager::SetShadowMap()
+	{
+		GLuint textureId = m_Frame.frameContext.shadowMap;
+		//glActiveTexture(GL_TEXTURE0 + textureId);
+		//glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, color);
+		m_pShader->setUniform1i("shadowMap", textureId);
+
+	}
+
 	bool OpenGLGraphicsManager::InitializeShader()
 	{
-		m_pShader = new  OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
-		m_skyboxShader =  new OpenGLShader(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
-		m_pShadowMapShader = new OpenGLShader(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
+		m_pShader = make_shared<OpenGLShader>(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
+		m_skyboxShader = make_shared<OpenGLShader>(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
+		m_pShadowMapShader = make_shared<OpenGLShader>(SHADOWMAP_VS_SHADER_SOURCE_FILE, SHADOWMAP_PS_SHADER_SOURCE_FILE);
+		m_currentShader = m_pShader;
 		return true;
 	}
 
-	
 	static float factor = 0.0f;
 
 	void OpenGLGraphicsManager::SetPerFrameLight(const Light & light)
@@ -622,7 +657,8 @@ namespace Phantom {
 		//À´¸öÈÕ³öÈÕÂä
 		float tempX = cos(factor);
 		float tempY = sin(factor);
-		factor += 0.003f;
+		//factor += 0.003f;
+
 
 		m_Frame.light.lightPos = vec4(0.0f, 200.0f, 0.0f, 0.0f);//µ±Ç°Æ½ÐÐ¹âÏÂÃ»ÓÐÓÃµ½
 		m_Frame.light.lightDir = vec4(tempX, tempY, 0.0f, 0.0f);

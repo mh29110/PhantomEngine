@@ -7,6 +7,12 @@
 
 
 namespace Phantom {
+	enum Shader_Type
+	{
+		Common_Shader = 0,
+		SkyBox_Shader,
+		ShadowMap_Shader
+	};
 	class GraphicsManager: implements IRuntimeModule
 	{
 	public:
@@ -30,7 +36,7 @@ namespace Phantom {
 
 		void UpdateConstants();
 
-		virtual void bindCommonShader() = 0;
+		virtual void BindShaderByType(Shader_Type st) = 0;
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context) {}
 		virtual void SetPerFrameLight(const Light & light) {}

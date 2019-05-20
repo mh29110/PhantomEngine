@@ -1,6 +1,4 @@
 ﻿cmake_minimum_required (VERSION 3.1)
-set (CMAKE_C_STANDARD 11)
-set (CMAKE_CXX_STANDARD 11)
 
 # Check platforms
 IF(UNIX)
@@ -37,6 +35,9 @@ ENDIF(UNIX)
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-D_DEBUG)
 ENDIF()
+
+
+
 
 project (PhantomEngine)
 include_directories("${PROJECT_SOURCE_DIR}/PhantomCore/src/common")
@@ -96,8 +97,15 @@ link_directories("${PROJECT_SOURCE_DIR}/Dependencies/${PHANTOM_TARGET_PLATFORM}/
 find_package(OpenGL REQUIRED)
 
 if(OS_WINDOWS)
+	
+	set (CMAKE_C_STANDARD 17)
+	set (CMAKE_CXX_STANDARD 17)
 
 elseif(OS_MACOS)
+	
+	set (CMAKE_C_STANDARD 11)
+	set (CMAKE_CXX_STANDARD 11)
+
 	INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
 	FIND_LIBRARY(IOKit_LIBRARY IOKit)

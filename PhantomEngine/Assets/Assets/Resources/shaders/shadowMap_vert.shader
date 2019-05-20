@@ -1,11 +1,24 @@
 #version 330 core
 
 // Input vertex data, different for all executions of this shader.
-layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location = 0) in vec3 inputPosition;
 
-// Values that stay constant for the whole mesh.
-uniform mat4 depthMVP;
+uniform mat4 projection;
+uniform mat4 view;
+
+
+layout( std140) uniform ConstantsPerBatch
+{
+    mat4 modelMatrix;
+} uboBatch;
+
+layout( std140) uniform ConstantsPerFrame
+{
+    mat4 viewMatrix;
+    mat4 projectionMatrix;
+    vec4 camPos;
+} uboFrame;
 
 void main(){
- gl_Position =  depthMVP * vec4(vertexPosition_modelspace,1);
+	gl_Position = projection * view * vec4(inputPosition, 1.0f);
 }
