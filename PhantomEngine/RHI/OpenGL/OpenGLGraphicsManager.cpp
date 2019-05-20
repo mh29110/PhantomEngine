@@ -349,9 +349,10 @@ namespace Phantom {
 	void OpenGLGraphicsManager::Draw()
 	{
 		//shadow map pass
-		//RenderShadowMap();
+		RenderShadowMap();
 
 		// Render the model using the color shader.
+        bindCommonShader();
         RenderBuffers();
         DrawSkyBox();
 		m_pShader->unbind();
@@ -564,9 +565,9 @@ namespace Phantom {
     void OpenGLGraphicsManager::BeginShadowMap()
     {
         // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
-        GLuint FramebufferName = 0;
-        glGenFramebuffers(1, &FramebufferName);
-        glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+        m_ShadowMapFramebufferName = 0;
+        glGenFramebuffers(1, &m_ShadowMapFramebufferName);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowMapFramebufferName);
         
         // Depth texture. Slower than a depth buffer, but you can sample it later in your shader
         GLuint depthTexture;
@@ -587,11 +588,22 @@ namespace Phantom {
         {
             std::cout << " error !!!" <<std::endl;
         }
+        
+        glViewport(0,0,1024,768);
+
+        glCullFace(GL_FRONT);//todo
     }
     
     void OpenGLGraphicsManager::EndShadowMap()
     {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         
+        glDeleteFramebuffers(1, &m_ShadowMapFramebufferName);
+        
+        const GfxConfiguration& conf = g_pApp->GetConfiguration();
+        glViewport(0, 0, conf.screenWidth, conf.screenHeight);
+        
+        glCullFace(GL_BACK); //todo
     }
 
 	bool OpenGLGraphicsManager::InitializeShader()

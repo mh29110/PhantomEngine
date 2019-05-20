@@ -28,7 +28,6 @@ void Phantom::GraphicsManager::CalculateCameraMatrix() {
 }
 
 void Phantom::GraphicsManager::UpdateConstants() {
-	bindCommonShader();
 
 	for (auto& pDbc : m_Frame.batchContexts)
 	{

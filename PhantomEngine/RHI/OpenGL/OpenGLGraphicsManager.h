@@ -58,6 +58,8 @@ namespace Phantom {
 		GLuint m_lightId;
 		std::unordered_map<std::string, GLuint> m_textures;
 
+		GLuint m_ShadowMapFramebufferName;
+
 		const bool VSYNC_ENABLED = true;
 
 		struct OpenGLContextPerDrawBatch : public ContextPerDrawBatch {

@@ -9,6 +9,10 @@ typedef maths::vec3 float3;
 typedef maths::vec2 float2;
 typedef maths::mat4x4 mat4x4f;
 
+	const size_t kSizeOfFrameConstantBuffer = 256;
+	const size_t kSizeOfBatchConstantBuffer = 256;
+	const size_t kSizeOfLigtBuffer = 256;
+
 	struct Light
 	{
 		float4    lightPos;   
@@ -21,9 +25,6 @@ typedef maths::mat4x4 mat4x4f;
 	{
 		maths::mat4x4 modelMatrix;
 	};
-	const size_t kSizeOfFrameConstantBuffer = 256;
-	const size_t kSizeOfBatchConstantBuffer = 256;
-	const size_t kSizeOfLigtBuffer = 256;
 
 
 	//渲染批次上下文
@@ -42,6 +43,7 @@ typedef maths::mat4x4 mat4x4f;
 	struct texturesForFrame
 	{
 		int32_t skybox = -1;
+        int32_t shadowMap = -1;//todo
 	};
 	//渲染中每帧内固定常量
 	struct ConstantsPerFrame
