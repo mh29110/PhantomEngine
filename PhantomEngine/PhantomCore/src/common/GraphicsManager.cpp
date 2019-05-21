@@ -64,7 +64,7 @@ void Phantom::GraphicsManager::CalculateLights()
 
 				target.z = -(0.75* nearClipDistance + 0.25f*farClipDistance);
 
-				float sm_half_dist = 250;// min(farClipDistance / 4.0f, 500.0f);
+				float sm_half_dist = 350;// min(farClipDistance / 4.0f, 500.0f);
 				projectionMat.orthographic(-sm_half_dist, sm_half_dist,
 					sm_half_dist, -sm_half_dist,
 					nearClipDistance, farClipDistance);
@@ -73,6 +73,9 @@ void Phantom::GraphicsManager::CalculateLights()
 										vec3(0.0f, 0.0f, 0.0f),
 										vec3(-1.0f, 0.0f, 0.0f));
 
+                
+                
+                
                 
                 
 
