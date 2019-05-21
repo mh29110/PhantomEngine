@@ -36,7 +36,8 @@ void main()
 
     //--法线需要转换到视图空间中才可以参与光照计算  正交矩阵简化： (M \-1) \t  = M 
     //http://www.songho.ca/opengl/gl_normaltransform.html
-    normal = ( uboFrame.viewMatrix *  uboBatch.modelMatrix * vec4(inputNormal, 0.0f) ).xyz;
+    //但是我们现在的平行光是写死在世界坐标系空间下，暂时先用世界坐标吧。
+    normal = (  uboBatch.modelMatrix * vec4(inputNormal, 0.0f) ).xyz;
 
     texc = vec2 (inputUV.x , 1-inputUV.y);
 }
