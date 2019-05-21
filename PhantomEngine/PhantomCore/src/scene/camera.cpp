@@ -11,7 +11,9 @@
 #endif // OS_WINDOWS
 
 using namespace Phantom::maths;
-const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,50,500);
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,500,500);
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_FRONT (1,-1,0);
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_UP (1,1,0);
 void Phantom::CameraNode::initViewMatrix()
 {
 	Yaw += 0.1f;//todo  有个bug，启动第一帧天空盒不渲
@@ -33,7 +35,8 @@ void Phantom::CameraNode::initViewMatrix()
 void Phantom::CameraNode::CalculateVPMatrix()
 {
 	if (true||m_Transforms.size() == 0) {
-		vec3 focus = Position + Front;
+		//vec3 focus = Position + Front;
+        vec3 focus (0,0,0);
 		m_viewMatrix.LookAtMatrixBuild(Position, focus,  UP);
 		/*glm::mat4 vProjection  = glm::lookAt( glm::vec3( Position.x,Position.y , Position.z),
 			glm::vec3(focus.x, focus.y, focus.z),

@@ -23,6 +23,8 @@ namespace Phantom {
 		const float ZOOM = 45.0f;
         
         static const Phantom::maths::vec3 DEFAULT_POS;
+        static const Phantom::maths::vec3 DEFAULT_FRONT;
+        static const Phantom::maths::vec3 DEFAULT_UP;
         
     public:
         Phantom::maths::vec3 UP ;
@@ -36,31 +38,31 @@ namespace Phantom {
         float Pitch = 0.0f;
 		
 	public:
-		CameraNode() :	UP(0, 1, 0), 
+		CameraNode() :	UP(DEFAULT_UP),
 						Position(DEFAULT_POS), 
-						Front(0, 0, 1),
+						Front(DEFAULT_FRONT),
 						WorldUp(0,1,0),
 						Right(-1,0,0), Zoom(ZOOM),Yaw(YAW),Pitch(PITCH)
 						{};
-		CameraNode(const char* name) : UP(0, 1, 0),
+		CameraNode(const char* name) : UP(DEFAULT_UP),
 			Position(DEFAULT_POS),
-			Front(0, 0, 1),
+			Front(DEFAULT_FRONT),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM), Yaw(YAW), Pitch(PITCH)
 		{
 			m_Name = name;
 		};
-		CameraNode(const std::string& name) : UP(0, 1, 0),
+		CameraNode(const std::string& name) : UP(DEFAULT_UP),
 			Position(DEFAULT_POS),
-			Front(0, 0, 1),
+			Front(DEFAULT_FRONT),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM), Yaw(YAW), Pitch(PITCH)
 		{
 			m_Name = name;
 		};
-		CameraNode(const std::string&& name) : UP(0, 1, 0),
+		CameraNode(const std::string&& name) : UP(DEFAULT_UP),
 			Position(DEFAULT_POS),
-			Front(0, 0, 1),
+			Front(DEFAULT_FRONT),
 			WorldUp(0, 1, 0),
 			Right(-1, 0, 0), Zoom(ZOOM) , Yaw(YAW), Pitch(PITCH)
 		{

@@ -1,4 +1,4 @@
-﻿#include "GraphicsManager.h"
+#include "GraphicsManager.h"
 #include <iostream>
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -63,17 +63,18 @@ void Phantom::GraphicsManager::CalculateLights()
 				vec4 target(0.0f, 0.0f, 0.0f, 1.0f);
 
 				target.z = -(0.75* nearClipDistance + 0.25f*farClipDistance);
-				viewMat = m_Frame.frameContext.viewMatrix;//todo
 
-				float sm_half_dist = 100;// min(farClipDistance / 4.0f, 500.0f);
+				float sm_half_dist = 250;// min(farClipDistance / 4.0f, 500.0f);
 				projectionMat.orthographic(-sm_half_dist, sm_half_dist,
 					sm_half_dist, -sm_half_dist,
-					nearClipDistance, farClipDistance + sm_half_dist);
+					nearClipDistance, farClipDistance);
 
 				viewMat.LookAtMatrixBuild(vec3(0.0f, 200.0f, 0.0f),
 										vec3(0.0f, 0.0f, 0.0f),
-										vec3(1.0f, 0.0f, 0.0f));
+										vec3(-1.0f, 0.0f, 0.0f));
 
+                
+                
 
 
 				auto pCameraNode = scene.camera;
