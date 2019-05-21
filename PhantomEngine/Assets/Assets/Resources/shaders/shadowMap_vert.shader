@@ -3,8 +3,7 @@
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 inputPosition;
 
-uniform mat4 projection;
-uniform mat4 view;
+uniform mat4 depthVP;
 
 
 layout( std140) uniform ConstantsPerBatch
@@ -20,5 +19,5 @@ layout( std140) uniform ConstantsPerFrame
 } uboFrame;
 
 void main(){
-	gl_Position = projection * view * vec4(inputPosition, 1.0f);
+	gl_Position = depthVP * vec4(inputPosition, 1.0f);
 }

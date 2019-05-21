@@ -14,7 +14,7 @@ uniform sampler2D shadowMap;
 
 
 in vec4 pos;
-in vec3 norl;
+in vec3 normal;
 in vec2 texc;
 in vec4 ShadowCoord;
 
@@ -25,7 +25,7 @@ void main()
 
 	vec4 diff = texture(diffuseColor, texc.xy);
 
-	vec3 norm = normalize(norl);
+	vec3 norm = normalize(normal);
 	vec3 dir = normalize(light.lightDir.xyz);
 	float diffFactor = max(dot(norm, dir), 0.0);
 	vec4 diffuse = diffFactor * light.lightColor;

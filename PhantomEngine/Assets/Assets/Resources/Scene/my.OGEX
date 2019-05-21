@@ -1157,19 +1157,6 @@ GeometryObject $geometry5		// Box001
 			}
 		}
 
-		IndexArray (material = 0)
-		{
-			unsigned_int32[3]		// 2
-			{
-				{0, 1, 2}, {3, 2, 1},
-				{4, 5, 6}, {7, 6, 5},
-				{20, 21, 22}, {23, 22, 21},
-				{12, 13, 14}, {15, 14, 13},
-				{8, 9, 10}, {11, 10, 9},
-				{16, 17, 18}, {19, 18, 17}
-			}
-		}
-
 		IndexArray (material = 1)
 		{
 			unsigned_int32[3]		// 2
@@ -1183,42 +1170,7 @@ GeometryObject $geometry5		// Box001
 			}
 		}
 
-		IndexArray (material = 2)
-		{
-			unsigned_int32[3]		// 2
-			{
-				{0, 1, 2}, {3, 2, 1},
-				{4, 5, 6}, {7, 6, 5},
-				{20, 21, 22}, {23, 22, 21},
-				{12, 13, 14}, {15, 14, 13},
-				{8, 9, 10}, {11, 10, 9},
-				{16, 17, 18}, {19, 18, 17}
-			}
-		}
-
-		IndexArray (material = 3)
-		{
-			unsigned_int32[3]		// 2
-			{
-				{12, 13, 14}, {15, 14, 13}
-			}
-		}
-
-		IndexArray (material = 4)
-		{
-			unsigned_int32[3]		// 2
-			{
-				{8, 9, 10}, {11, 10, 9}
-			}
-		}
-
-		IndexArray (material = 5)
-		{
-			unsigned_int32[3]		// 2
-			{
-				{16, 17, 18}, {19, 18, 17}
-			}
-		}
+	
 	}
 }
 

@@ -34,6 +34,7 @@ public:
 public:
 	const std::shared_ptr<SceneObjectMaterial> GetFirstMaterial() const;
 	const std::shared_ptr<SceneObjectMaterial> GetMaterial(const std::string&  matName) const;
+	const std::shared_ptr<SceneObjectLight>    GetLight(const std::string & lightName) const;
 	void LoadTextures(void);
 protected:
 private:

@@ -33,13 +33,14 @@ namespace Phantom {
 		bool Inited = false;
 	private:
 		void CalculateCameraMatrix();
+		void CalculateLights();
 
 		void UpdateConstants();
 
 		virtual void BindShaderByType(Shader_Type st) = 0;
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context) {}
-		virtual void SetPerFrameLight(const Light & light) {}
+		virtual void SetPerFrameLight() {}
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches) {}
 	protected:
 		Frame  m_Frame;

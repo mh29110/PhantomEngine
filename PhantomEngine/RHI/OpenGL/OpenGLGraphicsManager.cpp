@@ -607,10 +607,8 @@ namespace Phantom {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, 1024, 1024);
 
-		m_pShadowMapShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
-		m_pShadowMapShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
+		m_pShadowMapShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
 		
-
 
     }
     
@@ -650,32 +648,17 @@ namespace Phantom {
 		return true;
 	}
 
-	static float factor = 0.0f;
-
-	void OpenGLGraphicsManager::SetPerFrameLight(const Light & light)
+	void OpenGLGraphicsManager::SetPerFrameLight()
 	{
-		//À´¸öÈÕ³öÈÕÂä
-		float tempX = cos(factor);
-		float tempY = sin(factor);
-		//factor += 0.003f;
-
-
-		m_Frame.light.lightPos = vec4(0.0f, 200.0f, 0.0f, 0.0f);//µ±Ç°Æ½ÐÐ¹âÏÂÃ»ÓÐÓÃµ½
-		m_Frame.light.lightDir = vec4(tempX, tempY, 0.0f, 0.0f);
-		m_Frame.light.lightColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+	
 
 		glBindBuffer(GL_UNIFORM_BUFFER, m_lightId);
-		glBufferData(GL_UNIFORM_BUFFER, kSizeOfLigtBuffer, &light, GL_DYNAMIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, kSizeOfLightBuffer, &m_Frame.light, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	void OpenGLGraphicsManager::SetPerFrameConstants(const ContextPerFrame& context)
 	{
-		shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
-		m_Frame.frameContext.viewMatrix = camera->m_viewMatrix;
-		m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
-
-
 		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);   //MaterialPropertyBlock
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrameId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 ¶ÔÆë  £¬ gpu¿é¶ÁÈ¡ todo

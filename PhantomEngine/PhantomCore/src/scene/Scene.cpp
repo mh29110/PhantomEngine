@@ -37,6 +37,16 @@ const std::shared_ptr<SceneObjectMaterial> Phantom::Scene::GetMaterial(const std
 	}
 }
 
+const std::shared_ptr<Phantom::SceneObjectLight> Phantom::Scene::GetLight(const std::string & lightName) const
+{
+	auto light = Lights.find(lightName);
+	if (light != Lights.end())
+	{
+		return light->second;
+	}
+	return nullptr;
+}
+
 void Phantom::Scene::LoadTextures(void)
 {
 	for (auto mat : Materials)

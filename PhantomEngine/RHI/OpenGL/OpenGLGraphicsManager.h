@@ -44,7 +44,7 @@ namespace Phantom {
 		bool initializeSkyBox();
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context);
-		virtual void SetPerFrameLight(const Light & light);
+		virtual void SetPerFrameLight();
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
 
 		virtual void BindShaderByType(Shader_Type st);

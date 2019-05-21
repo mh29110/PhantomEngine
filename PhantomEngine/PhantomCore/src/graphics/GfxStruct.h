@@ -11,13 +11,14 @@ typedef maths::mat4x4 mat4x4f;
 
 	const size_t kSizeOfFrameConstantBuffer = 256;
 	const size_t kSizeOfBatchConstantBuffer = 256;
-	const size_t kSizeOfLigtBuffer = 256;
+	const size_t kSizeOfLightBuffer = 256;
 
 	struct Light
 	{
 		float4    lightPos;   
 		float4    lightColor;  
 		float4    lightDir;   
+		mat4x4f	  lightVP;
 	};
 #pragma region constants per dc
 	//每渲染批次常量
