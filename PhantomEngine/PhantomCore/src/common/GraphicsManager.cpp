@@ -38,32 +38,52 @@ void Phantom::GraphicsManager::CalculateLights()
 	{
 		shared_ptr<SceneLightNode> pLightNode = lightNode.second.lock();
 		Light light;
-		mat4x4 view;
-		mat4x4 projection;
+		mat4x4 viewMat;
+		mat4x4 projectionMat;
 #pragma region test_light_move
 		float tempX = cos(factor);
 		float tempY = sin(factor);
 		factor += 0.003f;
 
 		light.lightPos = vec4(0.0f, 200.0f, 0.0f, 0.0f);//µ±Ç°Æ½ÐÐ¹âÏÂÃ»ÓÐÓÃµ½
-		light.lightDir = vec4(tempX, tempY, tempY, 0.0f);
-		light.lightColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		light.lightDir = vec4(0.0f, -1.0f, 0.0f, 0.0f);
+		light.lightColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 #pragma endregion
 #pragma region LightObject
 		shared_ptr<SceneObjectLight> pLightObj = scene.GetLight(pLightNode->GetSceneObjectRef());
 		
+		float nearClipDistance = 1.0f;
+		float farClipDistance = 10000.0f;
 
 		if (pLightObj) {
 			//light.lightColor;
 		
 			if (true) /*pLightObj type ==  kSceneObjectTypeLightInfi*///todo 先写平行光
 			{
+				vec4 target(0.0f, 0.0f, 0.0f, 1.0f);
+
+				target.z = -(0.75* nearClipDistance + 0.25f*farClipDistance);
+				viewMat = m_Frame.frameContext.viewMatrix;//todo
+
+				float sm_half_dist = 100;// min(farClipDistance / 4.0f, 500.0f);
+				projectionMat.orthographic(-sm_half_dist, sm_half_dist,
+					sm_half_dist, -sm_half_dist,
+					nearClipDistance, farClipDistance + sm_half_dist);
+
+				viewMat.LookAtMatrixBuild(vec3(0.0f, 200.0f, 0.0f),
+										vec3(0.0f, 0.0f, 0.0f),
+										vec3(1.0f, 0.0f, 0.0f));
+
+
+
 				auto pCameraNode = scene.camera;
+				light.lightPos.w = 0.0f;
 			}
 		}
 #pragma endregion
 
-		light.lightVP = projection * view;
+		light.lightVP = projectionMat * viewMat;
+
 		m_Frame.light = light;
 
 		if (pLightNode)//只要第一个光
@@ -83,7 +103,6 @@ void Phantom::GraphicsManager::UpdateConstants() {
 	//#todo
 	CalculateCameraMatrix();
 	CalculateLights();
-
 
 	SetPerFrameConstants(m_Frame.frameContext);
 	SetPerFrameLight();

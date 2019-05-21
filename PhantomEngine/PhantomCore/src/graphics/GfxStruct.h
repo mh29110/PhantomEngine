@@ -27,7 +27,6 @@ typedef maths::mat4x4 mat4x4f;
 		maths::mat4x4 modelMatrix;
 	};
 
-
 	//渲染批次上下文
 	struct ContextPerDrawBatch :ConstantsPerBatch {
 		uint32_t batchIndex;

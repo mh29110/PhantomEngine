@@ -526,6 +526,7 @@ namespace Phantom {
 	void OpenGLGraphicsManager::RenderBatches()
 	{
 		shared_ptr<OpenGLShader> curShader = m_currentShader.lock();
+		curShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
 		//Ê¹ÓÃubo »ñÈ¡Ò»Ö¡ÆÚ¼äµÄ³£Á¿
 		uint32_t blockIndex = glGetUniformBlockIndex(curShader->m_ShaderId, "ConstantsPerFrame");//Shader.PropertyToID
 		if (blockIndex != GL_INVALID_INDEX)

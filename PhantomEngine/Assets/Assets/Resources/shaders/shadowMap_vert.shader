@@ -19,5 +19,5 @@ layout( std140) uniform ConstantsPerFrame
 } uboFrame;
 
 void main(){
-	gl_Position = depthVP * vec4(inputPosition, 1.0f);
+	gl_Position = depthVP * uboBatch.modelMatrix * vec4(inputPosition, 1.0f);
 }

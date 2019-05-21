@@ -160,7 +160,7 @@ namespace Phantom {namespace maths {
 
 	mat4x4 mat4x4::perspective(float fov, float aspectRatio, float near, float far)
 	{
-		float q = 1.0f / tan(0.5*toRadians(fov));
+		float q = 1.0f / tan(0.5*fov);
 		float a = q / aspectRatio;
 
 		float b = -1* (near + far) / (far - near);

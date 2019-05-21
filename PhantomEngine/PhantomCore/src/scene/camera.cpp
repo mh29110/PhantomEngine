@@ -2,7 +2,13 @@
 #include "camera.h"
 #include "AngleUtils.h"
 #include <math.h>
+#include "mat4.h"
 
+#ifdef OS_WINDOWS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/constants.hpp> 
+#endif // OS_WINDOWS
 
 using namespace Phantom::maths;
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,50,500);
@@ -13,8 +19,6 @@ void Phantom::CameraNode::initViewMatrix()
 	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
 	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/
 	if (true||m_Transforms.size() == 0) {
-		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
-		//ÉãÏñ»úÎ»ÖÃ£»  LookAtÎ»ÖÃ£¬ Up·½Ïò  
 		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front, UP);
 
 	}
@@ -23,25 +27,33 @@ void Phantom::CameraNode::initViewMatrix()
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	m_projectionMatrix.perspective(Zoom, 16.0f / 9.0f, 0.01f, 10000.0f);
+	//m_projectionMatrix.perspective(Zoom, 16.0f / 9.0f, 0.01f, 100.0f);
 
 }
 void Phantom::CameraNode::CalculateVPMatrix()
 {
 	if (true||m_Transforms.size() == 0) {
-		//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
-		//ÉãÏñ»úÎ»ÖÃ£»  LookAtÎ»ÖÃ£¬ Up·½Ïò  
-		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front,  UP);
+		vec3 focus = Position + Front;
+		m_viewMatrix.LookAtMatrixBuild(Position, focus,  UP);
+		/*glm::mat4 vProjection  = glm::lookAt( glm::vec3( Position.x,Position.y , Position.z),
+			glm::vec3(focus.x, focus.y, focus.z),
+			glm::vec3(UP.x, UP.y, UP.z));
+		m_viewMatrix = &vProjection[0][0];*/
+
 	}
 	else {
 		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo Ä¬ÈÏÎÞÏà»úÃ»ÓÐ¿¼ÂÇ
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	m_projectionMatrix.perspective(Zoom ,16.0f / 9.0f, 0.01f, 10000.0f);
-	//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 1000.0f);
-	/*glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.01f, 10000.0f);
+	
+	//m_projectionMatrix.orthographic(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 10000.0f);
 
+	/*glm::mat4 Projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 10000.0f);
+	m_projectionMatrix = &Projection[0][0];*/
+
+	m_projectionMatrix.perspective(toRadians(Zoom), 16.0f / 9.0f, 1.0f, 10000.0f);
+	/*glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.01f, 10000.0f);
 	m_projectionMatrix = &Projection[0][0];*/
 }
 
