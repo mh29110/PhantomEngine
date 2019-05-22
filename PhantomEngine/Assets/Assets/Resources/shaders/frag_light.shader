@@ -23,24 +23,39 @@ in vec3 normal;
 in vec2 texc;
 in vec4 vWorldPos;
 
+vec2 poissonDisk[4] = vec2[](
+  vec2( -0.94201624, -0.39906216 ),
+  vec2( 0.94558609, -0.76890725 ),
+  vec2( -0.094184101, -0.92938870 ),
+  vec2( 0.34495938, 0.29387760 )
+);
+
 layout (location = 0) out vec4 outputColor;
 
 float ShadowCalculation (float cosTheta) {
     vec4 fragPosLightSpace = light.lightVP * vWorldPos;
+
     //归一化坐标
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     //转换到[0,1]范围
     projCoords = (projCoords + 1) * 0.5;
-    //采样最近点
-    float closestDepth = texture(shadowMap, projCoords.xy).r;
+
     //当前的深度
     float currentDepth = projCoords.z;
+
     //比较当前深度和最近采样点深度
     float bias = 0.005*tan(acos(cosTheta)); 
     bias = clamp(bias, 0.0,0.01);
-    float shadow = currentDepth-bias > closestDepth? 1.0 : 0.0;
 
-    return shadow;
+    // possion sampling
+    float shadowFactor = 1.0;//currentDepth-bias > closestDepth? 1.0 : 0.0;
+    for (int i=0;i<4;i++){
+      if ( texture( shadowMap, projCoords.xy + poissonDisk[i]/700.0 ).r  <  currentDepth-bias ){
+        shadowFactor-=0.2;
+      }
+    }
+
+    return shadowFactor;
 }
 
 
@@ -65,7 +80,7 @@ void main()
     vec3 specular = spec * lightColor; 
     // 计算阴影
 	float shadow =  ShadowCalculation(cosTheta);
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffLight + specular)) * diffColor;    
+    vec3 lighting = (ambient + shadow * (diffLight + specular)) * diffColor;    
     
     outputColor = vec4(lighting, 1.0);
 

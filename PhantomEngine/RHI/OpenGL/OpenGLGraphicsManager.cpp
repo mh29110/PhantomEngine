@@ -610,7 +610,6 @@ namespace Phantom {
 
 		m_pShadowMapShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
 
-
 		// We don't use bias in the shader, but instead we draw back faces,
 		// which are already separated from the front faces by a small distance
 		// (if your geometry is made this way)
