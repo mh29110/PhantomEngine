@@ -35,8 +35,7 @@ void Phantom::CameraNode::initViewMatrix()
 void Phantom::CameraNode::CalculateVPMatrix()
 {
 	if (true||m_Transforms.size() == 0) {
-		//vec3 focus = Position + Front;
-        vec3 focus (0,0,0);
+		vec3 focus = Position + Front;
 		m_viewMatrix.LookAtMatrixBuild(Position, focus,  UP);
 		/*glm::mat4 vProjection  = glm::lookAt( glm::vec3( Position.x,Position.y , Position.z),
 			glm::vec3(focus.x, focus.y, focus.z),

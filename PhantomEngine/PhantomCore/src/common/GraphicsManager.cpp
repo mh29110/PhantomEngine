@@ -68,7 +68,6 @@ void Phantom::GraphicsManager::CalculateLights()
 										vec3(0.0f, 0.0f, 0.0f),
 										vec3(0.0f, 0.0f, 1.0f));
 
-
 				auto pCameraNode = scene.camera;
 				light.lightPos.w = 0.0f;
 			}

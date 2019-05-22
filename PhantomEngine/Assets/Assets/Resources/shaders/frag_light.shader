@@ -31,7 +31,8 @@ float ShadowCalculation () {
     //当前的深度
     float currentDepth = projCoords.z;
     //比较当前深度和最近采样点深度
-    float shadow = currentDepth > closestDepth? 1.0 : 0.0;
+    float bias = 0.005;
+    float shadow = currentDepth-bias > closestDepth? 1.0 : 0.0;
 
     return shadow;
 }
