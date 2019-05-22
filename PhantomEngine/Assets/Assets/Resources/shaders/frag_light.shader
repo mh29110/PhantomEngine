@@ -18,10 +18,10 @@ in vec4 vViewPos;
 in vec3 normal;
 in vec2 texc;
 in vec4 vWorldPos;
-in vec4 FragPosLightSpace;
 
 
-float ShadowCalculation (vec4 fragPosLightSpace) {
+float ShadowCalculation () {
+    vec4 fragPosLightSpace = light.lightVP * vWorldPos;
     //归一化坐标
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     //转换到[0,1]范围
@@ -57,7 +57,7 @@ void main()
     spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);*/
     vec3 specular = spec * lightColor; 
     // 计算阴影
-	float shadow =  ShadowCalculation(FragPosLightSpace);
+	float shadow =  ShadowCalculation();
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
     
     outputColor = vec4(lighting, 1.0);

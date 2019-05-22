@@ -526,7 +526,6 @@ namespace Phantom {
 	void OpenGLGraphicsManager::RenderBatches()
 	{
 		shared_ptr<OpenGLShader> curShader = m_currentShader.lock();
-		curShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
 		//Ê¹ÓÃubo »ñÈ¡Ò»Ö¡ÆÚ¼äµÄ³£Á¿
 		uint32_t blockIndex = glGetUniformBlockIndex(curShader->m_ShaderId, "ConstantsPerFrame");//Shader.PropertyToID
 		if (blockIndex != GL_INVALID_INDEX)
@@ -575,6 +574,7 @@ namespace Phantom {
         EndShadowMap();
     }
 
+	static const int kSizeOfShadowMap = 1024;
     void OpenGLGraphicsManager::BeginShadowMap()
     {
 		//clear shadow map
@@ -592,7 +592,7 @@ namespace Phantom {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 512, 512, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, kSizeOfShadowMap, kSizeOfShadowMap, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 
 		m_Frame.frameContext.shadowMap = shadowMap;
 
@@ -606,7 +606,7 @@ namespace Phantom {
 		glDrawBuffers(0, nullptr); // No color buffer is drawn to.
 		glDepthMask(GL_TRUE);
 		glClear(GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, 1024, 1024);
+		glViewport(0, 0, kSizeOfShadowMap, kSizeOfShadowMap);
 
 		m_pShadowMapShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
 		

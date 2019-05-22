@@ -17,21 +17,16 @@ layout( std140) uniform ConstantsPerFrame
     vec4 camPos;
 } uboFrame;
 
-uniform mat4 depthVP;
-
 out vec4 vViewPos;
 out vec3 normal;
 out vec2 texc;
 out vec4 vWorldPos;
-out vec4 FragPosLightSpace;
 
 void main()
 {
     vWorldPos = uboBatch.modelMatrix * inputPosition;
     vViewPos = uboFrame.viewMatrix * vWorldPos;
     gl_Position = uboFrame.projectionMatrix * vViewPos;
-
-    FragPosLightSpace = depthVP * vWorldPos;
 
 
     //--法线需要转换到视图空间中才可以参与光照计算  正交矩阵简化： (M \-1) \t  = M 
