@@ -609,8 +609,12 @@ namespace Phantom {
 		glViewport(0, 0, kSizeOfShadowMap, kSizeOfShadowMap);
 
 		m_pShadowMapShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
-		
 
+
+		// We don't use bias in the shader, but instead we draw back faces,
+		// which are already separated from the front faces by a small distance
+		// (if your geometry is made this way)
+		glCullFace(GL_FRONT); // Cull front-facing triangles -> draw only back-facing triangles
     }
     
     void OpenGLGraphicsManager::EndShadowMap()
@@ -622,7 +626,7 @@ namespace Phantom {
         const GfxConfiguration& conf = g_pApp->GetConfiguration();
         glViewport(0, 0, conf.screenWidth, conf.screenHeight);
         
-        glCullFace(GL_BACK); //todo
+		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
     }
 
 	void OpenGLGraphicsManager::SetShadowMap()
