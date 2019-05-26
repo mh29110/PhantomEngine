@@ -45,8 +45,8 @@ void Phantom::GraphicsManager::CalculateLights()
 		float tempY = sin(factor);
 		factor += 0.003f;
 
-		light.lightPos = vec4(0.0f, 200.0f, 0.0f, 1.0f);//µ±Ç°Æ½ÐÐ¹âÏÂÃ»ÓÐÓÃµ½
-		light.lightDir = vec4(0.0f, -1.0f, 0.0f, 0.0f);
+		light.lightPos = vec4(0.0f, 0.0f, 0.0f, 1.0f);//µ±Ç°Æ½ÐÐ¹âÏÂÃ»ÓÐÓÃµ½
+		light.lightDir = vec4(tempX, -1.0f, 0.0f, 0.0f);
 		light.lightColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 #pragma endregion
 #pragma region LightObject
@@ -64,8 +64,8 @@ void Phantom::GraphicsManager::CalculateLights()
 				projectionMat.orthographic(-sm_half_dist, sm_half_dist,
 					-sm_half_dist, sm_half_dist,
 					nearClipDistance, farClipDistance);
-				viewMat.LookAtMatrixBuild(vec3(0.0f, 200.0f, 0.0f),
-										vec3(0.0f, 0.0f, 0.0f),
+				viewMat.LookAtMatrixBuild(vec3(0.0f, 0.0f, 0.0f),
+										vec3(tempX, -1.0f, 0.0f),
 										vec3(0.0f, 0.0f, 1.0f));
 
 

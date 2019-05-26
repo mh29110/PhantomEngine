@@ -272,7 +272,6 @@ namespace Phantom {
 
 	int OpenGLGraphicsManager::Init()
 	{
-
 		int result;
 		result = gladLoadGL();//ÔÚOpenGL RHIÏÂ³õÊ¼»¯glad £¬×¢Òâ¸÷Æ½Ì¨ÒýÓÃglad/(_wgl).c²»Í¬£¬ÔÝÔÚcmakeÖÐÉèÖÃ
 		if (!result) {
@@ -608,7 +607,6 @@ namespace Phantom {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, kSizeOfShadowMap, kSizeOfShadowMap);
 
-		m_pShadowMapShader->setUniformMat4("depthVP", m_Frame.light.lightVP);
 
 		// We don't use bias in the shader, but instead we draw back faces,
 		// which are already separated from the front faces by a small distance
@@ -631,16 +629,11 @@ namespace Phantom {
 	void OpenGLGraphicsManager::SetShadowMap()
 	{
 		GLuint textureId = m_Frame.frameContext.shadowMap;
-		//glActiveTexture(GL_TEXTURE0 + textureId);
-		//glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, color);
+		/*glActiveTexture(GL_TEXTURE0 +  textureId);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);*/
 		m_pShader->setUniform1i("shadowMap", textureId);
-
 	}
 
 	bool OpenGLGraphicsManager::InitializeShader()

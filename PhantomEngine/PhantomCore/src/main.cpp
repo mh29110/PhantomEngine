@@ -74,7 +74,8 @@ int main(int argc, char** argv) {
 		//if (timer.Elapsed() - timeCount > 1.0f)
 		//{
 		//	timeCount += 1.0f;
-		//	//std::cout << "frames === " << frames << std::endl;
+		//	//std::cout << "frames === " << frames << std::endl; 
+		/* 由于N卡默认开启自动同步，除非手动代码设置（或者显卡配置），最多60帧。 A卡默认关闭。*/
 		//	frames = 0;
 		//}
 	}

@@ -62,8 +62,8 @@ float ShadowCalculation (float cosTheta) {
 void main()
 {
 	vec3 diffColor = texture(diffuseColor, texc.xy).rgb;
-    vec3 normal = normalize(normal);
     vec3 lightColor = light.lightColor.xyz;
+    vec3 normal = normalize(normal);
 
     vec3 ambient = 0.02 * diffColor;
 
@@ -78,8 +78,10 @@ void main()
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
     vec3 specular = spec * lightColor; 
+
     // º∆À„“ı”∞
 	float shadow =  ShadowCalculation(cosTheta);
+
     vec3 lighting = (ambient + shadow * (diffLight + specular)) * diffColor;    
     
     outputColor = vec4(lighting, 1.0);

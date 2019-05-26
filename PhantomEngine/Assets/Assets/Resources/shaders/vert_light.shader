@@ -17,10 +17,10 @@ layout( std140) uniform ConstantsPerFrame
     vec4 camPos;
 } uboFrame;
 
-out vec4 vViewPos;
-out vec3 normal;
+out vec4 vViewPos;//在视图空间坐标
+out vec3 normal;  //从模型空间转到世界坐标系
 out vec2 texc;
-out vec4 vWorldPos;
+out vec4 vWorldPos;//在世界空间
 
 void main()
 {
@@ -29,9 +29,10 @@ void main()
     gl_Position = uboFrame.projectionMatrix * vViewPos;
 
 
-    //--法线需要转换到视图空间中才可以参与光照计算  正交矩阵简化： (M \-1) \t  = M 
+    //--目前我们的法线是在模型空间下，可以打开.OGEX文件确认。
+    //法线可以转换到视图空间中，参与视点方向的高光计算，            |||正交矩阵简化： (M \-1) \t  = M 
     //http://www.songho.ca/opengl/gl_normaltransform.html
-    //但是我们现在的平行光是写死在世界坐标系空间下，暂时先用世界坐标吧。
+    //但是我们现在的平行光是写死在世界坐标系空间下，暂时先都转到世界坐标空间下吧。
     normal = (  uboBatch.modelMatrix * vec4(inputNormal, 0.0f) ).xyz;
 
     texc = vec2 (inputUV.x , 1-inputUV.y);

@@ -3,7 +3,13 @@
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 inputPosition;
 
-uniform mat4 depthVP;
+layout( std140) uniform Light
+{
+    vec4 lightPos;
+	vec4 lightColor;
+	vec4 lightDir;
+	mat4 lightVP;
+} light;
 
 
 layout( std140) uniform ConstantsPerBatch
@@ -19,5 +25,5 @@ layout( std140) uniform ConstantsPerFrame
 } uboFrame;
 
 void main(){
-	gl_Position = depthVP * uboBatch.modelMatrix * vec4(inputPosition, 1.0f);
+	gl_Position = light.lightVP * uboBatch.modelMatrix * vec4(inputPosition, 1.0f);
 }
