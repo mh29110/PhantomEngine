@@ -5,17 +5,7 @@ layout(location = 1) in vec3 inputNormal;
 layout(location = 2) in vec2 inputUV;
 
 
-layout( std140) uniform ConstantsPerBatch
-{
-    mat4 modelMatrix;
-} uboBatch;
-
-layout( std140) uniform ConstantsPerFrame
-{
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
-    vec4 camPos;
-} uboFrame;
+UNIFORM_BLOCK_MACRO
 
 out vec4 vViewPos;//在视图空间坐标
 out vec3 normal;  //从模型空间转到世界坐标系

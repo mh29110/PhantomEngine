@@ -4,13 +4,7 @@ layout (location = 0) in vec3 aPos;
 
 out vec3 TexCoords;
 
-layout( std140) uniform ConstantsPerFrame
-{
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
-    vec4 camPos;
-} uboFrame;
-
+UNIFORM_BLOCK_MACRO
 
 void main()
 {

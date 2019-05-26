@@ -1,7 +1,18 @@
 #include "OpenGLShader.h"
 #include "AssetLoadManager.h"
 
+using namespace std;
 namespace Phantom { 
+
+	void string_replace_first( string& allStr , string& src , string& dest)
+	{
+		string::size_type pos = 0;
+		string::size_type srcLen = src.size();
+		if( (pos = allStr.find( src , pos)) != string::npos)
+		{
+			allStr.replace( pos , srcLen , dest );
+		}
+	}
 
 	OpenGLShader::OpenGLShader(const char* $vPath,const char* $fPath):vPath($vPath),fPath($fPath)
 	{
@@ -20,9 +31,15 @@ namespace Phantom {
 //load
 		std::string vsString = g_pAssetLoader->SyncOpenAndReadTextFileToString(vPath);
 		std::string fsString = g_pAssetLoader->SyncOpenAndReadTextFileToString(fPath);
-		char* vs = (char* )vsString.data();
-		char* fs = (char*)fsString.data();
+        std::string macroString = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/shaders/GfxStruct.glsl"); //Unifrom block 所需结构体用宏统一标示
+        
+        string macroVar = "UNIFORM_BLOCK_MACRO";
+        string_replace_first( vsString , macroVar , macroString);
+        string_replace_first( fsString , macroVar , macroString);
 
+		char* vs = (char* )vsString.data();
+		char* fs = (char* )fsString.data();
+        
 //compile
 		GLint compileRes;
 

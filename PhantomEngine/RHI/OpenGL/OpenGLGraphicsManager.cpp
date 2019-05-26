@@ -359,8 +359,7 @@ namespace Phantom {
 
 	bool OpenGLGraphicsManager::initializeSkyBox()
 	{
-		
-
+        
 		//==============================================
 		static const float skyboxVertices[] = {
 			// positions          
