@@ -481,11 +481,15 @@ namespace Phantom {
 		m_skyboxShader->bind();
 		int32_t texture_id = m_Frame.frameContext.skybox;
 
-		m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
-		m_skyboxShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
-
-
-
+		//m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
+		//m_skyboxShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
+        uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
+        if (blockIndex != GL_INVALID_INDEX)
+        {
+            glUniformBlockBinding(m_skyboxShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
+            glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
+        }
+        
 		glBindVertexArray(m_skyboxContext.vao);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
