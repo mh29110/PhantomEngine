@@ -502,6 +502,9 @@ namespace Phantom {
 	void OpenGLGraphicsManager::resize(int32_t width, int32_t height)
 	{
 		glViewport(0, 0, width, height);
+		GfxConfiguration& conf = g_pApp->GetConfiguration();
+		conf.screenWidth = width;
+		conf.screenHeight = height;
 	}
 
 	void OpenGLGraphicsManager::BindShaderByType(Shader_Type st)
@@ -624,7 +627,7 @@ namespace Phantom {
         //glDeleteFramebuffers(1, &m_shadowMapFboId); //参考  glGenFramebuffers
 
         const GfxConfiguration& conf = g_pApp->GetConfiguration();
-        glViewport(0, 0, conf.screenWidth, conf.screenHeight);
+        glViewport( 0 , 0 , conf.screenWidth, conf.screenHeight);
         
 		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
     }

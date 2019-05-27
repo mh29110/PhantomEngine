@@ -18,8 +18,6 @@ void Phantom::CameraNode::initViewMatrix()
 {
 	Yaw += 0.1f;//todo  有个bug，启动第一帧天空盒不渲
 	updateCameraVectors();
-	/*GfxConfiguration& conf = g_pApp->GetConfiguration();
-	float screenAspect = (float)conf.screenWidth / (float)conf.screenHeight;*/
 	if (true||m_Transforms.size() == 0) {
 		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front, UP);
 
@@ -29,10 +27,9 @@ void Phantom::CameraNode::initViewMatrix()
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
-	//m_projectionMatrix.perspective(Zoom, 16.0f / 9.0f, 0.01f, 100.0f);
 
 }
-void Phantom::CameraNode::CalculateVPMatrix()
+void Phantom::CameraNode::CalculateVPMatrix(float aspect)
 {
 	if (true||m_Transforms.size() == 0) {
 		vec3 focus = Position + Front;
@@ -54,8 +51,8 @@ void Phantom::CameraNode::CalculateVPMatrix()
 	/*glm::mat4 Projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 10000.0f);
 	m_projectionMatrix = &Projection[0][0];*/
 
-	m_projectionMatrix.perspective(toRadians(Zoom), 16.0f / 9.0f, 1.0f, 10000.0f);
-	/*glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.01f, 10000.0f);
+	m_projectionMatrix.perspective(toRadians(Zoom), aspect , 1.0f, 10000.0f);
+	/*glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, aspect, 0.01f, 10000.0f);
 	m_projectionMatrix = &Projection[0][0];*/
 }
 

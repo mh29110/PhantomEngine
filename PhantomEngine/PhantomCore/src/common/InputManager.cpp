@@ -65,10 +65,10 @@ void InputManager::LeftMouseButtonUp()
 void InputManager::LeftMouseDrag(int newX, int newY)
 {
 
-	int deltaX = newX - m_mousePosition.x;
-	int deltaY = newY - m_mousePosition.y;
-	m_mousePosition.x = newX;
-	m_mousePosition.y = newY;
+	int deltaX = newX - (int)m_mousePosition.x;
+	int deltaY = newY - (int)m_mousePosition.y;
+	m_mousePosition.x = (float)newX;
+	m_mousePosition.y = (float)newY;
 	g_pBehaviourManager->LeftMouseDrag( deltaX, deltaY);
 #ifdef _DEBUG
 	/*cerr << "[InputManager] Left Mouse Dragged! ("

@@ -72,7 +72,7 @@ namespace Phantom {
 		Phantom::maths::mat4x4 m_projectionMatrix;
 
 		void initViewMatrix();
-		void CalculateVPMatrix();
+		void CalculateVPMatrix(float aspect);
 	
 		void ProcessKeyboard(CameraDirection direction, float deltaTime);
 		void ProcessMouseMovement(float xoffset, float yoffset);

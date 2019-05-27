@@ -2,8 +2,13 @@
 #include <iostream>
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "IApplication.h"
+#include "GfxConfiguration.h"
+
 using namespace std;
 using namespace Phantom::maths;
+
+
 float PI = 3.1415926f;
 
 int Phantom::GraphicsManager::Init()
@@ -22,13 +27,22 @@ void Phantom::GraphicsManager::Tick()
 	Draw();
 	
 }
-void Phantom::GraphicsManager::CalculateCameraMatrix() {
-	shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
-	camera->CalculateVPMatrix();
-	m_Frame.frameContext.viewMatrix = camera->m_viewMatrix;
-	m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
 
+namespace Phantom {
+	extern IApplication* g_pApp;  //wtf !  namespace 
+	void GraphicsManager::CalculateCameraMatrix() {
+		const GfxConfiguration& conf = g_pApp->GetConfiguration();
+		float aspect = conf.screenWidth / conf.screenHeight;
+
+		shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
+
+		camera->CalculateVPMatrix(aspect);
+		m_Frame.frameContext.viewMatrix = camera->m_viewMatrix;
+		m_Frame.frameContext.projectionMatrix = camera->m_projectionMatrix;
+
+	}
 }
+
 static float factor = 0.0f;
 void Phantom::GraphicsManager::CalculateLights()
 {
