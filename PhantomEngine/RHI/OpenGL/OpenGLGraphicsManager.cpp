@@ -361,7 +361,7 @@ namespace Phantom {
 	{
         
 		//==============================================
-		static const float skyboxVertices[] = {
+		static float skyboxVertices[] = {
 			// positions          
 		  -1.0f,  1.0f, -1.0f,
 		  -1.0f, -1.0f, -1.0f,
@@ -405,6 +405,14 @@ namespace Phantom {
 		  -1.0f, -1.0f,  1.0f,
 		   1.0f, -1.0f,  1.0f
 		};
+
+		//为得到不扭曲的天空盒，需考虑大点。
+		for (int i = 0 ;i < sizeof(skyboxVertices)/4; i++)
+		{
+			skyboxVertices[i] = 256.0f * skyboxVertices[i];
+		}
+
+
 		unsigned int skyboxVAO, skyboxVBO;
 		glGenVertexArrays(1, &skyboxVAO);
 		glGenBuffers(1, &skyboxVBO);
@@ -443,7 +451,7 @@ namespace Phantom {
 		m_textures["SkyBox"] = texture_id;
 		m_Frame.frameContext.skybox = texture_id;
 		m_skyboxShader->bind();
-		m_skyboxShader->setUniform1i("skybox", 0); //0号纹理
+		m_skyboxShader->setUniform1i("skybox", 2); //2号纹理  /如果是0的话这里可以忽略
 		
 
 		m_skyboxContext.vao = skyboxVAO;
@@ -490,7 +498,7 @@ namespace Phantom {
         }
         
 		glBindVertexArray(m_skyboxContext.vao);
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
 		//glDrawElements(m_skyboxContext.mode, m_skyboxContext.indexCount, m_skyboxContext.type, 0x00);
 		glDrawArrays(GL_TRIANGLES, 0, 36);

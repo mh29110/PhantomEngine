@@ -119,6 +119,7 @@ namespace Phantom {
 		return glGetUniformLocation(m_ShaderId, name);
 	}
 
+	// 类比    material.SetInt("_SrcBlend", (int) value);
 	void OpenGLShader::setUniform1f(const GLchar* name, float value)
 	{
 		glUniform1f(getUniformLocation(name), value);

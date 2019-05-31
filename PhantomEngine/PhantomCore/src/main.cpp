@@ -57,9 +57,9 @@ int main(int argc, char** argv) {
 		return ret;
 	}
 
-	//Timer timer;
-	//float timeCount = 0.0f;
-	//unsigned int  frames = 0;
+	Timer timer;
+	float timeCount = 0.0f;
+	unsigned int  frames = 0;
 	while (!g_pApp->IsQuit()) {
 		g_pApp->Tick();
 		//float now = timer.ElapsedMillis();
@@ -70,14 +70,14 @@ int main(int argc, char** argv) {
 		g_pBehaviourManager->Tick();
 		g_pInputManager->Tick();
 
-		//frames++;
-		//if (timer.Elapsed() - timeCount > 1.0f)
-		//{
-		//	timeCount += 1.0f;
-		//	//std::cout << "frames === " << frames << std::endl; 
+		frames++;
+		if (timer.Elapsed() - timeCount > 1.0f)
+		{
+			timeCount += 1.0f;
+			//std::cout << "frames === " << frames << std::endl; 
 		/* 由于N卡默认开启自动同步，除非手动代码设置（或者显卡配置），最多60帧。 A卡默认关闭。*/
-		//	frames = 0;
-		//}
+			frames = 0;
+		}
 	}
 
     g_pGraphicsManager->Shutdown();

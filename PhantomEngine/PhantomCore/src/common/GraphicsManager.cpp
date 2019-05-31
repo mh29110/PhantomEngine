@@ -25,7 +25,6 @@ void Phantom::GraphicsManager::Tick()
 {
 	UpdateConstants();
 	Draw();
-	
 }
 
 namespace Phantom {
