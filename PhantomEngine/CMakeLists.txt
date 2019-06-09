@@ -128,7 +128,7 @@ endif(OS_WINDOWS)
 
 
 add_subdirectory(PhantomCore)
-add_subdirectory(sample)
+add_subdirectory(Tests)
 add_subdirectory(Platform)
 add_subdirectory(RHI)
 add_subdirectory(Game)
