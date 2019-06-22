@@ -20,6 +20,7 @@ if(OS_WINDOWS)
 							${OPENGEX_LIBRARY} 
 							${OPENDDL_LIBRARY}
 							${JPGE_LIBRARY}
+                            ${FREETYPE_LIBRARY}
                         )
 elseif(OS_MACOS)
 
@@ -36,6 +37,7 @@ elseif(OS_MACOS)
                             ${OPENGEX_LIBRARY} 
                             ${OPENDDL_LIBRARY}
                             ${JPGE_LIBRARY}
+                            ${FREETYPE_LIBRARY}
                         )
 endif()
 # copy resource to execute dir (debug directory)

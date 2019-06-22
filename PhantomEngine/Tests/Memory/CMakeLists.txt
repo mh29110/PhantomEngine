@@ -9,3 +9,6 @@ file (GLOB_RECURSE  MEM_SRC
 
 
 add_executable (ZMemoryMgr main.cpp  ${MEM_SRC})
+ target_link_libraries(ZMemoryMgr 
+                            ${FREETYPE_LIBRARY}
+                        )
