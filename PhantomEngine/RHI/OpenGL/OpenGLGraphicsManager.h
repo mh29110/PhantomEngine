@@ -25,7 +25,7 @@ namespace Phantom {
 
 		virtual void Draw();
 
-		virtual void DrawString(std::string guiStr);
+		virtual void DrawGUI();
 
 		virtual void DrawSkyBox();
 

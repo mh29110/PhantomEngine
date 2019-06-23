@@ -14,7 +14,6 @@ const char*  FONT_PATH = "C:\\windows\\Fonts\\arial.TTF";
 int Phantom::GraphicsManager::Init()
 {
 	Inited = true;
-	m_GuiString = "";
 	fontEngine.LoadFontFace(FONT_PATH);
 	return 0;
 }
@@ -27,9 +26,17 @@ void Phantom::GraphicsManager::Tick()
 {
 	UpdateConstants();
 	Draw();
-	DrawString(m_GuiString);
+	DrawGUI();
 }
 
+
+void Phantom::GraphicsManager::DrawString(GUI::GUIIndex idx, float posx, float posy, std::string content)
+{
+	GUI::GuiDisplayUnit unit = {
+		posx,posy,content
+	};
+	m_GuiUnitMap[idx] = unit;
+}
 
 namespace Phantom {
 	extern IApplication* g_pApp;  //wtf !  namespace 

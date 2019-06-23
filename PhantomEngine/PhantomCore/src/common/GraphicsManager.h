@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "GfxStruct.h"
 #include "textCore/FontEngine.h"
+#include "gui/GuiCommon.h"
 
 namespace Phantom {
 	
@@ -25,7 +26,8 @@ namespace Phantom {
 		virtual void Tick();
 		virtual void Clear() = 0;
 		virtual void Draw() = 0;
-		virtual void DrawString(std::string guiStr) = 0;
+		virtual void DrawGUI() = 0;
+		virtual void DrawString(GUI::GUIIndex idx, float posx, float posy, std::string content);
 
 		// sky box
 		virtual void DrawSkyBox() {}
@@ -47,7 +49,7 @@ namespace Phantom {
 	protected:
 		Frame  m_Frame;
 		TextCore::FontEngine fontEngine;
-		std::string m_GuiString;
+		std::unordered_map<char , GUI::GuiDisplayUnit> m_GuiUnitMap;
 	};
 	extern GraphicsManager* g_pGraphicsManager;
 }

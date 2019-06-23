@@ -1,4 +1,4 @@
-#include "glad/glad.h"
+﻿#include "glad/glad.h"
 #include <iostream>
 #include <fstream>
 #include <math.h>
@@ -363,8 +363,8 @@ namespace Phantom {
 		m_pShader->unbind();
 		//glFlush();
 	}
-	const int CHAR_I= 56;
-	void OpenGLGraphicsManager::DrawString(std::string guiStr)
+
+	void OpenGLGraphicsManager::DrawGUI()
 	{
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
@@ -383,36 +383,39 @@ namespace Phantom {
 		m_TextShader->setUniform1i("text", 3);
 		glActiveTexture(GL_TEXTURE3);
 
-		std::string::const_iterator c;
-		float x = 100, y = 100;
-		for (c = guiStr.begin(); c != guiStr.end(); c++)
+		std::unordered_map<char, GUI::GuiDisplayUnit>::iterator itr;
+		for (itr = m_GuiUnitMap.begin(); itr != m_GuiUnitMap.end(); itr++)
 		{
-			TextCore::Character ch = fontEngine.m_Characters[*c];
-			float scale = 1.0f;
-			GLfloat xpos = x + ch.Bearing.x * scale;
-			GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-			GLfloat w = ch.Size.x * scale;
-			GLfloat h = ch.Size.y * scale;
+			auto unit = itr->second;
+			std::string::const_iterator c;
+			for (c = unit.content.begin(); c != unit.content.end(); c++)
+			{
+				TextCore::Character ch = fontEngine.m_Characters[*c];
+				float scale = 1.0f;
+				GLfloat xpos = unit.posX + ch.Bearing.x * scale;
+				GLfloat ypos = unit.posY - (ch.Size.y - ch.Bearing.y) * scale;
+				GLfloat w = ch.Size.x * scale;
+				GLfloat h = ch.Size.y * scale;
 
-			GLfloat vertices[6][4] = {
-			  { xpos,     ypos + h,   0.0, 0.0 },
-				{ xpos,     ypos,       0.0, 1.0 },
-				{ xpos + w, ypos,       1.0, 1.0 },
+				GLfloat vertices[6][4] = {
+				  { xpos,     ypos + h,   0.0, 0.0 },
+					{ xpos,     ypos,       0.0, 1.0 },
+					{ xpos + w, ypos,       1.0, 1.0 },
 
-				{ xpos,     ypos + h,   0.0, 0.0 },
-				{ xpos + w, ypos,       1.0, 1.0 },
-				{ xpos + w, ypos + h,   1.0, 0.0 }
-			};
+					{ xpos,     ypos + h,   0.0, 0.0 },
+					{ xpos + w, ypos,       1.0, 1.0 },
+					{ xpos + w, ypos + h,   1.0, 0.0 }
+				};
 
-			glBindTexture(GL_TEXTURE_2D, m_TextTextureId[*c]);
+				glBindTexture(GL_TEXTURE_2D, m_TextTextureId[*c]);
 
-			glBindBuffer(GL_ARRAY_BUFFER, m_TextVboId);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-			x += (ch.Advance >> 6)*scale;
+				glBindBuffer(GL_ARRAY_BUFFER, m_TextVboId);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+				unit.posX += (ch.Advance >> 6)*scale;
+			}
 		}
-
 		
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);

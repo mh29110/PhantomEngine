@@ -41,12 +41,12 @@ void InputManager::AsciiKeyDown(unsigned char keycode)
 {
 	if (keycode == 229) return;// 229 '?'ÀÏÊÇtrue #todo
 	string str = std::to_string(keycode);
-	g_pGraphicsManager->DrawString("keycode:" + str);
+	g_pGraphicsManager->DrawString(GUI::KeycodeGuiIdx, 100,100, "keycode:" + str);
 }
 
 void InputManager::AsciiKeyUp(unsigned char keycode)
 {
-#
+
 }
 
 void InputManager::LeftMouseButtonDown(float x, float y)

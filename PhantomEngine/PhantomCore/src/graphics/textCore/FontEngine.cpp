@@ -41,7 +41,7 @@ namespace Phantom { namespace TextCore{
 			}
 
 			//m_Error = FT_Set_Pixel_Sizes(m_Face, 0, m_Face->units_per_EM);
-			m_Error = FT_Set_Pixel_Sizes(m_Face, 0, 128);
+			m_Error = FT_Set_Pixel_Sizes(m_Face, 0, 32);
 			if (m_Error) return m_Error;
 			m_PreviousPath = path;
 		}
@@ -86,7 +86,7 @@ namespace Phantom { namespace TextCore{
 		}
 
 		Character character = {
-			m_Face->glyph->bitmap.buffer,//×¢Òâ½á¹¹ÌåÖÐÖ¸ÕëµÄÓÃ·¨£¬Èç¹ûÃ»ÓÐÉÏ´«ÓÖÃ»ÓÐmemcpy³öÈ¥£¬»áÒýÓÃµ½ÎÞÐ§Êý¾Ý¡£
+			m_Face->glyph->bitmap.buffer,//æ³¨æ„ç»“æž„ä½“ä¸­æŒ‡é’ˆçš„ç”¨æ³•ï¼Œå¦‚æžœæ²¡æœ‰ä¸Šä¼ åˆæ²¡æœ‰memcpyå‡ºåŽ»ï¼Œä¼šå¼•ç”¨åˆ°æ— æ•ˆæ•°æ®ã€‚
 			 maths::vec2(m_Face->glyph->bitmap.width, m_Face->glyph->bitmap.rows),
 			maths::vec2(m_Face->glyph->bitmap_left, m_Face->glyph->bitmap_top),
 			m_Face->glyph->advance.x
