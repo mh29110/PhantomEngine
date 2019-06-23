@@ -151,8 +151,8 @@ namespace Phantom {
 		virtual void Shutdown();
 		virtual void Tick();
 
-		void AsciiKeyDown(char keycode);
-		void AsciiKeyUp(char keycode);
+		void AsciiKeyDown(unsigned char keycode);
+		void AsciiKeyUp(unsigned char keycode);
 
 		bool IsKeyPressed(int keycode) const;
 

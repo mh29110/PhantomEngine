@@ -9,11 +9,13 @@ using namespace std;
 using namespace Phantom::maths;
 
 float PI = 3.1415926f;
+const char*  FONT_PATH = "C:\\windows\\Fonts\\arial.TTF";
 
 int Phantom::GraphicsManager::Init()
 {
 	Inited = true;
-	fontEngine.LoadFontFace("C:\\windows\\Fonts\\arial.TTF");
+	m_GuiString = "";
+	fontEngine.LoadFontFace(FONT_PATH);
 	return 0;
 }
 
@@ -25,7 +27,7 @@ void Phantom::GraphicsManager::Tick()
 {
 	UpdateConstants();
 	Draw();
-	DrawString();
+	DrawString(m_GuiString);
 }
 
 

@@ -364,7 +364,7 @@ namespace Phantom {
 		//glFlush();
 	}
 	const int CHAR_I= 56;
-	void OpenGLGraphicsManager::DrawString()
+	void OpenGLGraphicsManager::DrawString(std::string guiStr)
 	{
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
@@ -383,10 +383,9 @@ namespace Phantom {
 		m_TextShader->setUniform1i("text", 3);
 		glActiveTexture(GL_TEXTURE3);
 
-		std::string  text = "hello world!123";
 		std::string::const_iterator c;
 		float x = 100, y = 100;
-		for (c = text.begin(); c != text.end(); c++)
+		for (c = guiStr.begin(); c != guiStr.end(); c++)
 		{
 			TextCore::Character ch = fontEngine.m_Characters[*c];
 			float scale = 1.0f;
@@ -526,6 +525,7 @@ namespace Phantom {
 		return true;
 	}
 
+	//need to go further ; pack all glyphs into one texture and record uvs.
 	bool OpenGLGraphicsManager::initializeTextVao()
 	{
 		// Disable byte-alignment restriction

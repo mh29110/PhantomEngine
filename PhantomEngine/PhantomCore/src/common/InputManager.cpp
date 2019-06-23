@@ -31,17 +31,20 @@ void InputManager::Tick()
 {
 	for (int i = 0; i < MAX_KEYS; i++)
 	{
-	
+		if (m_keyState[i] == true) {
+			AsciiKeyDown(i);
+		}
 	}
 }
 
-
-void InputManager::AsciiKeyDown(char keycode)
+void InputManager::AsciiKeyDown(unsigned char keycode)
 {
-
+	if (keycode == 229) return;// 229 '?'ÀÏÊÇtrue #todo
+	string str = std::to_string(keycode);
+	g_pGraphicsManager->DrawString("keycode:" + str);
 }
 
-void InputManager::AsciiKeyUp(char keycode)
+void InputManager::AsciiKeyUp(unsigned char keycode)
 {
 #
 }

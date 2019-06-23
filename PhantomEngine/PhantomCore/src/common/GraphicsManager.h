@@ -25,7 +25,7 @@ namespace Phantom {
 		virtual void Tick();
 		virtual void Clear() = 0;
 		virtual void Draw() = 0;
-		virtual void DrawString() = 0;
+		virtual void DrawString(std::string guiStr) = 0;
 
 		// sky box
 		virtual void DrawSkyBox() {}
@@ -47,6 +47,7 @@ namespace Phantom {
 	protected:
 		Frame  m_Frame;
 		TextCore::FontEngine fontEngine;
+		std::string m_GuiString;
 	};
 	extern GraphicsManager* g_pGraphicsManager;
 }
