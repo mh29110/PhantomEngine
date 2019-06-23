@@ -66,7 +66,7 @@ namespace Phantom {
 		//text vao && vbo  for test
 		GLuint m_TextVaoId;
 		GLuint m_TextVboId;
-		GLuint m_TextTextureId[128];
+		GLuint m_TextTextureId[128];//#todo 使用glTexSubImage2D优化
 
 		std::unordered_map<std::string, GLuint> m_textures;
 

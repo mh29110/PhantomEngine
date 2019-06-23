@@ -7,6 +7,7 @@ namespace Phantom {
 			float posX;
 			float posY;
 			std::string content;
+			maths::vec3	color;
 		};
 
 		enum GUIIndex

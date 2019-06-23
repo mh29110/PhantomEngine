@@ -377,7 +377,7 @@ namespace Phantom {
 		m_pro.orthographic(0.0f, conf.screenWidth, 0.0f, conf.screenHeight, 0.01f, 10000.0f);
 		m_TextShader->setUniformMat4("projection", m_pro);
 		
-		m_TextShader->setUniform3f("textColor", maths::vec3(0.5, 0.8f, 0.2f));
+		
 
 		glBindVertexArray(m_TextVaoId);
 		m_TextShader->setUniform1i("text", 3);
@@ -388,6 +388,8 @@ namespace Phantom {
 		{
 			auto unit = itr->second;
 			std::string::const_iterator c;
+			maths::vec3 color = itr->first == 0 ? maths::vec3(0.5, 0.8f, 0.2f) : maths::vec3(0.3, 0.8f, 0.6f);
+			m_TextShader->setUniform3f("textColor", color);
 			for (c = unit.content.begin(); c != unit.content.end(); c++)
 			{
 				TextCore::Character ch = fontEngine.m_Characters[*c];
