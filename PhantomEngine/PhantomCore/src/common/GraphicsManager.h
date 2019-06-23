@@ -4,9 +4,10 @@
 #include "vector.h"
 #include "camera.h"
 #include "GfxStruct.h"
-
+#include "textCore/FontEngine.h"
 
 namespace Phantom {
+	
 	enum Shader_Type
 	{
 		Common_Shader = 0,
@@ -24,6 +25,7 @@ namespace Phantom {
 		virtual void Tick();
 		virtual void Clear() = 0;
 		virtual void Draw() = 0;
+		virtual void DrawString() = 0;
 
 		// sky box
 		virtual void DrawSkyBox() {}
@@ -44,6 +46,7 @@ namespace Phantom {
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches) {}
 	protected:
 		Frame  m_Frame;
+		TextCore::FontEngine fontEngine;
 	};
 	extern GraphicsManager* g_pGraphicsManager;
 }

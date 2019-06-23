@@ -8,12 +8,12 @@
 using namespace std;
 using namespace Phantom::maths;
 
-
 float PI = 3.1415926f;
 
 int Phantom::GraphicsManager::Init()
 {
 	Inited = true;
+	fontEngine.LoadFontFace("C:\\windows\\Fonts\\arial.TTF");
 	return 0;
 }
 
@@ -25,13 +25,15 @@ void Phantom::GraphicsManager::Tick()
 {
 	UpdateConstants();
 	Draw();
+	DrawString();
 }
+
 
 namespace Phantom {
 	extern IApplication* g_pApp;  //wtf !  namespace 
 	void GraphicsManager::CalculateCameraMatrix() {
 		const GfxConfiguration& conf = g_pApp->GetConfiguration();
-		float aspect = conf.screenWidth / conf.screenHeight;
+		float aspect = conf.screenWidth / (conf.screenHeight?conf.screenHeight:1);
 
 		shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
 

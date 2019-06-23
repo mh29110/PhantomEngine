@@ -16,6 +16,7 @@
 
 
 
+
 using namespace std;
 using namespace Phantom::maths;
 
@@ -36,6 +37,9 @@ namespace Phantom {
 
 	const char SHADOWMAP_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/shadowMap_vert.shader";
 	const char SHADOWMAP_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/shadowMap_frag.shader";
+
+	const char TEXT_VS_SHADER_SOURCE_FILE[] = "Resources/shaders/text_vt.shader";
+	const char TEXT_PS_SHADER_SOURCE_FILE[] = "Resources/shaders/text_ps.shader";
 
 	float cubeVertices[] = {
 		// positions          // texture Coords
@@ -272,6 +276,7 @@ namespace Phantom {
 
 	int OpenGLGraphicsManager::Init()
 	{
+		GraphicsManager::Init();
 		int result;
 		result = gladLoadGL();//ÔÚOpenGL RHIÏÂ³õÊ¼»¯glad £¬×¢Òâ¸÷Æ½Ì¨ÒýÓÃglad/(_wgl).c²»Í¬£¬ÔÝÔÚcmakeÖÐÉèÖÃ
 		if (!result) {
@@ -300,12 +305,14 @@ namespace Phantom {
 		InitializeShader();
 		InitializeBuffers();
 		initializeSkyBox();
+		initializeTextVao();
 		
-		GraphicsManager::Init();
+		
 		glGenBuffers(1, &m_uboBatchId);
 		glGenBuffers(1, &m_uboFrameId);
 		glGenBuffers(1, &m_lightId);
 		glGenFramebuffers(1, &m_shadowMapFboId);
+
 		return result;
 	}
 
@@ -354,7 +361,62 @@ namespace Phantom {
 		RenderBatches();
 		DrawSkyBox();
 		m_pShader->unbind();
-		glFlush();
+		//glFlush();
+	}
+	const int CHAR_I= 56;
+	void OpenGLGraphicsManager::DrawString()
+	{
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		m_TextShader->bind();
+		//正交投影 -#todo 挪到init or camera中，无需反复创建
+		maths::mat4x4  m_pro;
+		GfxConfiguration& conf = g_pApp->GetConfiguration();
+		m_pro.orthographic(0.0f, conf.screenWidth, 0.0f, conf.screenHeight, 0.01f, 10000.0f);
+		m_TextShader->setUniformMat4("projection", m_pro);
+		
+		m_TextShader->setUniform3f("textColor", maths::vec3(0.5, 0.8f, 0.2f));
+
+		glBindVertexArray(m_TextVaoId);
+		m_TextShader->setUniform1i("text", 3);
+		glActiveTexture(GL_TEXTURE3);
+
+		std::string  text = "hello world!123";
+		std::string::const_iterator c;
+		float x = 100, y = 100;
+		for (c = text.begin(); c != text.end(); c++)
+		{
+			TextCore::Character ch = fontEngine.m_Characters[*c];
+			float scale = 1.0f;
+			GLfloat xpos = x + ch.Bearing.x * scale;
+			GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+			GLfloat w = ch.Size.x * scale;
+			GLfloat h = ch.Size.y * scale;
+
+			GLfloat vertices[6][4] = {
+			  { xpos,     ypos + h,   0.0, 0.0 },
+				{ xpos,     ypos,       0.0, 1.0 },
+				{ xpos + w, ypos,       1.0, 1.0 },
+
+				{ xpos,     ypos + h,   0.0, 0.0 },
+				{ xpos + w, ypos,       1.0, 1.0 },
+				{ xpos + w, ypos + h,   1.0, 0.0 }
+			};
+
+			glBindTexture(GL_TEXTURE_2D, m_TextTextureId[*c]);
+
+			glBindBuffer(GL_ARRAY_BUFFER, m_TextVboId);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			x += (ch.Advance >> 6)*scale;
+		}
+
+		
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	bool OpenGLGraphicsManager::initializeSkyBox()
@@ -461,6 +523,47 @@ namespace Phantom {
 		
 
 	
+		return true;
+	}
+
+	bool OpenGLGraphicsManager::initializeTextVao()
+	{
+		// Disable byte-alignment restriction
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		for (int i = 0; i < 128; i++) {
+			glGenTextures(1, &m_TextTextureId[i]);
+			glBindTexture(GL_TEXTURE_2D, m_TextTextureId[i]);
+			TextCore::Character c = fontEngine.RenderGlyphToTextureData(i);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RED,
+				c.Size.x,
+				c.Size.y,
+				0,
+				GL_RED,
+				GL_UNSIGNED_BYTE,
+				c.buffer
+			);
+			// Set texture options
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
+		// Configure VAO/VBO for texture quads
+		glGenVertexArrays(1, &m_TextVaoId);
+		glGenBuffers(1, &m_TextVboId);
+		glBindVertexArray(m_TextVaoId);
+		glBindBuffer(GL_ARRAY_BUFFER, m_TextVboId);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 		return true;
 	}
 
@@ -655,6 +758,7 @@ namespace Phantom {
 		m_pShader = make_shared<OpenGLShader>(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 		m_skyboxShader = make_shared<OpenGLShader>(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
 		m_pShadowMapShader = make_shared<OpenGLShader>(SHADOWMAP_VS_SHADER_SOURCE_FILE, SHADOWMAP_PS_SHADER_SOURCE_FILE);
+		m_TextShader = make_shared<OpenGLShader>(TEXT_VS_SHADER_SOURCE_FILE,TEXT_PS_SHADER_SOURCE_FILE);
 		m_currentShader = m_pShader;
 		return true;
 	}

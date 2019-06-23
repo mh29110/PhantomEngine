@@ -25,6 +25,8 @@ namespace Phantom {
 
 		virtual void Draw();
 
+		virtual void DrawString();
+
 		virtual void DrawSkyBox();
 
 		virtual void resize(int32_t width, int32_t height);
@@ -42,6 +44,7 @@ namespace Phantom {
 		bool InitializeBuffers();
 		bool InitializeShader();
 		bool initializeSkyBox();
+		bool initializeTextVao();
 
 		virtual void SetPerFrameConstants(const ContextPerFrame& context);
 		virtual void SetPerFrameLight();
@@ -52,12 +55,18 @@ namespace Phantom {
 		std::shared_ptr<OpenGLShader>     m_pShader;
 		std::shared_ptr<OpenGLShader>     m_skyboxShader;
 		std::shared_ptr<OpenGLShader>     m_pShadowMapShader;
+		std::shared_ptr<OpenGLShader>     m_TextShader;
 		std::weak_ptr<OpenGLShader>       m_currentShader;
 
 		GLuint m_uboFrameId; 
 		GLuint m_uboBatchId; 
 		GLuint m_lightId;
 		GLuint m_shadowMapFboId;
+
+		//text vao && vbo  for test
+		GLuint m_TextVaoId;
+		GLuint m_TextVboId;
+		GLuint m_TextTextureId[128];
 
 		std::unordered_map<std::string, GLuint> m_textures;
 
