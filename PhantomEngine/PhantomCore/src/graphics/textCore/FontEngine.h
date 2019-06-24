@@ -14,7 +14,11 @@ namespace Phantom {
 			maths::vec2 Size;    // Size of glyph
 			maths::vec2  Bearing;  // Offset from baseline to left/top of glyph
 			int Advance;    // Horizontal offset to advance to next glyph
+
+			maths::vec2 offset;//for textcoord uv mapping
 		};
+		const int K_TEXTURE_SIZE = 512;
+		const int K_FONT_SIZE = 32;
 		class FontEngine
 		{
 		public:
@@ -23,7 +27,7 @@ namespace Phantom {
 			int LoadFontFace(const char* path);
 			int DestoryFontEngine();
 
-			Character RenderGlyphToTextureData(char c);
+			void  RenderGlyphToTextureData(char c);
 		private:
 			bool init();
 

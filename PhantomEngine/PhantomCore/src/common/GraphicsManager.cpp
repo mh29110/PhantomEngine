@@ -42,7 +42,7 @@ namespace Phantom {
 	extern IApplication* g_pApp;  //wtf !  namespace 
 	void GraphicsManager::CalculateCameraMatrix() {
 		const GfxConfiguration& conf = g_pApp->GetConfiguration();
-		float aspect = conf.screenWidth / (conf.screenHeight?conf.screenHeight:1);
+		float aspect = (float)conf.screenWidth / (conf.screenHeight?conf.screenHeight:1);
 
 		shared_ptr<CameraNode> camera = g_pSceneManager->GetSceneForRendering().camera;
 

@@ -86,7 +86,6 @@ namespace Phantom {
 		-50.0f,  50.0f, -50.0f,  0.0f, 1.0f
 	};
 
-
 	bool OpenGLGraphicsManager::InitializeBuffers()
 	{
 		uint32_t batchCounter = 0;
@@ -383,6 +382,7 @@ namespace Phantom {
 		m_TextShader->setUniform1i("text", 3);
 		glActiveTexture(GL_TEXTURE3);
 
+		glBindTexture(GL_TEXTURE_2D, m_TextTextureId);
 		std::unordered_map<char, GUI::GuiDisplayUnit>::iterator itr;
 		for (itr = m_GuiUnitMap.begin(); itr != m_GuiUnitMap.end(); itr++)
 		{
@@ -399,17 +399,21 @@ namespace Phantom {
 				GLfloat w = ch.Size.x * scale;
 				GLfloat h = ch.Size.y * scale;
 
-				GLfloat vertices[6][4] = {
-				  { xpos,     ypos + h,   0.0, 0.0 },
-					{ xpos,     ypos,       0.0, 1.0 },
-					{ xpos + w, ypos,       1.0, 1.0 },
+				GLfloat xOffsetUv = ch.offset.x / TextCore::K_TEXTURE_SIZE;
+				GLfloat yOffsetUv = ch.offset.y / TextCore::K_TEXTURE_SIZE;
+				GLfloat xPlusWidthUv = (ch.offset.x + w)/ TextCore::K_TEXTURE_SIZE;
+				GLfloat yPlusHeightUv = (ch.offset.y + h)/ TextCore::K_TEXTURE_SIZE;
 
-					{ xpos,     ypos + h,   0.0, 0.0 },
-					{ xpos + w, ypos,       1.0, 1.0 },
-					{ xpos + w, ypos + h,   1.0, 0.0 }
+				GLfloat vertices[6][4] = {
+				  { xpos,     ypos + h,   xOffsetUv, yOffsetUv },
+					{ xpos,     ypos,       xOffsetUv, yPlusHeightUv },
+					{ xpos + w, ypos,       xPlusWidthUv, yPlusHeightUv },
+
+					{ xpos,     ypos + h,   xOffsetUv, yOffsetUv },
+					{ xpos + w, ypos,       xPlusWidthUv, yPlusHeightUv},
+					{ xpos + w, ypos + h,   xPlusWidthUv, yOffsetUv }
 				};
 
-				glBindTexture(GL_TEXTURE_2D, m_TextTextureId[*c]);
 
 				glBindBuffer(GL_ARRAY_BUFFER, m_TextVboId);
 				glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -534,30 +538,53 @@ namespace Phantom {
 	bool OpenGLGraphicsManager::initializeTextVao()
 	{
 		// Disable byte-alignment restriction
+		glGenTextures(1, &m_TextTextureId);
+		glBindTexture(GL_TEXTURE_2D, m_TextTextureId);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			TextCore::K_TEXTURE_SIZE,
+			TextCore::K_TEXTURE_SIZE,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			0
+		);
+		// Set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		for (int i = 0; i < 128; i++) {
-			glGenTextures(1, &m_TextTextureId[i]);
-			glBindTexture(GL_TEXTURE_2D, m_TextTextureId[i]);
-			TextCore::Character c = fontEngine.RenderGlyphToTextureData(i);
+		int xStart = 0;
+		int yStart = 0;
 
-			glTexImage2D(
+		for (int i = 0; i < 128; i++) {
+			if (xStart + TextCore::K_FONT_SIZE > TextCore::K_TEXTURE_SIZE)
+			{
+				xStart = 0;
+				yStart += TextCore::K_FONT_SIZE;
+			}
+			fontEngine.RenderGlyphToTextureData(i);
+			TextCore::Character &c = fontEngine.m_Characters.at(i);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glTexSubImage2D(
 				GL_TEXTURE_2D,
 				0,
-				GL_RED,
+				xStart,
+				yStart,
 				c.Size.x,
 				c.Size.y,
-				0,
 				GL_RED,
 				GL_UNSIGNED_BYTE,
 				c.buffer
 			);
-			// Set texture options
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBindTexture(GL_TEXTURE_2D, 0);
+			c.offset.x = xStart;
+			c.offset.y = yStart;
+			xStart += c.Size.x + 1;
 		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Configure VAO/VBO for texture quads
 		glGenVertexArrays(1, &m_TextVaoId);
@@ -572,9 +599,6 @@ namespace Phantom {
 		return true;
 	}
 
-	//ÔÚ×îºó»æÖÆ,Êµ¼Ê»æÖÆµÄÃæ»ýÐ¡ÐÔÄÜ¸üºÃ¡£ÔÚshaderÀïÃæÇ¿ÖÆÆäÉî¶ÈÎª1.0£¨¾ÍÊÇ×îÔ¶£©¡£
-	//½«Éî¶È²âÊÔÌõ¼þ´ÓÐ¡ÓÚ¸ÄÎªÐ¡ÓÚµÈÓÚ¡£ÒòÎªÔÚÖ¡¿ªÊ¼µÄÊ±ºòÉî¶È»º³åÇø±»ÇåÎª1.0£¬ËùÒÔÖ»ÓÐÃ»ÓÐ»æÖÆ³¡¾°ÎïÌåµÄ²¿·Ö»á±£³Ö1.0£¬
-	//Ò²¾ÍÊÇÖ»ÓÐÄÇÐ©³¡¾°ÎïÌåÃ»ÓÐ¸²¸ÇµÄµØ·½»á±»Ìì¿ÕºÐ¸²¸Ç¡£
 	void OpenGLGraphicsManager::DrawSkyBox()
 	{
 		

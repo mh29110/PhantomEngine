@@ -41,7 +41,7 @@ namespace Phantom { namespace TextCore{
 			}
 
 			//m_Error = FT_Set_Pixel_Sizes(m_Face, 0, m_Face->units_per_EM);
-			m_Error = FT_Set_Pixel_Sizes(m_Face, 0, 32);
+			m_Error = FT_Set_Pixel_Sizes(m_Face, 0, K_FONT_SIZE);
 			if (m_Error) return m_Error;
 			m_PreviousPath = path;
 		}
@@ -78,7 +78,7 @@ namespace Phantom { namespace TextCore{
 		return m_Error;
 	}
 	
-	Character FontEngine::RenderGlyphToTextureData(char c)
+	void FontEngine::RenderGlyphToTextureData(char c)
 	{
 		if (FT_Load_Char(m_Face, c, FT_LOAD_RENDER))
 		{
@@ -92,6 +92,5 @@ namespace Phantom { namespace TextCore{
 			m_Face->glyph->advance.x
 		};
 		m_Characters.insert(std::pair<char, Character>(c, character));
-		return character;
 	}
 }}

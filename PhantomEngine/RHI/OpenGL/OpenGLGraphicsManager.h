@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include "GraphicsManager.h"
 #include "OpenGLShader.h"
 #include "GfxStruct.h"
 #include <unordered_map>
 
 namespace Phantom {
-	enum //shader°ó¶¨µã    
+	enum //shaderç»‘å®šç‚¹    
 	{
 		ConstantsPerBatchBind = 10,
 		ConstantsPerFrameBind = 11,
@@ -66,7 +66,7 @@ namespace Phantom {
 		//text vao && vbo  for test
 		GLuint m_TextVaoId;
 		GLuint m_TextVboId;
-		GLuint m_TextTextureId[128];//#todo Ê¹ÓÃglTexSubImage2DÓÅ»¯
+		GLuint m_TextTextureId;
 
 		std::unordered_map<std::string, GLuint> m_textures;
 
