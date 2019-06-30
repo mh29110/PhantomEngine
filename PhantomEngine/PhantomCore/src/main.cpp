@@ -7,6 +7,7 @@
 #include "InputManager.h"
 // #include "MemoryManager.h"
 #include "Timer.h"
+#include "eventQueue/EventManager.h"
 
 using namespace Phantom;
 using namespace std;
@@ -22,6 +23,18 @@ namespace Phantom {
 }
 
 int main(int argc, char** argv) {
+
+    using namespace EventQueue;
+    EventHandler eh;
+    EventManager::GetInstance().AddEventHandler(0,&eh);
+    Event evt(EventId::EVT_TICK);
+    EventManager::GetInstance().DispatchEvent(&evt);
+    
+    
+    
+    
+    
+    
 	int ret;
 
 	if ((ret = g_pApp->Init()) != 0) {

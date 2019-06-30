@@ -1,5 +1,3 @@
-﻿#pragma once
-
 #include "EventManager.h"
 
 
@@ -56,3 +54,4 @@ namespace Phantom {
 		EventManager::EventManager(const EventManager&) {}
 	}
 }
+

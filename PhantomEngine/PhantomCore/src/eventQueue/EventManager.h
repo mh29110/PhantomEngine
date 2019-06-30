@@ -1,14 +1,14 @@
-﻿#pragma once
+#pragma once
 #include <list>
 #include <map>
-
+#include "Singleton.h"
 #include "EventStruct.h"
 
 
 //be harmony
 namespace Phantom {
 	namespace EventQueue{
-	class EventManager
+        class EventManager:public Singleton<EventManager>
 	{
 	public:
 		typedef std::list<EventHandler*> HandlerList;
@@ -22,10 +22,10 @@ namespace Phantom {
 		void clearEventHandler(int id);
 
 		void DispatchEvent(Event* evt);
-	protected:
-	private:
+	public:
 		EventManager();
 		~EventManager();
+    private:
 		EventManager(const EventManager&);
 		IdHandlerMap m_handlerMap;
 	};
