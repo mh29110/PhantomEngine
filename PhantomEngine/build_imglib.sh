@@ -2,7 +2,7 @@
 mkdir Dependencies/build/libjpeg
 pushd Dependencies/build/libjpeg
 # rm -rf *
-cmake -DCMAKE_INSTALL_PREFIX=../../Darwin  ../../src/libjpeg
+cmake -DCMAKE_INSTALL_PREFIX=../../Darwin/  ../../src/libjpeg
 cmake --build . --config debug --target install
 popd
 

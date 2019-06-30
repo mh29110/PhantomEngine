@@ -9,7 +9,13 @@ using namespace std;
 using namespace Phantom::maths;
 
 float PI = 3.1415926f;
+#ifdef OS_WINDOWS
 const char*  FONT_PATH = "C:\\windows\\Fonts\\arial.TTF";
+#endif
+#ifdef OS_MACOS
+const char*  FONT_PATH = "/System/Library/Fonts/Symbol.ttf";
+#endif
+
 
 int Phantom::GraphicsManager::Init()
 {

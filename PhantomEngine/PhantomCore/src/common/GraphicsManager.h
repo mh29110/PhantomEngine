@@ -6,6 +6,7 @@
 #include "GfxStruct.h"
 #include "textCore/FontEngine.h"
 #include "gui/GuiCommon.h"
+#include <unordered_map>
 
 namespace Phantom {
 	

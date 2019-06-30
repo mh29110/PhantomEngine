@@ -89,7 +89,7 @@ namespace Phantom { namespace TextCore{
 			m_Face->glyph->bitmap.buffer,//注意结构体中指针的用法，如果没有上传又没有memcpy出去，会引用到无效数据。
 			 maths::vec2(m_Face->glyph->bitmap.width, m_Face->glyph->bitmap.rows),
 			maths::vec2(m_Face->glyph->bitmap_left, m_Face->glyph->bitmap_top),
-			m_Face->glyph->advance.x
+			(int)m_Face->glyph->advance.x
 		};
 		m_Characters.insert(std::pair<char, Character>(c, character));
 	}
