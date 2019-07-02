@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include "OpenGLApplication.h"
-#include "GraphicsManager.h"
+#include "common/GraphicsManager.h"
 #include "glad/glad_wgl.h"
 
 using namespace Phantom;

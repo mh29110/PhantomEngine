@@ -1,5 +1,5 @@
 #include "OpenGLShader.h"
-#include "AssetLoadManager.h"
+#include "common/AssetLoadManager.h"
 
 using namespace std;
 namespace Phantom { 

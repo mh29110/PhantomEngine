@@ -1,7 +1,7 @@
 #include "WindowsApplication.h"
 #include <tchar.h>
-#include "InputManager.h"
-#include "GraphicsManager.h"
+#include "common/InputManager.h"
+#include "common/GraphicsManager.h"
 
 using namespace Phantom;
 void Phantom::KeyCallback(InputManager * inputManager, int flags, int key, uint32_t message)

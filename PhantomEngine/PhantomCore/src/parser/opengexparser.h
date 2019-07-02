@@ -1,7 +1,7 @@
 #include <unordered_map>
 #include "OpenGEX.h"
-#include "Portable.h"
-#include "SceneParser.h"
+#include "common/Portable.h"
+#include "interface/SceneParser.h"
 
 
 namespace Phantom {

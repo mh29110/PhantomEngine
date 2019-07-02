@@ -1,8 +1,8 @@
 #include <iostream>
 #include "camera.h"
-#include "AngleUtils.h"
+#include "maths/AngleUtils.h"
 #include <math.h>
-#include "mat4.h"
+#include "maths/mat4.h"
 
 #ifdef OS_WINDOWS
 #include <glm/glm.hpp>

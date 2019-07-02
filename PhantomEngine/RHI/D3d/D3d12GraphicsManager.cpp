@@ -2,7 +2,7 @@
 #include <d3dcompiler.h>
 #include "D3d12GraphicsManager.h"
 #include "WindowsApplication.h"
-#include "utility.hpp"
+#include "common/utility.hpp"
 
 using namespace Phantom;
 

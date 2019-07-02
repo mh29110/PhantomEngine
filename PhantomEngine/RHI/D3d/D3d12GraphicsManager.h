@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <d3d12.h>
 #include <DXGI1_4.h>
-#include "GraphicsManager.h"
-#include "buffer.h"
-#include "Image.h"
+#include "common/GraphicsManager.h"
+#include "common/buffer.h"
+#include "graphics/Image.h"
 
 namespace Phantom {
 	

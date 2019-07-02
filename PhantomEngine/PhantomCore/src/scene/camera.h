@@ -1,6 +1,6 @@
 #pragma once
-#include "vector.h"
-#include "mat4.h"
+#include "maths/vector.h"
+#include "maths/mat4.h"
 #include "SceneBaseNode.h"
 
 namespace Phantom {

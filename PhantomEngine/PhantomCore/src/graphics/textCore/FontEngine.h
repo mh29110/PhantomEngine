@@ -1,5 +1,5 @@
 #pragma once
-#include "vector.h"
+#include "maths/vector.h"
 #include <map>
 
 namespace Phantom {

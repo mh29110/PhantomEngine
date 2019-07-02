@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "vector.h"
+#include "maths/vector.h"
 #include "SceneBaseObject.h"
 #include "SceneObjectTexture.h"
 

@@ -1,7 +1,7 @@
 #include "SceneManager.h"
 #include <iostream>
 #include "AssetLoadManager.h"
-#include "opengexparser.h"
+#include "parser/opengexparser.h"
 using namespace std;
 using namespace Phantom;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
-#include "Scene.h"
-#include "IRuntimeModule.h"
+#include "scene/Scene.h"
+#include "interface/IRuntimeModule.h"
 
 namespace Phantom {
 	class SceneManager : implements IRuntimeModule

@@ -1,6 +1,6 @@
 #pragma once
-#include "IRuntimeModule.h"
-#include "PhMaths.h"
+#include "interface/IRuntimeModule.h"
+#include "maths/PhMaths.h"
 
 
 #define PHANTOM_MOUSE_LEFT	  0x00

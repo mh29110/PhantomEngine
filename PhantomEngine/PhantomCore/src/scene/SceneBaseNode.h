@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "TreeNode.h"
-#include "PhMaths.h"
+#include "maths/PhMaths.h"
 #include "SceneObjectTransform.h"
 namespace Phantom {
 

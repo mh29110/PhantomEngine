@@ -1,11 +1,11 @@
 #include "opengexparser.h"
-#include "PhMaths.h"
-#include "SceneGeometryNode.h"
-#include "SceneLightNode.h"
-#include "SceneObjectGeometry.h"
-#include "SceneObjectMaterial.h"
-#include "SceneObjectTexture.h"
-#include "Scene.h"
+#include "maths/PhMaths.h"
+#include "scene/SceneGeometryNode.h"
+#include "scene/SceneLightNode.h"
+#include "scene/SceneObjectGeometry.h"
+#include "scene/SceneObjectMaterial.h"
+#include "scene/SceneObjectTexture.h"
+#include "scene/Scene.h"
 using namespace Phantom;
 using namespace maths;
 void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structure & structure, std::shared_ptr<SceneBaseNode>& base_node, Scene& scene)

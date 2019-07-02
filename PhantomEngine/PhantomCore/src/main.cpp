@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "interface/IApplication.h"
-#include "GraphicsManager.h"
-#include "AssetLoadManager.h"
-#include "BehaviourManager.h"
-#include "SceneManager.h"
-#include "InputManager.h"
+#include "common/GraphicsManager.h"
+#include "common/AssetLoadManager.h"
+#include "common/BehaviourManager.h"
+#include "common/SceneManager.h"
+#include "common/InputManager.h"
 // #include "MemoryManager.h"
-#include "Timer.h"
+#include "utils/Timer.h"
 #include "eventQueue/EventManager.h"
 
 #include <typeinfo>

@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "IRuntimeModule.h"
+#include "interface/IRuntimeModule.h"
 #include "buffer.h"
 
 namespace Phantom {

@@ -3,16 +3,16 @@
 #include <fstream>
 #include <math.h>
 #include "OpenGLGraphicsManager.h"
-#include "AssetLoadManager.h"
-#include "SceneManager.h"
-#include "GfxConfiguration.h"
-#include "IApplication.h"
-#include "Scene.h"
+#include "common/AssetLoadManager.h"
+#include "common/SceneManager.h"
+#include "common/GfxConfiguration.h"
+#include "interface/IApplication.h"
+#include "scene/Scene.h"
 #include <unordered_map>
-#include "SceneObjectGeometry.h"
-#include "SceneObjectVertexArray.h"
-#include "SceneObjectIndexArray.h"
-#include "GfxStruct.h"
+#include "scene/SceneObjectGeometry.h"
+#include "scene/SceneObjectVertexArray.h"
+#include "scene/SceneObjectIndexArray.h"
+#include "graphics/GfxStruct.h"
 
 
 

@@ -2,7 +2,7 @@
 #include "SceneObjectVertexArray.h"
 #include "SceneOjbectTypeDef.h"
 #include "SceneBaseNode.h"
-#include "BehaviourManager.h"
+#include "common/BehaviourManager.h"
 
 using namespace Phantom;
 using namespace std;

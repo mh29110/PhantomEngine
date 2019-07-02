@@ -1,7 +1,7 @@
 #pragma once 
-#include "mat4.h"
-#include "vector.h"
-#include "SceneGeometryNode.h"
+#include "maths/mat4.h"
+#include "maths/vector.h"
+#include "scene/SceneGeometryNode.h"
 namespace Phantom {
 
 typedef maths::vec4 float4;

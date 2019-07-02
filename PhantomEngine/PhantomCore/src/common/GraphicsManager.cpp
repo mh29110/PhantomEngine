@@ -2,7 +2,7 @@
 #include <iostream>
 #include "InputManager.h"
 #include "SceneManager.h"
-#include "IApplication.h"
+#include "interface/IApplication.h"
 #include "GfxConfiguration.h"
 
 using namespace std;

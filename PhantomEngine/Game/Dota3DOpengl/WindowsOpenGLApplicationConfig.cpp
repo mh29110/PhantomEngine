@@ -1,13 +1,13 @@
 #include "OpenGLApplication.h"
 #include "OpenGL/OpenGLGraphicsManager.h"
-#include "AssetLoadManager.h"
-#include "SceneManager.h"
-#include "SceneBaseObject.h"
+#include "common/AssetLoadManager.h"
+#include "common/SceneManager.h"
+#include "scene/SceneBaseObject.h"
 #include <unordered_map>
-#include "GfxConfiguration.h"
-#include "IApplication.h"
-#include "BehaviourManager.h"
-#include "InputManager.h"
+#include "common/GfxConfiguration.h"
+#include "interface/IApplication.h"
+#include "common/BehaviourManager.h"
+#include "common/InputManager.h"
 namespace Phantom {
 	//配置程序集命名空间内管理器的全局变量
     GfxConfiguration config(8, 8, 8, 8, 24, 8, 0, 1024, 576, "Phantom Game  (Windows OpenGL)");

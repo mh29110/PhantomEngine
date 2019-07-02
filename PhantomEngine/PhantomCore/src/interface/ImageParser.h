@@ -1,7 +1,7 @@
 #pragma once
 #include "IInterface.h"
-#include "Image.h"
-#include "buffer.h"
+#include "graphics/Image.h"
+#include "common/buffer.h"
 
 namespace Phantom {
 	IInterface ImageParser

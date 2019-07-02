@@ -1,6 +1,6 @@
 #pragma once
 #include "SceneBaseObject.h"
-#include "PhMaths.h"
+#include "maths/PhMaths.h"
 
 namespace Phantom {
     class SceneObjectTransform : public SceneBaseObject

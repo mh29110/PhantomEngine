@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 #include "IInterface.h"
-#include "SceneBaseNode.h"
-#include "Scene.h"
+#include "scene/SceneBaseNode.h"
+#include "scene/Scene.h"
 
 namespace Phantom {
     IInterface SceneParser

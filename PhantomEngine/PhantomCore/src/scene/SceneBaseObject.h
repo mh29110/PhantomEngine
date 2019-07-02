@@ -1,6 +1,6 @@
 #pragma once 
 #include "SceneOjbectTypeDef.h"
-#include "guid.hpp"
+#include "utils/guid.hpp"
 namespace Phantom {
 	using namespace xg;
 class SceneBaseObject

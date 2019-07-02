@@ -1,11 +1,11 @@
 #pragma once
-#include "IRuntimeModule.h"
-#include "mat4.h"
-#include "vector.h"
-#include "camera.h"
-#include "GfxStruct.h"
-#include "textCore/FontEngine.h"
-#include "gui/GuiCommon.h"
+#include "interface/IRuntimeModule.h"
+#include "maths/mat4.h"
+#include "maths/vector.h"
+#include "scene/camera.h"
+#include "graphics/GfxStruct.h"
+#include "graphics/textCore/FontEngine.h"
+#include "graphics/gui/GuiCommon.h"
 #include <unordered_map>
 
 namespace Phantom {

@@ -2,7 +2,7 @@
 // include the basic windows header file
 #include <windows.h>
 #include <windowsx.h>
-#include "BaseApplication.h"
+#include "common/BaseApplication.h"
 namespace Phantom {
     class WindowsApplication : public BaseApplication
     {

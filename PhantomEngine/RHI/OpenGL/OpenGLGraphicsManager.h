@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "GraphicsManager.h"
+#include "common/GraphicsManager.h"
 #include "OpenGLShader.h"
-#include "GfxStruct.h"
+#include "graphics/GfxStruct.h"
 #include <unordered_map>
 
 namespace Phantom {

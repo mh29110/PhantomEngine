@@ -1,6 +1,6 @@
 #pragma once
 #include <glad/glad.h>
-#include "../maths/PhMaths.h"
+#include "maths/PhMaths.h"
 
 namespace Phantom { 
 

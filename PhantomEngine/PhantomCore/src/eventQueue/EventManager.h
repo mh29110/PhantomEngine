@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
 #include <map>
-#include "Singleton.h"
+#include "common/Singleton.h"
 #include "EventStruct.h"
 
 

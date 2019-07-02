@@ -1,6 +1,6 @@
 #pragma once
 #include "IRuntimeModule.h"
-#include "GfxConfiguration.h"
+#include "common/GfxConfiguration.h"
 
 namespace Phantom {
     IInterface IApplication : implements IRuntimeModule

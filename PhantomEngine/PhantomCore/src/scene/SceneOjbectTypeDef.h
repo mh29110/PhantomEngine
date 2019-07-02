@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "Portable.h"
-#include "vector.h"
+#include "common/Portable.h"
+#include "maths/vector.h"
 
 namespace Phantom {
 	ENUM(IndexDataType) {

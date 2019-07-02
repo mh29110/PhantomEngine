@@ -1,11 +1,11 @@
-#include "AssetLoadManager.h"
+#include "common/AssetLoadManager.h"
 
-#include "Image.h"
-#include "BMPParser.h"
-#include "JpegParser.h"
-#include "utility.hpp"
+#include "graphics/Image.h"
+#include "parser/BMPParser.h"
+#include "parser/JpegParser.h"
+#include "common/utility.hpp"
 #include "OpenGEX.h"
-#include "BehaviourManager.h"
+#include "common/BehaviourManager.h"
 
 
 

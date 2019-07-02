@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <setjmp.h>
-#include "ImageParser.h"
+#include "interface/ImageParser.h"
 #include "jpeglib.h"
 
 namespace Phantom {

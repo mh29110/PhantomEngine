@@ -1,7 +1,7 @@
 #include <iostream>
 #include "FontEngine.h"
 #include "ft2build.h"
-#include "Image.h"
+#include "graphics/Image.h"
 #include FT_FREETYPE_H
 namespace Phantom { namespace TextCore{
 	FT_Library m_Library;

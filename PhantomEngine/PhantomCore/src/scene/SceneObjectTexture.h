@@ -1,10 +1,10 @@
 #pragma once
 #include "SceneBaseObject.h"
-#include "mat4.h"
-#include "Image.h"
-#include "BMPParser.h"
-#include "JpegParser.h"
-#include "AssetLoadManager.h"
+#include "maths/mat4.h"
+#include "graphics/Image.h"
+#include "parser/BMPParser.h"
+#include "parser/JpegParser.h"
+#include "common/AssetLoadManager.h"
 
 namespace Phantom {
     class SceneObjectTexture : public SceneBaseObject
