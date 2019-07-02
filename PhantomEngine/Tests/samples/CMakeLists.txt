@@ -7,4 +7,4 @@ file (GLOB_RECURSE  SOURCES
 					)
 #message("My source files: " ${SOURCES})
 
-add_executable (Zsample ${SOURCES}  )
+add_executable (Zsample  ${SOURCES}  )

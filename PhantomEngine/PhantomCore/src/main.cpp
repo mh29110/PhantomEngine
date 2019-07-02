@@ -9,6 +9,8 @@
 #include "Timer.h"
 #include "eventQueue/EventManager.h"
 
+#include <typeinfo>
+
 using namespace Phantom;
 using namespace std;
 
@@ -24,15 +26,16 @@ namespace Phantom {
 
 int main(int argc, char** argv) {
 
-    using namespace EventQueue;
-    EventHandler eh;
-    EventManager::GetInstance().AddEventHandler(0,&eh);
-    Event evt(EventId::EVT_TICK);
-    EventManager::GetInstance().DispatchEvent(&evt);
-    
-    
-    
-    
+#pragma region Test EventManager
+	using namespace EventQueue;
+	EventHandler eh;
+	EventManager::GetInstance().AddEventHandler(0, &eh);
+	Event evt(EventId::EVT_TICK);
+	EventManager::GetInstance().DispatchEvent(&evt);
+
+#pragma endregion
+
+  
     
     
 	int ret;
