@@ -27,6 +27,8 @@ public:
 	std::unordered_multimap<std::string, std::weak_ptr<SceneGeometryNode>>      GeometryNodes;
 	std::unordered_map<std::string, std::weak_ptr<SceneLightNode>>              LightNodes;
 
+	std::vector<std::weak_ptr<SceneBaseNode>>                                   AnimationNodes;
+
 	//camera¡Ÿ ±”√
 	std::shared_ptr<CameraNode>  camera;
 

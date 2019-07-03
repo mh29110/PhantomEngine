@@ -6,10 +6,8 @@
 #include "common/SceneManager.h"
 #include "common/InputManager.h"
 // #include "MemoryManager.h"
+#include "common/AnimationManager.h"
 #include "utils/Timer.h"
-#include "eventQueue/EventManager.h"
-
-#include <typeinfo>
 
 using namespace Phantom;
 using namespace std;
@@ -24,20 +22,15 @@ namespace Phantom {
     extern InputManager* g_pInputManager;
 }
 
+#include "test.cpp"
+#define DEBUG
 int main(int argc, char** argv) {
 
-#pragma region Test EventManager
-	using namespace EventQueue;
-	EventHandler eh;
-	EventManager::GetInstance().AddEventHandler(0, &eh);
-	Event evt(EventId::EVT_TICK);
-	EventManager::GetInstance().DispatchEvent(&evt);
+#ifdef DEBUG
+	Test();
+#endif // DEBUG
 
-#pragma endregion
 
-  
-    
-    
 	int ret;
 
 	if ((ret = g_pApp->Init()) != 0) {
@@ -73,23 +66,35 @@ int main(int argc, char** argv) {
 		return ret;
 	}
 
+	if ((ret = AnimationManager::GetInstance().Init()) != 0) {
+		printf("AnimationManager  Init failed, will exit now.");
+		return ret;
+	}
+
+
 	Timer timer;
-	float timeCount = 0.0f;
+	float secondCount = 0.0f;
+	float lastFrameTime = 0.0f;
 	unsigned int  frames = 0;
 	while (!g_pApp->IsQuit()) {
+		float now = timer.ElapsedMillis();
+		float deltaTime = timer.ElapsedMillis() - lastFrameTime;
+		lastFrameTime = now;
+
 		g_pApp->Tick();
-		//float now = timer.ElapsedMillis();
-        // g_pMemoryManager->Tick();
+		// g_pMemoryManager->Tick(deltaTime);
 		g_pAssetLoader->Tick();
 		g_pSceneManager->Tick();
         g_pGraphicsManager->Tick();
 		g_pBehaviourManager->Tick();
 		g_pInputManager->Tick();
 
+		AnimationManager::GetInstance().Tick(deltaTime);
+
 		frames++;
-		if (timer.Elapsed() - timeCount > 1.0f)
+		if (timer.Elapsed() - secondCount > 1.0f)
 		{
-			timeCount += 1.0f;
+			secondCount += 1.0f;
 			string str = std::to_string(frames);
 			g_pGraphicsManager->DrawString(GUI::FrameGuiIdx,20, 400, "fps:" + str);
 		/* 由于N卡默认开启自动同步，除非手动代码设置（或者显卡配置），最多60帧。 A卡默认关闭。*/
@@ -97,14 +102,19 @@ int main(int argc, char** argv) {
 		}
 	}
 
-    g_pGraphicsManager->Shutdown();
     // g_pMemoryManager->Shutdown();
-	g_pApp->Shutdown();
+	AnimationManager::GetInstance().Shutdown();
+	g_pInputManager->Shutdown();
+	g_pBehaviourManager->Shutdown();
+    g_pGraphicsManager->Shutdown();
+	g_pSceneManager->Shutdown();
 	g_pAssetLoader->Shutdown();
-	delete g_pGraphicsManager;
-	delete g_pAssetLoader;
+	g_pApp->Shutdown();
 	delete g_pInputManager;
 	delete g_pBehaviourManager;
+	delete g_pGraphicsManager;
+	delete g_pSceneManager;
+	delete g_pAssetLoader;
 	delete g_pApp;
 	return 0;
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "src/PhAllocator.h"
 #include <windows.h>
-#include "sort.h"
+#include "maths/sort.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 

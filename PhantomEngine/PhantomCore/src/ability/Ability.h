@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IInterface.h"
+#include "interface/IInterface.h"
 
 
 #define Ability class

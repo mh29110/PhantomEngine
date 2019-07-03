@@ -1,7 +1,7 @@
 #include <objbase.h>
 #include "D2dGraphicsManager.h"
 #include "WindowsApplication.h"
-#include "utility.hpp"
+#include "common/utility.hpp"
 
 using namespace Phantom;
 

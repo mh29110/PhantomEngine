@@ -4,6 +4,7 @@ target_link_libraries(ZOgexParserTest
 						${OPENGEX_LIBRARY} 
 						${OPENDDL_LIBRARY} 
 				    	${EXTRA_LIBS}  # mac库
+							${JPGE_LIBRARY}
 						)
 
 #add_executable(SceneObjectTest SceneObjectTest.cpp)

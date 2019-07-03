@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "AssetLoadManager.h"
+#include "common/AssetLoadManager.h"
 #include "OpenGEX.h"
-#include "OpengexParser.h"
+#include "parser/OpengexParser.h"
 
 using namespace Phantom;
 using namespace std;

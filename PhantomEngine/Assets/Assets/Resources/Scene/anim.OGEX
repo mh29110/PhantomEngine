@@ -63,7 +63,7 @@ GeometryNode $node4
 
 	Translation %xpos (kind = "x")
 	{
-		float {0x00000000}		// 0
+		float {0xC345C9B0}		// -197.788
 	}
 
 	Translation %ypos (kind = "y")
@@ -82,16 +82,16 @@ GeometryNode $node4
 		{
 			Time (curve = "bezier")
 			{
-				Key {float {0, 0.333333, 0.666667}}
-				Key (kind = "-control") {float {0, 0.222222, 0.555556}}
-				Key (kind = "+control") {float {0.111111, 0.444444, 0.666667}}
+				Key {float {0, 0.833333}}
+				Key (kind = "-control") {float {0, 0.555556}}
+				Key (kind = "+control") {float {0.277777, 0.833333}}
 			}
 
 			Value (curve = "bezier")
 			{
-				Key {float {0, -173.133, 150}}
-				Key (kind = "-control") {float {0, -173.133, 150}}
-				Key (kind = "+control") {float {0, -173.133, 150}}
+				Key {float {-197.788, 150}}
+				Key (kind = "-control") {float {-197.788, 150}}
+				Key (kind = "+control") {float {-197.788, 150}}
 			}
 		}
 	}
