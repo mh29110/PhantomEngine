@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
 	unsigned int  frames = 0;
 	while (!g_pApp->IsQuit()) {
 		float now = timer.ElapsedMillis();
-		float deltaTime = timer.ElapsedMillis() - lastFrameTime;
+		float deltaTime = now - lastFrameTime;
 		lastFrameTime = now;
 
 		g_pApp->Tick();

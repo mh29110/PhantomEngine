@@ -26,13 +26,24 @@ namespace Phantom {
 				assert(0);
 			}
 
+			void Update(const maths::vec3 amount)
+			{
+				// should not be used.
+				assert(0);
+			}
+
+			virtual void Update(const maths::mat4x4 amount) final
+			{
+				m_matrix = amount;
+			}
+
         friend std::ostream& operator<<(std::ostream& out, const SceneObjectTransform& obj);
     };
   
 	class SceneObjectTranslation : public SceneObjectTransform
 	{
 	private:
-		char m_Kind = 0;
+		char m_Kind = 0; // 0 for all ; x/y/z single
 
 	public:
 		SceneObjectTranslation() { m_Type = SceneObjectType::kSceneObjectTypeTranslate; }
@@ -43,13 +54,13 @@ namespace Phantom {
 
 			switch (axis) {
 			case 'x':
-				//MatrixTranslation(m_matrix, amount, 0.0f, 0.0f);
+				MatrixTranslation(m_matrix, amount, 0.0f, 0.0f);
 				break;
 			case 'y':
-				//MatrixTranslation(m_matrix, 0.0f, amount, 0.0f);
+				MatrixTranslation(m_matrix, 0.0f, amount, 0.0f);
 				break;
 			case 'z':
-				//MatrixTranslation(m_matrix, 0.0f, 0.0f, amount);
+				MatrixTranslation(m_matrix, 0.0f, 0.0f, amount);
 				break;
 			default:
 				assert(0);
@@ -61,12 +72,30 @@ namespace Phantom {
 			: SceneObjectTranslation()
 		{
 			m_Kind = 0;
-			//MatrixTranslation(m_matrix, x, y, z);
+			MatrixTranslation(m_matrix, x, y, z);
 			m_bSceneObjectOnly = object_only;
 		}
+
 		void Update(const float amount) final
 		{
-			m_matrix.elements[13] += amount/10;
+			switch (m_Kind) {
+			case 'x':
+				MatrixTranslation(m_matrix, amount, 0.0f, 0.0f);
+				break;
+			case 'y':
+				MatrixTranslation(m_matrix, 0.0f, amount, 0.0f);
+				break;
+			case 'z':
+				MatrixTranslation(m_matrix, 0.0f, 0.0f, amount);
+				break;
+			default:
+				assert(0);
+			}
+		}
+
+		void Update(const maths::vec3 amount)
+		{
+			MatrixTranslation(m_matrix, amount.x, amount.y, amount.z);
 		}
 	};
 }

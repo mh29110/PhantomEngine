@@ -27,9 +27,12 @@ namespace Phantom {
 		void Update(const float time_point) final;
 
 	private:
+		template <typename Tparam>
+		void UpdateTransform(const Tparam value);
 		std::shared_ptr<SceneObjectTransform> m_pTransform;
 		std::shared_ptr<CurveBase> m_Time;
 		std::shared_ptr<CurveBase> m_Value;
 		const SceneObjectTrackType m_kTrackType;
 	};
+	
 }

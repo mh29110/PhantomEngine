@@ -38,6 +38,7 @@ namespace Phantom {namespace maths {
 
 		vec3 crossProduct(const vec3 & other) const;
 		vec3& normalize();
+		void SetComponents(const float a,const  float b,const float c);
 
 		friend vec3 operator +(const vec3& left, const vec3&right);
 		friend vec3 operator -(const vec3& left, const vec3&right);

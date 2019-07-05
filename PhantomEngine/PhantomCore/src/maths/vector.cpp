@@ -126,6 +126,13 @@ namespace Phantom {
 			return *this;
 		}
 
+		void vec3::SetComponents(const float a, const  float b, const float c)
+		{
+			x = a;
+			y = b;
+			z = c;
+		}
+
 		bool vec3::operator==(const vec3 & other)
 		{
 			return x == other.x && y == other.y && z == other.z;

@@ -4,21 +4,22 @@
 
 namespace Phantom {namespace maths {
 
-	template<typename T>
+	template<typename Tval,typename Tparam>
 	struct NewtonRapson
 	{
-		typedef std::function <T(T)> nr_f;
-		typedef std::function <T(T)> nr_fprime;
+		typedef std::function <Tval(Tparam)> nr_f;
+		typedef std::function <Tval(Tparam)> nr_fprime;
 
-		static inline T Solve(T x0, nr_f f, nr_fprime fprime)
+		static inline Tparam Solve(Tparam x0, nr_f f, nr_fprime fprime)
 		{
-			T x, x1 = x0;
+			Tparam x, x1 = x0;
 			do {
 				x = x1;
-				T fx = f(x);
-				T fx1 = fprime(x);
+				Tval fx = f(x);
+				Tval fx1 = fprime(x);
 				x1 = x - (fx / fx1);
-			} while (std::abs(x1 - x) >= 10E-6);
+			} while (static_cast<Tval>(abs(x1 - x)) >= static_cast<Tval>(10E-6));
+
 			return x1;
 		}
 	};

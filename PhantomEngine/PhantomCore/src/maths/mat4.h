@@ -1,9 +1,11 @@
 #pragma once 
 
 #include <iostream>
+#include <assert.h>
 #include "vector.h"
 
 #include "AngleUtils.h"
+#include "mat3.h"
 
 // The elements of the matrix are stored as column major order.
 // | 0 2 |    | 0 3 6 |    |  0  4  8 12 |
@@ -108,5 +110,82 @@ namespace Phantom { namespace maths {
 #undef e
 	}
 	
+
+
+	//Inline  calculate function
+	inline void MatrixTranslation(mat4x4 & matrix, const float x, const float y, const float z)
+	{
+		matrix.elements[12] = x;
+		matrix.elements[13] = y;
+		matrix.elements[14] = z;
+	}
+
+
+
+	//template <typename T>
+	inline void MatrixPolarDecompose(const  mat3x3& in_matrix,
+		mat3x3& U,
+		mat3x3& P)
+	{
+		U = in_matrix;
+		mat3x3 U_inv;
+		mat3x3 U_pre;
+
+		do {
+			U_pre = U;
+			U_inv = U;
+			if (0 !=U_inv.InverseMatrix()) assert(0);
+			mat3x3 U_inv_trans;
+			U_inv_trans =  U_inv.Transpose();
+			U = (U + U_inv_trans) * /*(T)*/0.5f;
+		} while (U != U_pre);
+
+		U_inv = U;
+		if (0 != U_inv.InverseMatrix()) assert(0);
+		P = in_matrix * U_inv;
+	}
+
+	inline void Matrix4X4fCompose(mat4x4& matrix, const vec3& rotation, const vec3& scalar, const vec3& translation)
+	{
+		mat4x4 matrix_rotate_x, matrix_rotate_y, matrix_rotate_z, matrix_rotate;
+		/*MatrixRotationX(matrix_rotate_x, rotation[0]);
+		MatrixRotationY(matrix_rotate_y, rotation[1]);
+		MatrixRotationZ(matrix_rotate_z, rotation[2]);*/
+		matrix_rotate = matrix_rotate_x * matrix_rotate_y * matrix_rotate_z;
+		mat4x4 matrix_scale;
+		//MatrixScale(matrix_scale, scalar);
+		mat4x4 matrix_translation;
+		MatrixTranslation(matrix_translation, translation.x,translation.y,translation.z);
+		matrix = matrix_scale * matrix_rotate * matrix_translation;
+	}
+
+	inline void Matrix4X4fDecompose(const mat4x4& matrix, vec3& rotation, vec3& scalar, vec3& translation)
+	{
+		translation.SetComponents(matrix.elements[12], matrix.elements[13], matrix.elements[14]);
+
+		// QR decompose the top-left 3x3 matrix
+		const mat3x3 bases (
+			matrix.elements[0], matrix.elements[1], matrix.elements[2],
+			matrix.elements[4], matrix.elements[5], matrix.elements[6],
+			matrix.elements[8], matrix.elements[9], matrix.elements[10]);
+
+		mat3x3 U, P;
+		
+		MatrixPolarDecompose/*<float>*/(bases, U, P);
+
+		float scale_x = P.elements[0];
+		float scale_y = P.elements[4];
+		float scale_z = P.elements[8];
+
+		// decompose the scale
+		scalar.SetComponents( scale_x, scale_y, scale_z );
+
+		// decompose the rotation matrix
+		float theta_x = std::atan2(U.elements[5], U.elements[8]);
+		float theta_y = -std::asin(U.elements[2]);
+		float theta_z = std::atan2(U.elements[1], U.elements[0]);
+
+		rotation.SetComponents( theta_x, theta_y, theta_z );
+	}
 } }
 

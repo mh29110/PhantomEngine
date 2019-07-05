@@ -469,7 +469,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 					break;
 					case 16:
 					{
-
+						cout << "parser matrix missing." << endl;
 						type = SceneObjectTrackType::kMatrix;
 					}
 					break;
@@ -478,7 +478,40 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 					}
 				}
 				else {    // default to linear
-
+					switch (value_array_size)
+					{
+					case 0:
+					case 1:
+					{
+						value_curve = std::make_shared<Linear<float, float>>(
+							value_knots,
+							value_key_data_count);
+						type = SceneObjectTrackType::kScalar;
+					}
+					break;
+					case 3:
+					{
+						
+						type = SceneObjectTrackType::kVector3;
+					}
+					break;
+					case 4:
+					{
+						
+						type = SceneObjectTrackType::kQuoternion;
+					}
+					break;
+					case 16:
+					{
+						value_curve = std::make_shared<Linear<maths::mat4x4, float>>(
+							reinterpret_cast<const maths::mat4x4*>(value_knots),
+							value_key_data_count);
+						type = SceneObjectTrackType::kMatrix;
+					}
+					break;
+					default:
+						assert(0);
+					}
 				}
 				track = std::make_shared<SceneObjectTrack>(trans, time_curve, value_curve, type);
 				clip->AddTrack(track);
