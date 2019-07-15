@@ -49,6 +49,7 @@ Phantom::maths::mat3x3 Phantom::maths::mat3x3::Transpose()
 
 int Phantom::maths::mat3x3::InverseMatrix()
 {
+	//https://www.wikihow.com/Find-the-Inverse-of-a-3x3-Matrix
 	// computes the inverse of a matrix m
 	float det = elements[0] * (elements[4] * elements[8] - elements[7] * elements[5]) -
 		elements[1] * (elements[3] * elements[8] - elements[5] * elements[6]) +
