@@ -55,7 +55,7 @@ add_library(freetype STATIC IMPORTED)
 
 set_target_properties(freetype PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/freetype2"
-  INTERFACE_LINK_LIBRARIES "/usr/lib/libz.dylib;/usr/lib/libbz2.dylib"
+  INTERFACE_LINK_LIBRARIES "/usr/lib/libz.dylib;/usr/lib/libbz2.dylib;/usr/local/lib/libpng.dylib;/usr/lib/libz.dylib"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)

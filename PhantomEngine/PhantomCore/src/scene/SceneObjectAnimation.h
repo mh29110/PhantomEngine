@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+#include <memory>
 #include "SceneBaseObject.h"
 #include "ability/IAnimatable.h"
 #include "SceneObjectTrack.h"
+
 
 namespace Phantom {
 	class SceneObjectAnimationClip : public SceneBaseObject,public IAnimatable<float>

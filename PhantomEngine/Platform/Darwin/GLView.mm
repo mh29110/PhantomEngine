@@ -1,8 +1,8 @@
 #import "GLView.h"
 #include <OpenGL/gl.h>
 
-#include "GraphicsManager.h"
-#include "InputManager.h"
+#include "common/GraphicsManager.h"
+#include "common/InputManager.h"
 
 using namespace Phantom;
 

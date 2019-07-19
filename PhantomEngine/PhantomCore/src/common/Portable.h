@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <assert.h>
+#include <vector>
 #include "projectConfig.h"
 
 #ifdef ALIGN

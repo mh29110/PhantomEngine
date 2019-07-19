@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include "vector.h"
+#include <math.h>
 
 #include "AngleUtils.h"
 #include "mat3.h"
@@ -185,9 +186,9 @@ namespace Phantom { namespace maths {
 		scalar.SetComponents( scale_x, scale_y, scale_z );
 
 		// decompose the rotation matrix
-		float theta_x = std::atan2(U.elements[5], U.elements[8]);
-		float theta_y = -std::asin(U.elements[2]);
-		float theta_z = std::atan2(U.elements[1], U.elements[0]);
+		float theta_x = atan2(U.elements[5], U.elements[8]);
+		float theta_y = -asin(U.elements[2]);
+		float theta_z = atan2(U.elements[1], U.elements[0]);
 
 		rotation.SetComponents( theta_x, theta_y, theta_z );
 	}

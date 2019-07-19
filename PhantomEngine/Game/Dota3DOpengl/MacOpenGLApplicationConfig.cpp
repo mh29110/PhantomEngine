@@ -8,14 +8,14 @@
 	// #include "CocoaMetalApplication.h"
 #endif
 #include "OpenGL/OpenGLGraphicsManager.h"
-#include "AssetLoadManager.h"
-#include "SceneManager.h"
-#include "SceneBaseObject.h"
+#include "common/AssetLoadManager.h"
+#include "common/SceneManager.h"
+#include "scene/SceneHeaders.h"
 #include <unordered_map>
-#include "GfxConfiguration.h"
-#include "IApplication.h"
-#include "BehaviourManager.h"
-#include "InputManager.h"
+#include "common/GfxConfiguration.h"
+#include "interface/IApplication.h"
+#include "common/BehaviourManager.h"
+#include "common/InputManager.h"
 
 namespace Phantom {
 	//ÅäÖÃ³ÌÐò¼¯ÃüÃû¿Õ¼äÄÚ¹ÜÀíÆ÷µÄÈ«¾Ö±äÁ¿

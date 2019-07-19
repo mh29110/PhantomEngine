@@ -21,11 +21,11 @@ namespace Phantom { namespace maths {
 		mat3x3 Transpose();
 
 		mat3x3& operator=(const mat3x3& mat);
-		bool mat3x3::operator!=(const mat3x3 &other);
-		mat3x3 mat3x3::operator+(const mat3x3 &other);
+		bool operator!=(const mat3x3 &other);
+		mat3x3 operator+(const mat3x3 &other);
 
-		mat3x3 mat3x3::operator*(const mat3x3 &other) const;
-		mat3x3 mat3x3::operator*(const float factor) const;
+		mat3x3 operator*(const mat3x3 &other) const;
+		mat3x3 operator*(const float factor) const;
 		int InverseMatrix();
 	};
 } }

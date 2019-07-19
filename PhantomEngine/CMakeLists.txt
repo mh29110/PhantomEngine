@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.1)
 
 # Check platforms
 IF(UNIX)
@@ -108,6 +108,10 @@ elseif(OS_MACOS)
 	set (CMAKE_C_STANDARD 11)
 	set (CMAKE_CXX_STANDARD 11)
 
+    find_package(PNG REQUIRED)
+    find_package(BZIP2 REQUIRED)
+    find_package(ZLIB REQUIRED)
+
 	INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
 	FIND_LIBRARY(IOKit_LIBRARY IOKit)
@@ -122,7 +126,10 @@ elseif(OS_MACOS)
                     OPENGL_LIBRARIES
                     METAL_LIB)
     SET(EXTRA_LIBS ${COCOA_LIBRARY} ${IOKit_LIBRARY} ${COREVIDEO_LIB} ${OPENGL_LIBRARIES} 
-                    ${METAL_LIB}  ${METALKIT_LIB})
+                    ${METAL_LIB}  ${METALKIT_LIB}
+                    ${PNG_LIBRARY}
+                    ${ZLIB_LIBRARY}
+                    ${BZIP2_LIBRARY})
 
     
 endif(OS_WINDOWS)

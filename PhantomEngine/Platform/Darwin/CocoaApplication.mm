@@ -3,7 +3,7 @@
 #import <Carbon/Carbon.h>
 #include <string.h>
 #include "CocoaApplication.h"
-#include "InputManager.h"
+#include "common/InputManager.h"
 
 using namespace Phantom;
 

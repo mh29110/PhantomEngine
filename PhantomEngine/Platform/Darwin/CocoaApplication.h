@@ -1,6 +1,6 @@
 #pragma once 
-#include "Portable.h"
-#include "BaseApplication.h"
+#include "common/Portable.h"
+#include "common/BaseApplication.h"
 
 OBJC_CLASS(NSWindow);
 

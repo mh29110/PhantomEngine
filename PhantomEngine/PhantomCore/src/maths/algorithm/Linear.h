@@ -37,8 +37,8 @@ namespace Phantom{ namespace maths{
 			{
 				if (t >= Curve<Tval, Tparam>::m_Knots[i])
 					continue;
-				t0 = m_Knots[i - 1];
-				t1 = m_Knots[i];
+				t0 = Curve<Tval, Tparam>::m_Knots[i - 1];
+				t1 = Curve<Tval, Tparam>::m_Knots[i];
 				idx = i;
 				break;
 			}
