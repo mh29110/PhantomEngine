@@ -107,6 +107,7 @@ namespace Phantom {
 				int textureBeginIndex = textureName.find(textureStr);
 				const std::string realTextureName = textureName.substr(textureBeginIndex);
 
+
                 if(attrib == "diffuse") {
                     m_BaseColor = std::make_shared<SceneObjectTexture>(realTextureName);
                 }

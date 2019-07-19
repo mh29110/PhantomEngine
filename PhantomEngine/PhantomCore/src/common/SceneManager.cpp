@@ -35,7 +35,7 @@ const Scene & SceneManager::GetSceneForRendering()
 
 bool Phantom::SceneManager::LoadScene()
 {
-	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/anim.ogex");
+	string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/c8.ogex");
 	//string ogex_text = g_pAssetLoader->SyncOpenAndReadTextFileToString("Resources/Scene/my.ogex");
 	if (ogex_text.empty()) {
 		return false;

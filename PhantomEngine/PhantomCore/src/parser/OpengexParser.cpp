@@ -335,6 +335,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 					break;
 					default:
 						// ignore it
+						printf("error mesh");
 						;
 					}
 
@@ -491,13 +492,13 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 					break;
 					case 3:
 					{
-						
+
 						type = SceneObjectTrackType::kVector3;
 					}
 					break;
 					case 4:
 					{
-						
+
 						type = SceneObjectTrackType::kQuoternion;
 					}
 					break;
@@ -526,7 +527,12 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		scene.AnimationNodes.push_back(base_node);
 	}
 	return;
-
+	case OGEX::kStructureBoneNode:
+	{
+		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
+		return;//先不读取Bone下的，需要重载boneNode的attachAnimationClip
+	}
+	break;
 	default:
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
 		//std::cout << structure.GetStructureName() << "=== name " << std::endl;

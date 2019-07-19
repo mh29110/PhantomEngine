@@ -131,7 +131,11 @@ namespace Phantom { namespace maths {
 		mat3x3 U_inv;
 		mat3x3 U_pre;
 
+		int limit = 0;
 		do {
+			limit++;
+			if (limit >= 1024)
+				break;//...................... - -£¡//todo 
 			U_pre = U;
 			U_inv = U;
 			if (0 !=U_inv.InverseMatrix()) assert(0);

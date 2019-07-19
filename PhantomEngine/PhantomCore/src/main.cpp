@@ -22,13 +22,8 @@ namespace Phantom {
     extern InputManager* g_pInputManager;
 }
 
-#include "test.cpp"
-#define DEBUG
-int main(int argc, char** argv) {
 
-#ifdef DEBUG
-	Test();
-#endif // DEBUG
+int main(int argc, char** argv) {
 
 
 	int ret;
