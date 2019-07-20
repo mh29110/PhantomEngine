@@ -1,7 +1,7 @@
 #pragma once
 #include <d2d1.h>
-#include "GraphicsManager.h"
-#include "Image.h"
+#include "common/GraphicsManager.h"
+#include "graphics/Image.h"
 
 namespace Phantom {
     class D2dGraphicsManager : public GraphicsManager

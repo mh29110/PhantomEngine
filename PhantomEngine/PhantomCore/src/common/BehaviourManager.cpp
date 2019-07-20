@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "InputManager.h"
 
+
 int Phantom::BehaviourManager::Init()
 {
 	camera = g_pSceneManager->GetSceneForRendering().camera;

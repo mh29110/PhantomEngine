@@ -43,7 +43,9 @@ namespace Phantom {
 			kSceneObjectTypeScale = "SCAL"_i32,
 			kSceneObjectTypeTrack = "TRAC"_i32,
 			kSceneObjectTypeSkyBox = "SKYB"_i32,
-			kSceneObjectTypeTerrain = "TERN"_i32
+			kSceneObjectTypeTerrain = "TERN"_i32,
+			kSceneObjectTypeSkin = "Skin"_i32,
+			kSceneObjectTypeSkeleton = "Skel"_i32
 	};
 	//std::ostream& operator<<(std::ostream& out, VertexDataType type);
 	ENUM(PrimitiveType) {

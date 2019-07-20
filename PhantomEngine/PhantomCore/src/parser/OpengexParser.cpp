@@ -334,41 +334,127 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						mesh->AddIndexArray(std::move(_i_array));
 
 					}
+					break;
 					case OGEX::kStructureSkin:
 					{
-						const OGEX::SkinStructure* _v = dynamic_cast<const OGEX::SkinStructure*>(sub_structure);
-						/*	const char* attr = _v->GetArrayAttrib();
-							auto morph_index = _v->GetMorphIndex();
+						//skin begin:
+						const OGEX::SkinStructure* _ss = dynamic_cast<const OGEX::SkinStructure*>(sub_structure);
 
-							const ODDL::Structure* _data_structure = _v->GetFirstCoreSubnode();
-							const ODDL::DataStructure<FloatDataType>* dataStructure = dynamic_cast<const ODDL::DataStructure<FloatDataType>*>(_data_structure);
+						//process  skin's first and only transform.
+						const Structure *localStructure = _ss->GetFirstSubstructure(OGEX::kStructureTransform);
+						if (!CheckAvailableUniqueness(localStructure, _ss, OGEX::kStructureTransform))
+							return;
+						const OGEX::TransformStructure * skinTfStruct =
+								dynamic_cast<const OGEX::TransformStructure*> (localStructure);
+#pragma region skeleton
+						//process  skin's first and only kStructureSkeleton.
+						shared_ptr<SceneObjectSkeleton> _skeleton = std::make_shared<SceneObjectSkeleton>();
 
-							auto arraySize = dataStructure->GetArraySize();
-							auto elementCount = dataStructure->GetDataElementCount();
-							const void* _data = &dataStructure->GetDataElement(0);
-							void* data = new float[elementCount];
-							size_t buf_size = sizeof(float) * elementCount;
-							memcpy(data, _data, buf_size);
-							VertexDataType vertexDataType;
-							switch (arraySize) {
-							case 1:
-								vertexDataType = VertexDataType::kVertexDataTypeFloat1;
-								break;
-							case 2:
-								vertexDataType = VertexDataType::kVertexDataTypeFloat2;
-								break;
-							case 3:
-								vertexDataType = VertexDataType::kVertexDataTypeFloat3;
-								break;
-							case 4:
-								vertexDataType = VertexDataType::kVertexDataTypeFloat4;
-								break;
-							default:
-								continue;
-							}*/
+						localStructure = _ss->GetFirstSubstructure(OGEX::kStructureSkeleton);
+						if (!CheckAvailableUniqueness(localStructure, _ss, OGEX::kStructureSkeleton))
+							return;
+						const OGEX::SkeletonStructure * skeletonStruct =
+								dynamic_cast<const OGEX::SkeletonStructure*> (localStructure);
+						//transform array
+						const OGEX::TransformStructure* pTransformArr= skeletonStruct->GetTransformStructure();
+						const int transNum = pTransformArr->GetTransformCount();
+
+						int i ;
+						mat4x4 matrix;
+						bool object_flag = pTransformArr->GetObjectFlag();//todo
+						std::shared_ptr<SceneObjectTransform> transform = std::make_shared<SceneObjectTransform>();
+						const float* data = pTransformArr->GetTransform();
+
+						for (i = 0; i < transNum; i++)
+						{
+							matrix = data;
+							transform->AppendMatrix(matrix);
+							data += 16;
+						}
+						_skeleton->ApplyTransform(std::move(transform));
+						//bone node ref array
+						const OGEX::BoneRefArrayStructure* pBoneRefArr= skeletonStruct->GetBoneRefArrayStructure();
+						const int bonesNum = pBoneRefArr->GetBoneCount(); //bonesNum === transNum 
+
+						std::shared_ptr<SkeletonBoneRefArray> bonesRefArr = std::make_shared<SkeletonBoneRefArray>(bonesNum);
+						std::shared_ptr<BoneNode> bone;
+						const OGEX::BoneNodeStructure * const * boneNodeStruct = pBoneRefArr->GetBoneNodeArray();
+						for (i = 0; i < bonesNum; i++)
+						{
+							std::string boneName = (*boneNodeStruct)->GetNodeName();
+							bone = std::make_shared<BoneNode>(boneName);
+							bonesRefArr->AppendBone(bone);
+							boneNodeStruct++;
+						}
+						_skeleton->ApplyBoneRefArr(std::move(bonesRefArr));
+#pragma endregion
+						//process  skin's first and only kStructureBoneCountArray.
+						localStructure = _ss->GetFirstSubstructure(OGEX::kStructureBoneCountArray);
+						if (!CheckAvailableUniqueness(localStructure, _ss, OGEX::kStructureBoneCountArray))
+							return;
+						const OGEX::BoneCountArrayStructure * boneCountArrayStructure =
+								dynamic_cast<const OGEX::BoneCountArrayStructure*> (localStructure);
+
+						//process  skin's first and only kStructureBoneIndexArray.
+						localStructure = _ss->GetFirstSubstructure(OGEX::kStructureBoneIndexArray);
+						if (!CheckAvailableUniqueness(localStructure, _ss, OGEX::kStructureBoneIndexArray))
+							return;
+						const OGEX::BoneIndexArrayStructure * boneIndexArrayStructure =
+								dynamic_cast<const OGEX::BoneIndexArrayStructure*> (localStructure);
+
+						//process  skin's first and only kStructureBoneWeightArray.
+						localStructure = _ss->GetFirstSubstructure(OGEX::kStructureBoneWeightArray);
+						if (!CheckAvailableUniqueness(localStructure, _ss, OGEX::kStructureBoneWeightArray))
+							return;
+						const OGEX::BoneWeightArrayStructure * boneWeightArrayStructure =
+								dynamic_cast<const OGEX::BoneWeightArrayStructure*> (localStructure);
+						const float *boneWeightArray = boneWeightArrayStructure->GetBoneWeightArray();
+					
+						int32 boneIndexCount = boneIndexArrayStructure->GetBoneIndexCount();
+						const unsigned short * boneIndexArray = boneIndexArrayStructure->GetBoneIndexArray();
+						if (boneWeightArrayStructure->GetBoneWeightCount() != boneIndexCount)
+						{
+							printf ( "error : kDataOpenGexBoneWeightCountMismatch");
+							return;
+						}
+						int32 vertexCount = boneCountArrayStructure->GetVertexCount();
+						const unsigned short *boneCountArray = boneCountArrayStructure->GetBoneCountArray();
+
+						int32 boneWeightCount = 0;
+
+						int a = 0;//machine
+						for ( a = 0; a < vertexCount; a++)
+						{
+							unsigned_int32 count = boneCountArray[a];
+							boneWeightCount += count;
+						}
+						if (boneWeightCount != boneIndexCount)
+						{
+							printf("kDataOpenGexBoneWeightCountMismatch");
+							return;
+						}
+
+						unsigned short* dataCount = new unsigned_int16[vertexCount];
+						memcpy(dataCount, boneCountArray, vertexCount);
+						shared_ptr<SkinBoneCountArray> bca = make_shared<SkinBoneCountArray>(dataCount,vertexCount);
+
+						unsigned short* dataIdx = new unsigned_int16[boneIndexCount];
+						memcpy(dataIdx, boneIndexArray, boneIndexCount);
+						shared_ptr<SkinBoneIndexArray> bia = make_shared<SkinBoneIndexArray>(dataIdx, boneIndexCount);
+
+						float * dataWeight = new float[boneIndexCount];
+						memcpy(dataWeight, boneWeightArray, boneIndexCount);
+						shared_ptr<SkinBoneWeightArray> bwa = make_shared<SkinBoneWeightArray>(dataWeight, boneIndexCount);
+
+
+						// Do application-specific skin processing here.
 						SceneObjectSkin& _skin = *new SceneObjectSkin(
 
 						);
+						_skin.AddBoneCountArr(std::move(bca));
+						_skin.AddBoneIndexArr(std::move(bia));
+						_skin.AddBoneWeightArr(std::move(bwa));
+						_skin.AddSkeleton(std::move(_skeleton));
 						mesh->AddSkin(std::move(_skin));
 					}
 					break;
@@ -586,6 +672,23 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	}
 
 	base_node->AppendChild(std::move(node));
+}
+
+bool Phantom::OpengexParser::CheckAvailableUniqueness(const Structure * local, const OGEX::SkinStructure* skinParent, StructureType type)
+{
+	if (local)
+	{
+		if (skinParent->GetLastSubstructure(type) != local)
+		{
+			printf("error : return Structure is not uniqueness : %d", type);
+			return false;
+		}
+		return true;
+	}
+	else {
+		printf("error : return Structure  is not exist %d",type );
+		return false;
+	}
 }
 
 std::unique_ptr<Scene> Phantom::OpengexParser::Parse(const std::string & buf)

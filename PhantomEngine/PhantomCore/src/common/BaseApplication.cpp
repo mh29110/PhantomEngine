@@ -24,6 +24,7 @@ int Phantom::BaseApplication::Init()
 // Shutdown all sub modules and clean up all runtime temporary files.
 void Phantom::BaseApplication::Shutdown()
 {
+	m_bQuit = true;
 }
 
 
