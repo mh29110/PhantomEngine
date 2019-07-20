@@ -4,6 +4,7 @@
 #include "SceneObjectVertexArray.h"
 #include "SceneBaseObject.h"
 #include "SceneOjbectTypeDef.h"
+#include "SceneObjectSkin.h"
 
 namespace Phantom {
     class SceneObjectMesh : public SceneBaseObject
@@ -12,6 +13,7 @@ namespace Phantom {
             std::vector<SceneObjectIndexArray>  m_IndexArray;
             std::vector<SceneObjectVertexArray> m_VertexArray;
 			PrimitiveType	m_PrimitiveType;
+			std::shared_ptr<SceneObjectSkin>    m_Skin;
 
         public:
             SceneObjectMesh(bool visible = true, bool shadow = true, bool motion_blur = true) : SceneBaseObject(SceneObjectType::kSceneObjectTypeMesh) {};
@@ -24,6 +26,9 @@ namespace Phantom {
             };
             void AddIndexArray(SceneObjectIndexArray&& array) { m_IndexArray.push_back(std::move(array)); };
             void AddVertexArray(SceneObjectVertexArray&& array) { m_VertexArray.push_back(std::move(array)); };
+			void AddSkin(SceneObjectSkin&& skin) { 
+				m_Skin = std::make_shared<SceneObjectSkin>(std::move(skin)); 
+			};
 			void SetPrimitiveType(PrimitiveType type) { m_PrimitiveType = type;  };
 
             size_t GetIndexGroupCount() const { return m_IndexArray.size(); };

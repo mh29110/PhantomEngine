@@ -14,3 +14,4 @@
 #include "scene/SceneObjectTransform.h"
 #include "scene/SceneObjectVertexArray.h"
 #include "scene/SceneOjbectTypeDef.h"
+#include "scene/SceneObjectSkin.h"

@@ -44,15 +44,6 @@
 */
 
 
-/* Modified by
- * Tim Chen <chenwenli@chenwenl.com>
- * ON
- * Oct. 13, 2017
- * For
- * his tutorial Game Engine from Scratch
- * At
- * https://zhuanlan.zhihu.com/c_119702958
- */
 
 
 

@@ -170,6 +170,8 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		_object->SetIfCastShadow(_structure.GetShadowFlag());
 		_object->SetIfMotionBlur(_structure.GetMotionBlurFlag());
 
+
+		
 		//---------------------------mesh begin -------------------------
 		const ODDL::Map<OGEX::MeshStructure> *_meshs = _structure.GetMeshMap();
 		int32_t _count = _meshs->GetElementCount();
@@ -332,6 +334,43 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						mesh->AddIndexArray(std::move(_i_array));
 
 					}
+					case OGEX::kStructureSkin:
+					{
+						const OGEX::SkinStructure* _v = dynamic_cast<const OGEX::SkinStructure*>(sub_structure);
+						/*	const char* attr = _v->GetArrayAttrib();
+							auto morph_index = _v->GetMorphIndex();
+
+							const ODDL::Structure* _data_structure = _v->GetFirstCoreSubnode();
+							const ODDL::DataStructure<FloatDataType>* dataStructure = dynamic_cast<const ODDL::DataStructure<FloatDataType>*>(_data_structure);
+
+							auto arraySize = dataStructure->GetArraySize();
+							auto elementCount = dataStructure->GetDataElementCount();
+							const void* _data = &dataStructure->GetDataElement(0);
+							void* data = new float[elementCount];
+							size_t buf_size = sizeof(float) * elementCount;
+							memcpy(data, _data, buf_size);
+							VertexDataType vertexDataType;
+							switch (arraySize) {
+							case 1:
+								vertexDataType = VertexDataType::kVertexDataTypeFloat1;
+								break;
+							case 2:
+								vertexDataType = VertexDataType::kVertexDataTypeFloat2;
+								break;
+							case 3:
+								vertexDataType = VertexDataType::kVertexDataTypeFloat3;
+								break;
+							case 4:
+								vertexDataType = VertexDataType::kVertexDataTypeFloat4;
+								break;
+							default:
+								continue;
+							}*/
+						SceneObjectSkin& _skin = *new SceneObjectSkin(
+
+						);
+						mesh->AddSkin(std::move(_skin));
+					}
 					break;
 					default:
 						// ignore it
@@ -347,7 +386,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		}
 		//-------------end---------------------------------------
 	}
-	return;//叶子节点，跳出本次递归
+	return;//叶子节点,不是baseNode的children，跳出本次递归
 	case OGEX::kStructureTranslation:
 	{
 		const OGEX::TranslationStructure& _structure = dynamic_cast<const OGEX::TranslationStructure&>(structure);
@@ -530,7 +569,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	case OGEX::kStructureBoneNode:
 	{
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
-		return;//先不读取Bone下的，需要重载boneNode的attachAnimationClip
+		return;//先不读取Bone下的，mesh 与 skeleton 先行
 	}
 	break;
 	default:
