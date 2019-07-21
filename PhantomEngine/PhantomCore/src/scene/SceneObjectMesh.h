@@ -29,6 +29,9 @@ namespace Phantom {
 			void AddSkin(SceneObjectSkin&& skin) { 
 				m_Skin = std::make_shared<SceneObjectSkin>(std::move(skin)); 
 			};
+			const std::weak_ptr<SceneObjectSkin> GetSkin() { 
+				return m_Skin; 
+			}
 			void SetPrimitiveType(PrimitiveType type) { m_PrimitiveType = type;  };
 
             size_t GetIndexGroupCount() const { return m_IndexArray.size(); };

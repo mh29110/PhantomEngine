@@ -30,22 +30,18 @@ namespace Phantom {namespace maths {
 			float m08, float m09, float m10, float m11, // 3rd column
 			float m12, float m13, float m14, float m15)// 4th column
 	{
-		elements[0] = m00;
-		elements[1] = m01;
-		elements[2] = m02;
-		elements[3] = m03;
-		elements[4] = m04;
-		elements[5] = m05;
-		elements[6] = m06;
-		elements[7] = m07;
-		elements[8] = m08;
-		elements[9] = m09;
-		elements[10] = m10;
-		elements[11] = m11;
-		elements[12] = m12;
-		elements[13] = m13;
-		elements[14] = m14;
-		elements[15] = m15;
+		elements[0] = m00; elements[4] = m04; elements[8] = m08;  elements[12] = m12;
+		elements[1] = m01; elements[5] = m05; elements[9] = m09;  elements[13] = m13;
+		elements[2] = m02; elements[6] = m06; elements[10] = m10; elements[14] = m14;
+		elements[3] = m03; elements[7] = m07; elements[11] = m11; elements[15] = m15;
+	}
+
+	vec4 mat4x4::operator * (const vec4& v) {
+		float x = elements[0]*v.x + elements[4] * v.y + elements[8] * v.z + elements[12] * v.w;
+		float y = elements[1]*v.x + elements[5] * v.y + elements[9] * v.z + elements[13] * v.w;
+		float z = elements[2]*v.x + elements[6] * v.y + elements[10] * v.z + elements[14] * v.w;
+		float w = elements[3]*v.x + elements[7] * v.y + elements[11] * v.z + elements[15] * v.w;
+		return vec4(x, y, z, w);
 	}
 
 	mat4x4 mat4x4::operator * (const mat4x4 &other)

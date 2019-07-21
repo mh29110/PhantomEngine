@@ -114,7 +114,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	}
 	return;
 
-	case OGEX::kStructureGeometryNode:
+	case OGEX::kStructureGeometryNode: 
 	{
 		std::string _key = structure.GetStructureName();
 		auto _node = std::make_shared<SceneGeometryNode>(_key);
@@ -134,6 +134,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		MaterialRef (index = 2) {ref {$material7}}
 		MaterialRef (index = 3) {ref {$material16}}
 		*/
+
 		auto materials = _structure.GetMaterialStructureArray();
 		auto materials_count = materials.GetElementCount();
 		for (auto i = 0; i < materials_count; i++)
@@ -377,12 +378,12 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						const int bonesNum = pBoneRefArr->GetBoneCount(); //bonesNum === transNum 
 
 						std::shared_ptr<SkeletonBoneRefArray> bonesRefArr = std::make_shared<SkeletonBoneRefArray>(bonesNum);
-						std::shared_ptr<BoneNode> bone;
+						std::shared_ptr<SceneBoneNode> bone;
 						const OGEX::BoneNodeStructure * const * boneNodeStruct = pBoneRefArr->GetBoneNodeArray();
 						for (i = 0; i < bonesNum; i++)
 						{
 							std::string boneName = (*boneNodeStruct)->GetNodeName();
-							bone = std::make_shared<BoneNode>(boneName);
+							bone = std::make_shared<SceneBoneNode>(boneName);
 							bonesRefArr->AppendBone(bone);
 							boneNodeStruct++;
 						}
@@ -434,7 +435,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 							return;
 						}
 
-						unsigned short* dataCount = new unsigned_int16[vertexCount];
+						unsigned short* dataCount = new unsigned short[vertexCount];
 						memcpy(dataCount, boneCountArray, vertexCount);
 						shared_ptr<SkinBoneCountArray> bca = make_shared<SkinBoneCountArray>(dataCount,vertexCount);
 
@@ -654,8 +655,13 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	return;
 	case OGEX::kStructureBoneNode:
 	{
-		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
-		return;//先不读取Bone下的，mesh 与 skeleton 先行
+		std::string _key = structure.GetStructureName();
+		auto _node = std::make_shared<SceneBoneNode>(_key);
+		const OGEX::BoneNodeStructure& _structure = dynamic_cast<const OGEX::BoneNodeStructure&>(structure);
+
+		std::string name = _structure.GetNodeName();
+		scene.BoneNodes.emplace(name, _node);
+		node = _node;
 	}
 	break;
 	default:

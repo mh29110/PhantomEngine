@@ -26,8 +26,10 @@ public:
 	//所有Node强关联Scene的Node树，所以weak_ptr
 	std::unordered_multimap<std::string, std::weak_ptr<SceneGeometryNode>>      GeometryNodes;
 	std::unordered_map<std::string, std::weak_ptr<SceneLightNode>>              LightNodes;
+	std::unordered_multimap<std::string , std::weak_ptr<SceneBoneNode>>               BoneNodes;
 
 	std::vector<std::weak_ptr<SceneBaseNode>>                                   AnimationNodes;
+
 
 	//camera临时用
 	std::shared_ptr<CameraNode>  camera;

@@ -31,7 +31,7 @@ namespace Phantom {
 				m_matrix.push_back(matrix); 
 				m_bSceneObjectOnly = object_only;
 			}
-			const maths::mat4x4& GetMatrix() { return m_matrix[0]; }
+			const maths::mat4x4& GetMatrixFirst() { return m_matrix[0]; }
 
 			void Update(const float amount)
 			{
@@ -54,6 +54,7 @@ namespace Phantom {
 			{
 				m_matrix.push_back(mat);
 			}
+			const std::vector< maths::mat4x4 >& GetMatrixAll() { return m_matrix; }
 
         friend std::ostream& operator<<(std::ostream& out, const SceneObjectTransform& obj);
     };

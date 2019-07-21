@@ -23,7 +23,7 @@ void Phantom::CameraNode::initViewMatrix()
 
 	}
 	else {
-		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();
+		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrixFirst();
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}
@@ -41,7 +41,7 @@ void Phantom::CameraNode::CalculateVPMatrix(float aspect)
 
 	}
 	else {
-		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrix();//todo Ä¬ÈÏÎÞÏà»úÃ»ÓÐ¿¼ÂÇ
+		mat4x4 cMat = (*(m_Transforms.begin()))->GetMatrixFirst();//todo Ä¬ÈÏÎÞÏà»úÃ»ÓÐ¿¼ÂÇ
 		cMat.InverseMatrix4X4f();
 		m_viewMatrix = cMat;
 	}

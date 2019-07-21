@@ -51,6 +51,8 @@ namespace Phantom {
 		virtual void SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches);
 
 		virtual void BindShaderByType(Shader_Type st);
+
+		void ProcessCpuSkin(const ConstantsPerBatch& frame);
 	private:
 		std::shared_ptr<OpenGLShader>     m_pShader;
 		std::shared_ptr<OpenGLShader>     m_skyboxShader;
@@ -78,6 +80,7 @@ namespace Phantom {
 			uint32_t mode;
 			uint32_t type;
 			int32_t indexCount;
+			uint32_t posBuffId;
 		};
 
 		OpenGLContextPerDrawBatch m_skyboxContext;

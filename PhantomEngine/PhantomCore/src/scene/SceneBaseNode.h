@@ -24,12 +24,14 @@ public:
 	SceneBaseNode(const std::string&& name) { m_Name = std::move(name); };
 	virtual ~SceneBaseNode() {};
 
+	const std::string & GetName() { return m_Name; };
+
 	const std::shared_ptr< maths::mat4x4> GetCalculatedTransform() const
 	{
 		std::shared_ptr< maths::mat4x4> result(new  maths::mat4x4());
 		for (auto it = m_Transforms.rbegin(); it != m_Transforms.rend(); it++)
 		{
-			*result = *result * (**it).GetMatrix();
+			*result = *result * (**it).GetMatrixFirst();
 		}
 		return result;
 	}

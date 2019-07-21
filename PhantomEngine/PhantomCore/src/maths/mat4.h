@@ -33,6 +33,7 @@ namespace Phantom { namespace maths {
 		//‘ÀÀ„
 		/*mat4x4& multiply(const & other);*/
 		mat4x4 operator * (const mat4x4& other);
+		vec4 operator * (const vec4& v);
 		mat4x4& operator=(const float* _data)
 		{
 			std::memcpy(elements, _data, sizeof(float) * 4 * 4);

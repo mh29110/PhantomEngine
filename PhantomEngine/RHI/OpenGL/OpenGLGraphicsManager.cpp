@@ -117,6 +117,7 @@ namespace Phantom {
 			glBindVertexArray(vertexArrayId);
 
 			GLuint vertexBufferId;
+			GLuint positionBufferId; //todo 临时记录pos ，做cpu蒙皮
 			// Generate an ID for the vertex buffer.
 			for (GLuint i = 0; i < vertexPropertiesCount; i++)
 			{
@@ -124,7 +125,9 @@ namespace Phantom {
 				const auto vProArrSize = vProArr.GetDataSize();
 				const auto vProArrData = vProArr.GetData();
 
-				glGenBuffers(1, &vertexBufferId);
+				glGenBuffers(1, &vertexBufferId); 
+				if (i == 0) { positionBufferId = vertexBufferId; }
+				
 				glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
 				glBufferData(GL_ARRAY_BUFFER, vProArrSize, vProArrData, GL_STATIC_DRAW);
 
@@ -266,6 +269,7 @@ namespace Phantom {
 				contextPerBatch->type = type;
 				contextPerBatch->indexCount = indexCount;
 				contextPerBatch->node = pGeometryNode;
+				contextPerBatch->posBuffId = positionBufferId;
 				m_Frame.batchContexts.push_back(contextPerBatch);
 			}
 			glBindVertexArray(0);
@@ -668,6 +672,7 @@ namespace Phantom {
 		curShader->bind();
 	}
 
+
 	void OpenGLGraphicsManager::RenderBatches()
 	{
 		shared_ptr<OpenGLShader> curShader = m_currentShader.lock();
@@ -809,12 +814,107 @@ namespace Phantom {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
+
+	// GraphicsManager中处理Cpu-skin ， 将处理完的顶点数据传入各GL进行处理？？？？//todo
+	void OpenGLGraphicsManager::ProcessCpuSkin(const ConstantsPerBatch& batch)
+	{
+		const OpenGLContextPerDrawBatch& drawBatch = static_cast<const OpenGLContextPerDrawBatch&>(batch);
+		std::shared_ptr<SceneGeometryNode> geoNode = drawBatch.node;
+
+
+		auto & scene = g_pSceneManager->GetSceneForRendering();
+		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>> geoObjects = scene.GeometryOjbects;
+		const std::string & oKey = geoNode->GetSceneObjectRef();
+		auto pGeometry = geoObjects[oKey];
+		const auto& pMesh = pGeometry->GetMesh().lock();
+
+		glBindVertexArray(drawBatch.vao);
+		const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
+
+		auto skin = pMesh->GetSkin().lock();
+		auto skeleton = skin->GetSkeleton().lock();
+		auto boneCountArr = skin->GetBoneCountArray().lock();
+		auto boneIndexArr = skin->GetBoneIndexArray().lock();
+		auto boneWeightArr = skin->GetBoneWeightArray().lock();
+
+		auto binePoseTransform = skeleton->getTransform().lock();
+		const std::vector< maths::mat4x4 >& bindPoseMatAll = binePoseTransform->GetMatrixAll();
+		auto sceneBoneNodes = scene.BoneNodes;
+		auto vBoneRefArr = skeleton->GetBoneRefArr().lock()->GetBoneNodeRefArr();
+
+		GLuint vertexBufferId;
+		// Generate an ID for the vertex buffer.
+		for (GLuint i = 0; i < vertexPropertiesCount; i++)
+		{
+			
+			const SceneObjectVertexArray & vProArr = pMesh->GetVertexPropertyArray(i);
+			const auto vProArrSize = vProArr.GetDataSize();
+			const auto vProArrData = vProArr.GetData();
+
+			void * pBuffer = new uint8_t[vProArrSize];//todo step : float x 3
+			memcpy(pBuffer, vProArrData, vProArrSize);
+
+#pragma region Skining
+			const int verNum = boneCountArr->GetVertexCount();
+			int influenceCount = 0;
+			const unsigned short* bca = boneCountArr->GetData();
+			const unsigned short* bia = boneIndexArr->GetData();
+			const float*          bwa = boneWeightArr->GetData();
+			for (int i = 0; i < verNum; i++)  //for every vertex
+			{
+				if (i > 200) break; //md  vertexCountArray  memorycopy的时候有一半的数据拷贝不过来。todo
+				influenceCount = *(bca + i);
+				for (int j = 0; j < influenceCount; j++)
+				{
+					int idx = *(bia++);
+					auto boneRef = vBoneRefArr[idx];
+					auto boneNode = sceneBoneNodes.find(boneRef->GetName())->second.lock();
+					auto runtimeMat = boneNode->GetCalculatedTransform();
+
+					float weight = *(bwa++);
+
+					float x = *((float*)pBuffer + i);
+					float y = *((float*)pBuffer + i + 1);
+					float z = *((float*)pBuffer + i + 2);
+
+					vec4 v(x, y, z,0); //P-bind
+					
+					mat4x4 bpMat = bindPoseMatAll[idx];
+					vec4 tv = (*runtimeMat)* bpMat*v;
+					*((float*)pBuffer + i)		= tv.x;
+					*((float*)pBuffer + i + 1)  = tv.y;
+					*((float*)pBuffer + i + 2)  = tv.z;
+				}
+			
+				pBuffer = (float*)pBuffer + 3;
+				
+			}
+		
+			
+#pragma endregion
+
+			
+			glBindBuffer(GL_ARRAY_BUFFER, drawBatch.posBuffId);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, vProArrSize, pBuffer);
+			glEnableVertexAttribArray(i);
+			glVertexAttribPointer(i, 3, GL_FLOAT, false, 0, 0);
+			glBindBuffer(GL_ARRAY_BUFFER,0);
+			pBuffer = (float*)pBuffer - verNum;
+			delete pBuffer;
+			pBuffer = nullptr;
+
+			break;//仅仅处理顶点位置蒙皮先
+		}
+		glBindVertexArray(0);
+	}
+
 	void OpenGLGraphicsManager::SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches)
 	{
 		uint8_t * pBuffer = new uint8_t[kSizeOfBatchConstantBuffer* batches.size()];
 		for (auto & pBatch : batches)
 		{
 			const ConstantsPerBatch& constants = static_cast<ConstantsPerBatch&>(*pBatch);
+			ProcessCpuSkin(constants);
 			memcpy(pBuffer + pBatch->batchIndex * kSizeOfBatchConstantBuffer, &constants, kSizeOfBatchConstantBuffer);
 		}
 
