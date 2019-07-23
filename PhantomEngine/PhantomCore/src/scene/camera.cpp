@@ -11,7 +11,7 @@
 #endif // OS_WINDOWS
 
 using namespace Phantom::maths;
-const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,500,500);
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,100,300);
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_FRONT (1,-1,0);
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_UP (1,1,0);
 void Phantom::CameraNode::initViewMatrix()

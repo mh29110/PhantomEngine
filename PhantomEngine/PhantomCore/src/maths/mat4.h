@@ -3,7 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include "vector.h"
-#include <math.h>
+#include <cmath>
 
 #include "AngleUtils.h"
 #include "mat3.h"
@@ -121,7 +121,50 @@ namespace Phantom { namespace maths {
 		matrix.elements[13] = y;
 		matrix.elements[14] = z;
 	}
+    
+    inline void MatrixScale(mat4x4& matrix, const float x, const float y, const float z)
+    {
+        mat4x4 scale (
+                      x, 0.0f, 0.0f, 0.0f,
+                      0.0f,    y, 0.0f, 0.0f,
+                      0.0f, 0.0f,    z, 0.0f,
+                      0.0f, 0.0f, 0.0f, 1.0f);
+        
+        matrix = scale;
+    }
 
+    inline void MatrixRotationX(mat4x4& matrix, const float angle)
+    {
+        const float c = std::cos(angle), s = std::sin(angle);
+        
+        matrix = mat4x4(
+                        1.0f, 0.0f, 0.0f, 0.0f ,
+                        0.0f,    c,    s, 0.0f ,
+                        0.0f,   -s,    c, 0.0f ,
+                        0.0f, 0.0f, 0.0f, 1.0f );
+    }
+    
+    inline void MatrixRotationY(mat4x4& matrix, const float angle)
+    {
+        const float c = std::cos(angle), s = std::sin(angle);
+        
+        matrix = mat4x4(
+                        c,    0.0f,   -s, 0.0f ,
+                        0.0f, 1.0f, 0.0f, 0.0f ,
+                        s,    0.0f,    c, 0.0f ,
+                        0.0f, 0.0f, 0.0f, 1.0f );
+    }
+    
+    inline void MatrixRotationZ(mat4x4& matrix, const float angle)
+    {
+        const float c = std::cos(angle), s = std::sin(angle);
+        
+        matrix = mat4x4(
+                        c,    s, 0.0f, 0.0f ,
+                        -s,    c, 0.0f, 0.0f ,
+                        0.0f, 0.0f, 1.0f, 0.0f ,
+                        0.0f, 0.0f, 0.0f, 1.0f );
+    }
 
 
 	//template <typename T>
@@ -154,12 +197,12 @@ namespace Phantom { namespace maths {
 	inline void Matrix4X4fCompose(mat4x4& matrix, const vec3& rotation, const vec3& scalar, const vec3& translation)
 	{
 		mat4x4 matrix_rotate_x, matrix_rotate_y, matrix_rotate_z, matrix_rotate;
-		/*MatrixRotationX(matrix_rotate_x, rotation[0]);
-		MatrixRotationY(matrix_rotate_y, rotation[1]);
-		MatrixRotationZ(matrix_rotate_z, rotation[2]);*/
+		MatrixRotationX(matrix_rotate_x, rotation.x);
+		MatrixRotationY(matrix_rotate_y, rotation.y);
+		MatrixRotationZ(matrix_rotate_z, rotation.z);
 		matrix_rotate = matrix_rotate_x * matrix_rotate_y * matrix_rotate_z;
 		mat4x4 matrix_scale;
-		//MatrixScale(matrix_scale, scalar);
+        MatrixScale(matrix_scale, scalar.x, scalar.y, scalar.z);
 		mat4x4 matrix_translation;
 		MatrixTranslation(matrix_translation, translation.x,translation.y,translation.z);
 		matrix = matrix_scale * matrix_rotate * matrix_translation;
@@ -193,5 +236,6 @@ namespace Phantom { namespace maths {
 
 		rotation.SetComponents( theta_x, theta_y, theta_z );
 	}
+
 } }
 
