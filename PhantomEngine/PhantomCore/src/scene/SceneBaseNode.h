@@ -12,10 +12,12 @@ namespace Phantom {
 class SceneBaseNode :public TreeNode {
 protected:
 	std::string m_Name;
-	std::vector<std::shared_ptr<SceneObjectTransform>> m_Transforms;
-	std::map<std::string, std::shared_ptr<SceneObjectTransform>> m_LUTtransform;
+	std::vector<std::shared_ptr<SceneObjectTransform>>					m_Transforms;
+	std::map<std::string, std::shared_ptr<SceneObjectTransform>>		m_LUTtransform;
 
-	std::map <int, std::shared_ptr<SceneObjectAnimationClip>> m_AnimationClips;
+	std::map <int, std::shared_ptr<SceneObjectAnimationClip>>			m_AnimationClips;
+
+	std::shared_ptr<SceneObjectTransform>								m_objTransform;
 
 public:
 	SceneBaseNode() {};
@@ -29,17 +31,67 @@ public:
 	const std::shared_ptr< maths::mat4x4> GetCalculatedTransform() const
 	{
 		std::shared_ptr< maths::mat4x4> result(new  maths::mat4x4());
+
+		/*if (m_objTransform)//wtf!
+		{
+			*result = *result * (m_objTransform->GetMatrixFirst());
+		}*/
+
 		for (auto it = m_Transforms.rbegin(); it != m_Transforms.rend(); it++)
 		{
-			*result = *result * (**it).GetMatrixFirst();
+			*result = *result * ( (**it).GetMatrixFirst() );
+		}
+		//cascading
+		const SceneBaseNode* parent = static_cast <SceneBaseNode*> (m_parent);
+		
+		while (parent && parent->m_Name != "scene")
+		{
+			*result =   *(parent->GetCalculatedTransformForChild()) 
+						*  *result;
+			parent = static_cast <SceneBaseNode*> (parent->m_parent);
 		}
 		return result;
+	}
+
+	const std::shared_ptr< maths::mat4x4> GetCalculatedTransformForChild() const
+	{
+		std::shared_ptr< maths::mat4x4> result(new  maths::mat4x4());
+
+		for (auto it = m_Transforms.rbegin(); it != m_Transforms.rend(); it++)
+		{
+			*result = *result * ((**it).GetMatrixFirst());
+		}
+	
+		return result;
+	}
+
+	const std::shared_ptr<std::vector<std::string>> GetTreeChain() const
+	{
+		std::shared_ptr<std::vector<std::string>> chain = std::make_shared< std::vector<std::string >> ();
+		const SceneBaseNode* parent = static_cast <SceneBaseNode*> (m_parent);
+		while (parent && parent->m_Name != "scene")
+		{
+			chain->push_back(parent->m_Name);
+			parent = static_cast <SceneBaseNode*> (parent->m_parent);
+		}
+
+		return chain;
 	}
 
 	void AppendTransform(const char* key, const std::shared_ptr<SceneObjectTransform>& transform)
 	{
 		m_Transforms.push_back(transform);
 		m_LUTtransform.insert({ std::string(key),transform });
+	}
+
+	void ApplyObjectTransform(const std::shared_ptr<SceneObjectTransform> && transform)
+	{
+		m_objTransform = std::move(transform);
+	}
+
+	const std::weak_ptr<SceneObjectTransform> GetObjectTransform()
+	{
+		return m_objTransform;
 	}
 
 	std::shared_ptr<SceneObjectTransform> GetTransform(const std::string& key)

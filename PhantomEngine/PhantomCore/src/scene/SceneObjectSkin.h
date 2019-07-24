@@ -80,12 +80,21 @@ namespace Phantom {
 		{
 			return m_Skeleton;
 		}
+		void ApplySkinTransform(maths::mat4x4 mat)
+		{
+			m_SkinMat = std::move(mat);
+		}
+		const maths:: mat4x4& GetSkinMatrix()
+		{
+			return m_SkinMat;
+		}
 	protected:
 		//const  transform //bind-pose transforms for all bones.
 		std::shared_ptr<SkinBoneCountArray>    m_BoneCountArr;
 		std::shared_ptr<SkinBoneIndexArray>    m_BoneIndexArr;
 		std::shared_ptr<SkinBoneWeightArray>   m_BoneWeightArr;
 		std::shared_ptr<SceneObjectSkeleton>   m_Skeleton;
+		maths::mat4x4                                 m_SkinMat;
 
 		friend std::ostream& operator<<(std::ostream& out, const SceneObjectSkin& obj);
 

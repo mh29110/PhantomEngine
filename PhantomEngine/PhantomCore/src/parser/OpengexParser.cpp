@@ -7,6 +7,18 @@
 
 using namespace Phantom;
 using namespace maths;
+void MatrixExchangeYandZ(float * data, const int32_t rows, const int32_t cols)
+{
+	for (int32_t row_index = 0; row_index < rows; row_index++)
+	{
+		uint32_t *p, *q;
+		p = reinterpret_cast<uint32_t*>(data + row_index * cols + 1);
+		q = reinterpret_cast<uint32_t*>(data + row_index * cols + 2);
+		*p ^= *q;
+		*q ^= *p;
+		*p ^= *q;
+	}
+}
 void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structure & structure, std::shared_ptr<SceneBaseNode>& base_node, Scene& scene)
 {
 	std::shared_ptr <SceneBaseNode> node;
@@ -16,12 +28,28 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		node = std::make_shared<SceneBaseNode>(structure.GetStructureName());
 	}
 	break;
+	case OGEX::kStructureMetric:
+	{
+		const OGEX::MetricStructure& _structure = dynamic_cast<const OGEX::MetricStructure&>(structure);
+		auto _key = _structure.GetMetricKey();
+		const ODDL::Structure *sub_structure = _structure.GetFirstCoreSubnode();
+		if (_key == "up") {
+			const ODDL::DataStructure<ODDL::StringDataType> *dataStructure = static_cast<const ODDL::DataStructure<ODDL::StringDataType> *>(sub_structure);
+			auto axis_name = dataStructure->GetDataElement(0);
+			if (axis_name == "y") {
+				m_bUpIsYAxis = true;
+			}
+			else {
+				m_bUpIsYAxis = false;
+			}
+		}
+	}
+	return;
 	case OGEX::kStructureLightNode:
 	{
 		auto _node = std::make_shared<SceneLightNode>(structure.GetStructureName());
 
-		//**red**  前面少写了& ， 析构失败。 。。。。。
-		const OGEX::LightNodeStructure&/*必须&*/ _structure = dynamic_cast<const OGEX::LightNodeStructure&>(structure);
+		const OGEX::LightNodeStructure& _structure = dynamic_cast<const OGEX::LightNodeStructure&>(structure);
 
 		_node->SetCastShadow(_structure.GetShadowFlag());
 
@@ -108,8 +136,19 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 			const float* data = _structure.GetTransform(index);
 			matrix = data;
 
-			transform = std::make_shared<SceneObjectTransform>(matrix, object_flag);
-			base_node->AppendTransform(_key, std::move(transform));
+			if (!m_bUpIsYAxis) {
+				// exchange y and z
+				//MatrixExchangeYandZ(matrix.elements,4,4); //这个实现有问题
+			}
+
+			transform = std::make_shared<SceneObjectTransform>(base_node->GetName(), matrix, object_flag);
+			if (object_flag == false) {
+				base_node->AppendTransform(_key, std::move(transform));
+			}
+			else 
+			{
+				base_node->ApplyObjectTransform(std::move(transform));
+			}
 		}
 	}
 	return;
@@ -338,6 +377,11 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 					break;
 					case OGEX::kStructureSkin:
 					{
+						int i;
+						mat4x4 matrix;
+						SceneObjectSkin& _skin = *new SceneObjectSkin(
+
+						);
 						//skin begin:
 						const OGEX::SkinStructure* _ss = dynamic_cast<const OGEX::SkinStructure*>(sub_structure);
 
@@ -347,6 +391,9 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 							return;
 						const OGEX::TransformStructure * skinTfStruct =
 								dynamic_cast<const OGEX::TransformStructure*> (localStructure);
+						const float* data = skinTfStruct->GetTransform();
+						matrix = data;
+						_skin.ApplySkinTransform(std::move(matrix));
 #pragma region skeleton
 						//process  skin's first and only kStructureSkeleton.
 						shared_ptr<SceneObjectSkeleton> _skeleton = std::make_shared<SceneObjectSkeleton>();
@@ -360,11 +407,10 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						const OGEX::TransformStructure* pTransformArr= skeletonStruct->GetTransformStructure();
 						const int transNum = pTransformArr->GetTransformCount();
 
-						int i ;
-						mat4x4 matrix;
+						
 						bool object_flag = pTransformArr->GetObjectFlag();//todo
-						std::shared_ptr<SceneObjectTransform> transform = std::make_shared<SceneObjectTransform>();
-						const float* data = pTransformArr->GetTransform();
+						std::shared_ptr<SceneObjectTransform> transform = std::make_shared<SceneObjectTransform>(base_node->GetName());
+						data = pTransformArr->GetTransform();
 
 						for (i = 0; i < transNum; i++)
 						{
@@ -382,7 +428,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						const OGEX::BoneNodeStructure * const * boneNodeStruct = pBoneRefArr->GetBoneNodeArray();
 						for (i = 0; i < bonesNum; i++)
 						{
-							std::string boneName = (*boneNodeStruct)->GetNodeName();
+							std::string boneName = (*boneNodeStruct)->GetStructureName();
 							bone = std::make_shared<SceneBoneNode>(boneName);
 							bonesRefArr->AppendBone(bone);
 							boneNodeStruct++;
@@ -436,22 +482,20 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						}
 
 						unsigned short* dataCount = new unsigned short[vertexCount];
-						memcpy(dataCount, boneCountArray, vertexCount);
+						memcpy(dataCount, boneCountArray, vertexCount*sizeof(unsigned short));
 						shared_ptr<SkinBoneCountArray> bca = make_shared<SkinBoneCountArray>(dataCount,vertexCount);
 
 						unsigned short* dataIdx = new unsigned_int16[boneIndexCount];
-						memcpy(dataIdx, boneIndexArray, boneIndexCount);
+						memcpy(dataIdx, boneIndexArray, boneIndexCount * sizeof(unsigned short));
 						shared_ptr<SkinBoneIndexArray> bia = make_shared<SkinBoneIndexArray>(dataIdx, boneIndexCount);
 
 						float * dataWeight = new float[boneIndexCount];
-						memcpy(dataWeight, boneWeightArray, boneIndexCount);
+						memcpy(dataWeight, boneWeightArray, boneIndexCount * sizeof(float));
 						shared_ptr<SkinBoneWeightArray> bwa = make_shared<SkinBoneWeightArray>(dataWeight, boneIndexCount);
 
 
 						// Do application-specific skin processing here.
-						SceneObjectSkin& _skin = *new SceneObjectSkin(
-
-						);
+					
 						_skin.AddBoneCountArr(std::move(bca));
 						_skin.AddBoneIndexArr(std::move(bia));
 						_skin.AddBoneWeightArr(std::move(bwa));
@@ -484,11 +528,11 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 		auto data = _structure.GetTranslation();
 		if (kind == "xyz")
 		{
-			translation = std::make_shared<SceneObjectTranslation>(data[0], data[1], data[2], object_flag);
+			translation = std::make_shared<SceneObjectTranslation>(base_node->GetName(),data[0], data[1], data[2], object_flag);
 		}
 		else
 		{
-			translation = std::make_shared<SceneObjectTranslation>(kind[0], data[0], object_flag);
+			translation = std::make_shared<SceneObjectTranslation>(base_node->GetName(),kind[0], data[0], object_flag);
 		}
 		auto _key = _structure.GetStructureName();
 		base_node->AppendTransform(_key, std::move(translation));
@@ -657,10 +701,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 	{
 		std::string _key = structure.GetStructureName();
 		auto _node = std::make_shared<SceneBoneNode>(_key);
-		const OGEX::BoneNodeStructure& _structure = dynamic_cast<const OGEX::BoneNodeStructure&>(structure);
-
-		std::string name = _structure.GetNodeName();
-		scene.BoneNodes.emplace(name, _node);
+		scene.BoneNodes.emplace(_key, _node);
 		node = _node;
 	}
 	break;
@@ -712,6 +753,13 @@ std::unique_ptr<Scene> Phantom::OpengexParser::Parse(const std::string & buf)
 
 			structure = structure->Next();
 		}
+	}
+	else
+	{
+		printf("parse scene error! \n");
+
+
+
 	}
 	return spScene;
 }

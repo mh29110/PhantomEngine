@@ -10,6 +10,7 @@ namespace Phantom {
     class OpengexParser : implements SceneParser
     {
     private:
+		bool m_bUpIsYAxis;
     private:
 		void ConvertOddlStructureToSceneNode(const ODDL::Structure & structure, std::shared_ptr<SceneBaseNode>& base_node, Scene& scene);
        

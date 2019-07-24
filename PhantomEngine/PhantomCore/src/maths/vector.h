@@ -81,6 +81,7 @@ namespace Phantom {namespace maths {
 		vec4& operator+=(const vec4& other);
 		vec4& operator-=(const vec4& other);
 		float operator*=(const vec4& other);
+		vec4& operator*=(const float factor);
 
 		friend std::ostream& operator<<(std::ostream& stream, const vec4& vector);
 	};

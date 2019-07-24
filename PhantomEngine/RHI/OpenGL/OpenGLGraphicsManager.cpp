@@ -806,6 +806,8 @@ namespace Phantom {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
+	
+
 	void OpenGLGraphicsManager::SetPerFrameConstants(const ContextPerFrame& context)
 	{
 		ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(context);   //MaterialPropertyBlock
@@ -814,13 +816,12 @@ namespace Phantom {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-
+	static void * pBuffer = new uint8_t[1024*1024];//todo 挪到引擎core中
 	// GraphicsManager中处理Cpu-skin ， 将处理完的顶点数据传入各GL进行处理？？？？//todo
 	void OpenGLGraphicsManager::ProcessCpuSkin(const ConstantsPerBatch& batch)
 	{
 		const OpenGLContextPerDrawBatch& drawBatch = static_cast<const OpenGLContextPerDrawBatch&>(batch);
 		std::shared_ptr<SceneGeometryNode> geoNode = drawBatch.node;
-
 
 		auto & scene = g_pSceneManager->GetSceneForRendering();
 		std::unordered_map<std::string, std::shared_ptr<SceneObjectGeometry>> geoObjects = scene.GeometryOjbects;
@@ -832,6 +833,7 @@ namespace Phantom {
 		const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
 		auto skin = pMesh->GetSkin().lock();
+		if (!skin) return;
 		auto skeleton = skin->GetSkeleton().lock();
 		auto boneCountArr = skin->GetBoneCountArray().lock();
 		auto boneIndexArr = skin->GetBoneIndexArray().lock();
@@ -846,12 +848,10 @@ namespace Phantom {
 		// Generate an ID for the vertex buffer.
 		for (GLuint i = 0; i < vertexPropertiesCount; i++)
 		{
-			
 			const SceneObjectVertexArray & vProArr = pMesh->GetVertexPropertyArray(i);
 			const auto vProArrSize = vProArr.GetDataSize();
 			const auto vProArrData = vProArr.GetData();
 
-			void * pBuffer = new uint8_t[vProArrSize];//todo step : float x 3
 			memcpy(pBuffer, vProArrData, vProArrSize);
 
 #pragma region Skining
@@ -862,47 +862,57 @@ namespace Phantom {
 			const float*          bwa = boneWeightArr->GetData();
 			for (int i = 0; i < verNum; i++)  //for every vertex
 			{
-				if (i > 200) break; //md  vertexCountArray  memorycopy的时候有一半的数据拷贝不过来。todo
 				influenceCount = *(bca + i);
+				float x = *((float*)pBuffer + 0);
+				float y = *((float*)pBuffer + 1);
+				float z = *((float*)pBuffer + 2);
+				//P-bind  where bind P is the bind-pose position of the vertex (having an implicit w coordinate of one)
+				vec4 v(x, y, z, 1);
+				vec4 tv = v;
+
+				//todo pre-calculate all bone's transform.
+				/*auto chain = boneNode->GetTreeChain();
+				*/
+
 				for (int j = 0; j < influenceCount; j++)
 				{
 					int idx = *(bia++);
+					float weight = *(bwa++);
+
 					auto boneRef = vBoneRefArr[idx];
+					mat4x4 bpMat = bindPoseMatAll[idx];
+					bpMat.InverseMatrix4X4f();
+
 					auto boneNode = sceneBoneNodes.find(boneRef->GetName())->second.lock();
 					auto runtimeMat = boneNode->GetCalculatedTransform();
 
-					float weight = *(bwa++);
-
-					float x = *((float*)pBuffer + i);
-					float y = *((float*)pBuffer + i + 1);
-					float z = *((float*)pBuffer + i + 2);
-
-					vec4 v(x, y, z,0); //P-bind
+					vec4 tt =  
+								(*runtimeMat)*
+								bpMat *
+								skin->GetSkinMatrix() *
+								v;
+					tt *= weight;
+					tv += tt;
 					
-					mat4x4 bpMat = bindPoseMatAll[idx];
-					vec4 tv = (*runtimeMat)* bpMat*v;
-					*((float*)pBuffer + i)		= tv.x;
-					*((float*)pBuffer + i + 1)  = tv.y;
-					*((float*)pBuffer + i + 2)  = tv.z;
 				}
+				*((float*)pBuffer + 0) = tv.x;
+				*((float*)pBuffer + 1) = tv.y;
+				*((float*)pBuffer + 2) = tv.z;
 			
 				pBuffer = (float*)pBuffer + 3;
-				
 			}
 		
-			
+			pBuffer = (float*)pBuffer - (verNum * 3);
 #pragma endregion
 
 			
+
 			glBindBuffer(GL_ARRAY_BUFFER, drawBatch.posBuffId);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, vProArrSize, pBuffer);
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i, 3, GL_FLOAT, false, 0, 0);
 			glBindBuffer(GL_ARRAY_BUFFER,0);
-			pBuffer = (float*)pBuffer - verNum;
-			delete pBuffer;
-			pBuffer = nullptr;
-
+		
 			break;//仅仅处理顶点位置蒙皮先
 		}
 		glBindVertexArray(0);

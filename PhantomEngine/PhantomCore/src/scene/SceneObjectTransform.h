@@ -14,19 +14,17 @@ namespace Phantom {
         protected:
 			std::vector< maths::mat4x4 > m_matrix;
             bool m_bSceneObjectOnly;
+			std::string  m_Owner;
 
         public:
-            SceneObjectTransform() : SceneBaseObject(SceneObjectType::kSceneObjectTypeTransform)
+            SceneObjectTransform(std::string owner) : SceneBaseObject(SceneObjectType::kSceneObjectTypeTransform),
+														m_bSceneObjectOnly(false),m_Owner(owner)
             {
-				//todo  //md skeleton extra +1 . xxxxx
-				if (m_matrix.size() == 0)
-				{
-					maths::mat4x4 m;
-					m.identity();
-					m_matrix.push_back(m);
-				}
+				//default for skeleton's transform only . 
+				printf("debug");
 			}
-			SceneObjectTransform(const maths::mat4x4& matrix, const bool object_only = false) : SceneBaseObject(SceneObjectType::kSceneObjectTypeTransform)
+			SceneObjectTransform(std::string owner, const maths::mat4x4& matrix,const bool object_only = false) :
+									SceneBaseObject(SceneObjectType::kSceneObjectTypeTransform),m_Owner(owner)
 			{
 				m_matrix.push_back(matrix); 
 				m_bSceneObjectOnly = object_only;
@@ -65,10 +63,11 @@ namespace Phantom {
 		char m_Kind = 0; // 0 for all ; x/y/z single
 
 	public:
-		SceneObjectTranslation() { m_Type = SceneObjectType::kSceneObjectTypeTranslate; }
-		SceneObjectTranslation(const char axis, const float amount, const bool object_only = false)
-			: SceneObjectTranslation()
+		SceneObjectTranslation(std::string owner) :SceneObjectTransform(owner){ m_Type = SceneObjectType::kSceneObjectTypeTranslate; }
+		SceneObjectTranslation(std::string owner,const char axis, const float amount, const bool object_only = false)
+			: SceneObjectTranslation(owner)
 		{
+			m_matrix.push_back(maths::mat4x4::mat4x4(1.0));
 			m_Kind = axis;
 
 			switch (axis) {
@@ -87,9 +86,10 @@ namespace Phantom {
 
 			m_bSceneObjectOnly = object_only;
 		}
-		SceneObjectTranslation(const float x, const float y, const float z, const bool object_only = false)
-			: SceneObjectTranslation()
+		SceneObjectTranslation(std::string owner,const float x, const float y, const float z, const bool object_only = false)
+			: SceneObjectTranslation(owner)
 		{
+			m_matrix.push_back(maths::mat4x4::mat4x4(1.0));
 			m_Kind = 0;
 			MatrixTranslation(m_matrix[0], x, y, z);
 			m_bSceneObjectOnly = object_only;

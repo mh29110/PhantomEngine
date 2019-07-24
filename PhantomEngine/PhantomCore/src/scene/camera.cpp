@@ -11,11 +11,12 @@
 #endif // OS_WINDOWS
 
 using namespace Phantom::maths;
-const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,100,300);
+const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,5000,5000);
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_FRONT (1,-1,0);
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_UP (1,1,0);
 void Phantom::CameraNode::initViewMatrix()
 {
+
 	Yaw += 0.1f;//todo  有个bug，启动第一帧天空盒不渲
 	updateCameraVectors();
 	if (true||m_Transforms.size() == 0) {
@@ -51,14 +52,14 @@ void Phantom::CameraNode::CalculateVPMatrix(float aspect)
 	/*glm::mat4 Projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.01f, 10000.0f);
 	m_projectionMatrix = &Projection[0][0];*/
 
-	m_projectionMatrix.perspective(toRadians(Zoom), aspect , 1.0f, 10000.0f);
+	m_projectionMatrix.perspective(toRadians(Zoom), aspect , 1.0f, 50000.0f);
 	/*glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, aspect, 0.01f, 10000.0f);
 	m_projectionMatrix = &Projection[0][0];*/
 }
 
 void Phantom::CameraNode::ProcessKeyboard(CameraDirection direction, float deltaTime)
 {
-	float velocity =  deltaTime*3;
+	float velocity =  deltaTime*50;
 	vec3 movation;
 	if (direction == FORWARD) {
 		movation = Front * velocity;
@@ -86,9 +87,14 @@ void Phantom::CameraNode::ProcessMouseMovement(float xoffset, float yoffset)
 	Yaw += xoffset;
 	Pitch -= yoffset;
 #ifdef _DEBUG
-	std::cerr << "[camera] camera angle::! ("
+	/*std::cerr << "[camera] camera angle::! ("
 		<< xoffset << ","
 		<< yoffset << ")"
+		<< std::endl;*/
+	std::cerr << "[camera] camera postion::! ("
+		<< Position.x << ","
+		<< Position.y << ","
+		<< Position.z << ","
 		<< std::endl;
 #endif
 
