@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
 		// g_pMemoryManager->Tick(deltaTime);
 		g_pAssetLoader->Tick();
 		g_pSceneManager->Tick();
-		//AnimationManager::GetInstance().Tick(deltaTime);
+		AnimationManager::GetInstance().Tick(deltaTime);
         g_pGraphicsManager->Tick();
 		g_pBehaviourManager->Tick();
 		g_pInputManager->Tick();

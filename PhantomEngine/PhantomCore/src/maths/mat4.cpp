@@ -60,6 +60,7 @@ namespace Phantom {namespace maths {
 				result.elements[ column*4 + row] = sum;
 			}
 		}
+
 		return result;
 	}
 	// -------------translate -------------

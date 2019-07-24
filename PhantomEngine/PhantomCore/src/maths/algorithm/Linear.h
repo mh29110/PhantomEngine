@@ -95,23 +95,45 @@ namespace Phantom{ namespace maths{
 				auto v1 = Curve<mat4x4, float>::m_Knots[index - 1];
 				auto v2 = Curve<mat4x4, float>::m_Knots[index];
 
-				vec3 translation1, translation2;
-				vec3 scalar1, scalar2;
-				vec3 rotation1, rotation2;
+				//vec3 translation1, translation2;
+				//vec3 scalar1, scalar2;
+				//vec3 rotation1, rotation2;
 
-				Matrix4X4fDecompose(v1, rotation1, scalar1, translation1);
-				Matrix4X4fDecompose(v2, rotation2, scalar2, translation2);
+				//Matrix4X4fDecompose(v1, rotation1, scalar1, translation1);
+				//Matrix4X4fDecompose(v2, rotation2, scalar2, translation2);
 
-				// Interpolate tranlation
-				vec3 translation =  translation1 * (1.0f - s)+  translation2*s;
-				// Interpolate scalar 
-				vec3 scalar =   scalar1 *(1.0f - s) +  scalar2*s;
-				// Interpolate rotation
-				vec3 rotation =  rotation1 * (1.0f - s) +   rotation2 * s;
+				//// Interpolate tranlation
+				//vec3 translation =  translation1 * (1.0f - s)+  translation2*s;
+				//// Interpolate scalar 
+				//vec3 scalar =   scalar1 *(1.0f - s) +  scalar2*s;
+				//// Interpolate rotation
+				//vec3 rotation =  rotation1 * (1.0f - s) +   rotation2 * s;
 
-				// compose the interpolated matrix
-				Matrix4X4fCompose(result, rotation, scalar, translation);
+				//// compose the interpolated matrix
+				//Matrix4X4fCompose(result, rotation, scalar, translation);
+
+				result = v2;
 			}
+
+			//----------------
+			/*mat4x4 m1(	0.1197f,-0.1359f, 0.1019f,1.0f,
+						6.1709f, 5.4718f, 0.0487f,1.0f,
+						-28.4736f, 31.4404f, 75.3926f,1.0f,
+						0.0f,0.0f,0.0f,1.0f);
+			vec3 translation1, translation2;
+			vec3 scalar1, scalar2;
+			vec3 rotation1, rotation2;
+			Matrix4X4fDecompose(m1, rotation1, scalar1, translation1);*/
+
+			/*mat3x3 m31(0.5761, -0.6540, 0.4903,
+				0.7482, 0.6634, 0.0059,
+				-0.3292, 0.3634, 0.8715);
+				mat3x3 m32(
+					0.2078f, 0.0000f, 0.0000f,
+					0.0000f, 8.2476f, 0.0000f,
+					- 0.0000f, 0.0000f, 86.5060);
+				mat3x3 m33 = m31 * m32;*/
+		
 			return result;
 		}
 	};

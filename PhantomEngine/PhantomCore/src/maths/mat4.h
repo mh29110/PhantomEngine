@@ -69,6 +69,7 @@ namespace Phantom { namespace maths {
 		{
 			float inv[16];
 			double D = 0;
+
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
@@ -76,16 +77,21 @@ namespace Phantom { namespace maths {
 					inv[j * 4 + i] = invf4X4(i, j, elements);
 				}
 			}
+
 			for (int k = 0; k < 4; k++) {
 				float s = elements[k] * inv[k * 4];
 				D += s;
 			}
-			if (D == 0) D = 0.00001;//todo should return when 0; 
+
+			if (D == 0) assert(0);
+
 			D = 1.0 / D;
+
 			for (int i = 0; i < 16; i++)
 			{
 				elements[i] = static_cast<float>(inv[i] * D);
 			}
+
 		}
 	};
 // -----¾²Ì¬·½°¸
@@ -191,7 +197,7 @@ namespace Phantom { namespace maths {
 
 		U_inv = U;
 		if (0 != U_inv.InverseMatrix()) assert(0);
-		P = in_matrix * U_inv;
+		P =  U_inv * in_matrix;
 	}
 
 	inline void Matrix4X4fCompose(mat4x4& matrix, const vec3& rotation, const vec3& scalar, const vec3& translation)

@@ -15,7 +15,7 @@ namespace Phantom { namespace maths {
 		union
 		{
 			float elements[3 * 3];
-			vec4 columns[3];
+			vec3 columns[3];
 		};
 
 		mat3x3 Transpose();

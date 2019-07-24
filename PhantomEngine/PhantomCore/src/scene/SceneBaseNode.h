@@ -40,14 +40,16 @@ public:
 		for (auto it = m_Transforms.rbegin(); it != m_Transforms.rend(); it++)
 		{
 			*result = *result * ( (**it).GetMatrixFirst() );
+			if (m_Transforms.size() > 1) 
+				assert("nonono");
 		}
 		//cascading
 		const SceneBaseNode* parent = static_cast <SceneBaseNode*> (m_parent);
 		
 		while (parent && parent->m_Name != "scene")
 		{
-			*result =   *(parent->GetCalculatedTransformForChild()) 
-						*  *result;
+			*result = *(parent->GetCalculatedTransformForChild())
+				*  *result;
 			parent = static_cast <SceneBaseNode*> (parent->m_parent);
 		}
 		return result;

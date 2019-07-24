@@ -838,6 +838,7 @@ namespace Phantom {
 		auto boneCountArr = skin->GetBoneCountArray().lock();
 		auto boneIndexArr = skin->GetBoneIndexArray().lock();
 		auto boneWeightArr = skin->GetBoneWeightArray().lock();
+		auto skinRootTransform = skin->GetSkinMatrix();
 
 		auto binePoseTransform = skeleton->getTransform().lock();
 		const std::vector< maths::mat4x4 >& bindPoseMatAll = binePoseTransform->GetMatrixAll();
@@ -869,8 +870,9 @@ namespace Phantom {
 				//P-bind  where bind P is the bind-pose position of the vertex (having an implicit w coordinate of one)
 				vec4 v(x, y, z, 1);
 				vec4 tv = v;
-
+			
 				//todo pre-calculate all bone's transform.
+			// 可以参考这个写一个boneStack ： http://www.wazim.com/Collada_Tutorial_2.htm
 				/*auto chain = boneNode->GetTreeChain();
 				*/
 
@@ -889,10 +891,10 @@ namespace Phantom {
 					vec4 tt =  
 								(*runtimeMat)*
 								bpMat *
-								skin->GetSkinMatrix() *
+								skinRootTransform *
 								v;
-					tt *= weight;
-					tv += tt;
+					//tt *= weight;
+					tv = tt;
 					
 				}
 				*((float*)pBuffer + 0) = tv.x;
