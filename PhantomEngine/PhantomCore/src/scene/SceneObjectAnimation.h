@@ -16,7 +16,7 @@ namespace Phantom {
 											m_nIndex(idx){}
 
 		void AddTrack(std::shared_ptr<SceneObjectTrack>& track);
-		void Update(const float deltaTime) final;
+		void Update(const float pg) final;
 	private:
 		int m_nIndex = 0;
 		std::vector<std::shared_ptr<SceneObjectTrack>>  m_tracks;

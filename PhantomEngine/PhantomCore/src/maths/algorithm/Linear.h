@@ -112,30 +112,30 @@ namespace Phantom{ namespace maths{
 				// compose the interpolated matrix
 				Matrix4X4Compose(result, rotation, scalar, translation);
 
-				result = v2;
+                result = v1;
 			}
 
 			//----------------
-			/*mat4x4 m1(	0.1197f,-0.1359f, 0.1019f,1.0f,
-						6.1709f, 5.4718f, 0.0487f,1.0f,
-						-28.4736f, 31.4404f, 75.3926f,1.0f,
-						0.0f,0.0f,0.0f,1.0f);
-			vec3 translation1, translation2;
-			vec3 scalar1, scalar2;
-			vec3 rotation1, rotation2;
-			Matrix4X4Decompose(m1, rotation1, scalar1, translation1);
-
-			mat4x4 m31( 0.0f, 1.0f, 0.0f,0.0f,
-						-1.0f, 0.0f, 0.0f,0.0f,
-						0.0f, 0.0f, 1.0f,0.0f,
-						0.0f, 0.0f, 0.0f,1.0f);
-			mat4x4 m32( 1.0f, 0.0f, 0.0f, 0.0f,
-						0.0f, 2.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, 3.0f, 0.0f,
-						10.0f, 20.0f, 30.0f, 1.0f);
-			mat4x4 m33 = m31 * m32;
-			Matrix4X4Decompose(m33, rotation1, scalar1, translation1);
-			Matrix4X4Compose(result, rotation1, scalar1, translation1);*/
+//            mat4x4 m1(    0.1197f,-0.1359f, 0.1019f,1.0f,
+//                        6.1709f, 5.4718f, 0.0487f,1.0f,
+//                        -28.4736f, 31.4404f, 75.3926f,1.0f,
+//                        0.0f,0.0f,0.0f,1.0f);
+//            vec3 translation1, translation2;
+//            vec3 scalar1, scalar2;
+//            vec3 rotation1, rotation2;
+//            Matrix4X4Decompose(m1, rotation1, scalar1, translation1);
+//
+//            mat4x4 m31( 0.0f, 1.0f, 0.0f,0.0f,
+//                        -1.0f, 0.0f, 0.0f,0.0f,
+//                        0.0f, 0.0f, 1.0f,0.0f,
+//                        0.0f, 0.0f, 0.0f,1.0f);
+//            mat4x4 m32( 1.0f, 0.0f, 0.0f, 0.0f,
+//                        0.0f, 2.0f, 0.0f, 0.0f,
+//                        0.0f, 0.0f, 3.0f, 0.0f,
+//                        10.0f, 20.0f, 30.0f, 1.0f);
+//            mat4x4 m33 = m31 * m32;
+//            Matrix4X4Decompose(m33, rotation1, scalar1, translation1);
+//            Matrix4X4Compose(result, rotation1, scalar1, translation1);
 			return result;
 		}
 	};

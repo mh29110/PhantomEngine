@@ -5,15 +5,8 @@
 using namespace Phantom;
 using namespace std;
 using namespace maths;
-void SceneObjectTrack::Update(const float progress)
+void SceneObjectTrack::Update(const float pg)
 {
-	//OMG: accelerate by multiply the objects.
-	const int CURRENT_OBJECT_NUM = 50;
-	static float pg = 0.0f; 
-	pg += (progress / 1000.0f)  / CURRENT_OBJECT_NUM;
-	pg = pg > 18.0f ? 0.0f : pg;
-	//printf("pg : %f \n", pg);
-
 	if (m_pTransform)
 	{
 		auto time_curve_type = m_Time->GetCurveType();

@@ -5,9 +5,9 @@ void SceneObjectAnimationClip::AddTrack(std::shared_ptr<SceneObjectTrack>& track
 	m_tracks.push_back(track);
 }
 
-void SceneObjectAnimationClip::Update(const float deltaTime)
+void SceneObjectAnimationClip::Update(const float pg)
 {
 	for (auto track : m_tracks){
-		track->Update(deltaTime);
+		track->Update(pg);
 	}
 }

@@ -211,7 +211,7 @@ namespace Phantom { namespace maths {
         MatrixScale(matrix_scale, scalar.x, scalar.y, scalar.z);
 		mat4x4 matrix_translation;
 		MatrixTranslation(matrix_translation, translation.x,translation.y,translation.z);
-		matrix = matrix_scale * matrix_rotate * matrix_translation;
+		matrix = matrix_translation * matrix_scale * matrix_rotate ;
 	}
 
 	inline void Matrix4X4Decompose(const mat4x4& matrix, vec3& rotation, vec3& scalar, vec3& translation)

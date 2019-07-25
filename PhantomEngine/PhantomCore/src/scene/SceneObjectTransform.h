@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "SceneBaseObject.h"
 #include "maths/PhMaths.h"
 #include "ability/IAnimatable.h"
@@ -67,7 +67,7 @@ namespace Phantom {
 		SceneObjectTranslation(std::string owner,const char axis, const float amount, const bool object_only = false)
 			: SceneObjectTranslation(owner)
 		{
-			m_matrix.push_back(maths::mat4x4::mat4x4(1.0));
+			m_matrix.push_back(maths::mat4x4(1.0));
 			m_Kind = axis;
 
 			switch (axis) {
@@ -89,7 +89,7 @@ namespace Phantom {
 		SceneObjectTranslation(std::string owner,const float x, const float y, const float z, const bool object_only = false)
 			: SceneObjectTranslation(owner)
 		{
-			m_matrix.push_back(maths::mat4x4::mat4x4(1.0));
+			m_matrix.push_back(maths::mat4x4(1.0));
 			m_Kind = 0;
 			MatrixTranslation(m_matrix[0], x, y, z);
 			m_bSceneObjectOnly = object_only;

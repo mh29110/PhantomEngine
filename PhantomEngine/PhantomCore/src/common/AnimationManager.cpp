@@ -29,9 +29,14 @@ void AnimationManager::Shutdown()
 
 void AnimationManager::Tick(float delta)
 {
+    //OMG: accelerate by multiply the objects.
+    static float pg = 0.0f;
+    pg += (delta / 1000.0f);
+    pg = pg > 18.0f ? 0.0f : pg;
+    //printf("pg : %f \n", pg);
 	for (auto clip : m_AnimationClips)
 	{
-		clip->Update(delta);
+		clip->Update(pg);
 	}
 }
 
