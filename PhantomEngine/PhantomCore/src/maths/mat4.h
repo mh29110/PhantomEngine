@@ -200,7 +200,7 @@ namespace Phantom { namespace maths {
 		P =  U_inv * in_matrix;
 	}
 
-	inline void Matrix4X4fCompose(mat4x4& matrix, const vec3& rotation, const vec3& scalar, const vec3& translation)
+	inline void Matrix4X4Compose(mat4x4& matrix, const vec3& rotation, const vec3& scalar, const vec3& translation)
 	{
 		mat4x4 matrix_rotate_x, matrix_rotate_y, matrix_rotate_z, matrix_rotate;
 		MatrixRotationX(matrix_rotate_x, rotation.x);
@@ -214,7 +214,7 @@ namespace Phantom { namespace maths {
 		matrix = matrix_scale * matrix_rotate * matrix_translation;
 	}
 
-	inline void Matrix4X4fDecompose(const mat4x4& matrix, vec3& rotation, vec3& scalar, vec3& translation)
+	inline void Matrix4X4Decompose(const mat4x4& matrix, vec3& rotation, vec3& scalar, vec3& translation)
 	{
 		translation.SetComponents(matrix.elements[12], matrix.elements[13], matrix.elements[14]);
 

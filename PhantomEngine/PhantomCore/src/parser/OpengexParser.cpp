@@ -8,7 +8,7 @@
 using namespace Phantom;
 using namespace maths;
 void MatrixExchangeYandZ(float * data, const int32_t rows, const int32_t cols)
-{
+{ //这个实现有问题
 	for (int32_t row_index = 0; row_index < rows; row_index++)
 	{
 		uint32_t *p, *q;

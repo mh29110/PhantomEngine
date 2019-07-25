@@ -846,7 +846,7 @@ namespace Phantom {
 		auto vBoneRefArr = skeleton->GetBoneRefArr().lock()->GetBoneNodeRefArr();
 
 		GLuint vertexBufferId;
-		// Generate an ID for the vertex buffer.
+		// Generate an ID for the vertex buffer.  
 		for (GLuint i = 0; i < vertexPropertiesCount; i++)
 		{
 			const SceneObjectVertexArray & vProArr = pMesh->GetVertexPropertyArray(i);
@@ -861,7 +861,7 @@ namespace Phantom {
 			const unsigned short* bca = boneCountArr->GetData();
 			const unsigned short* bia = boneIndexArr->GetData();
 			const float*          bwa = boneWeightArr->GetData();
-			for (int i = 0; i < verNum; i++)  //for every vertex
+			for (int i = 0; i < verNum; i++)  //for every vertex  
 			{
 				influenceCount = *(bca + i);
 				float x = *((float*)pBuffer + 0);
@@ -869,10 +869,12 @@ namespace Phantom {
 				float z = *((float*)pBuffer + 2);
 				//P-bind  where bind P is the bind-pose position of the vertex (having an implicit w coordinate of one)
 				vec4 v(x, y, z, 1);
-				vec4 tv = v;
-			
+				v = skinRootTransform * v;
+				vec4 tv;
+				vec4 tt;
 				//todo pre-calculate all bone's transform.
 			// 可以参考这个写一个boneStack ： http://www.wazim.com/Collada_Tutorial_2.htm
+			// 进行整体旋转的话需要对整体进行父节点包装
 				/*auto chain = boneNode->GetTreeChain();
 				*/
 
@@ -885,18 +887,23 @@ namespace Phantom {
 					mat4x4 bpMat = bindPoseMatAll[idx];
 					bpMat.InverseMatrix4X4f();
 
-					auto boneNode = sceneBoneNodes.find(boneRef->GetName())->second.lock();
+					const std::string &boneName = boneRef->GetName();
+					auto boneNode = sceneBoneNodes.find(boneName)->second.lock();
 					auto runtimeMat = boneNode->GetCalculatedTransform();
-
-					vec4 tt =  
+					
+					tt =  
 								(*runtimeMat)*
 								bpMat *
-								skinRootTransform *
 								v;
-					//tt *= weight;
-					tv = tt;
-					
+					tt *= weight;
+					tv += tt;
+					assert(weight <= 1.0);
 				}
+
+				mat4x4 rotation; //todo
+				rotation= rotation.rotation(270, vec3(1.0f, 0.0f, 0.0f));
+				tv = rotation * tv;
+
 				*((float*)pBuffer + 0) = tv.x;
 				*((float*)pBuffer + 1) = tv.y;
 				*((float*)pBuffer + 2) = tv.z;
@@ -915,7 +922,7 @@ namespace Phantom {
 			glVertexAttribPointer(i, 3, GL_FLOAT, false, 0, 0);
 			glBindBuffer(GL_ARRAY_BUFFER,0);
 		
-			break;//仅仅处理顶点位置蒙皮先
+			break;//仅仅处理顶点位置蒙皮先 //todo normal *****
 		}
 		glBindVertexArray(0);
 	}
