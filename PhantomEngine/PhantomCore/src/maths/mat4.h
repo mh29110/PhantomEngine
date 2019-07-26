@@ -39,6 +39,7 @@ namespace Phantom { namespace maths {
 			std::memcpy(elements, _data, sizeof(float) * 4 * 4);
 			return *this;
 		}
+		mat4x4 Transpose();
 		//transform matrix
 		mat4x4& translate(const vec3& v);
 		mat4x4& translate(float x, float y, float z);
@@ -145,8 +146,8 @@ namespace Phantom { namespace maths {
         
         matrix = mat4x4(
                         1.0f, 0.0f, 0.0f, 0.0f ,
-                        0.0f,    c,    s, 0.0f ,
-                        0.0f,   -s,    c, 0.0f ,
+                        0.0f,   c,    -s, 0.0f ,
+                        0.0f,   s,    c, 0.0f ,
                         0.0f, 0.0f, 0.0f, 1.0f );
     }
     
@@ -155,9 +156,9 @@ namespace Phantom { namespace maths {
         const float c = std::cos(angle), s = std::sin(angle);
         
         matrix = mat4x4(
-                        c,    0.0f,   -s, 0.0f ,
+                        c,    0.0f,   s, 0.0f ,
                         0.0f, 1.0f, 0.0f, 0.0f ,
-                        s,    0.0f,    c, 0.0f ,
+                        -s,    0.0f,   c, 0.0f ,
                         0.0f, 0.0f, 0.0f, 1.0f );
     }
     
@@ -166,8 +167,8 @@ namespace Phantom { namespace maths {
         const float c = std::cos(angle), s = std::sin(angle);
         
         matrix = mat4x4(
-                        c,    s, 0.0f, 0.0f ,
-                        -s,    c, 0.0f, 0.0f ,
+                        c,    -s, 0.0f, 0.0f ,
+                        s,    c, 0.0f, 0.0f ,
                         0.0f, 0.0f, 1.0f, 0.0f ,
                         0.0f, 0.0f, 0.0f, 1.0f );
     }
@@ -186,18 +187,18 @@ namespace Phantom { namespace maths {
 		do {
 			limit++;
 			if (limit >= 1024)
-				break;//...................... - -£¡//todo 
+				assert(0);//...................... - -£¡//todo 
 			U_pre = U;
 			U_inv = U;
 			if (0 !=U_inv.InverseMatrix()) assert(0);
-			mat3x3 U_inv_trans;
-			U_inv_trans =  U_inv.Transpose();
+			mat3x3 U_inv_trans = U_inv;
+			U_inv_trans = U_inv_trans.Transpose();
 			U = (U + U_inv_trans) * /*(T)*/0.5f;
 		} while (U != U_pre);
 
 		U_inv = U;
 		if (0 != U_inv.InverseMatrix()) assert(0);
-		P =  U_inv * in_matrix;
+		P = U_inv * in_matrix;
 	}
 
 	inline void Matrix4X4Compose(mat4x4& matrix, const vec3& rotation, const vec3& scalar, const vec3& translation)
@@ -207,11 +208,12 @@ namespace Phantom { namespace maths {
 		MatrixRotationY(matrix_rotate_y, rotation.y);
 		MatrixRotationZ(matrix_rotate_z, rotation.z);
 		matrix_rotate = matrix_rotate_x * matrix_rotate_y * matrix_rotate_z;
+		matrix_rotate= matrix_rotate.Transpose();
 		mat4x4 matrix_scale;
         MatrixScale(matrix_scale, scalar.x, scalar.y, scalar.z);
 		mat4x4 matrix_translation;
 		MatrixTranslation(matrix_translation, translation.x,translation.y,translation.z);
-		matrix = matrix_translation * matrix_scale * matrix_rotate ;
+		matrix = matrix_translation * matrix_rotate * matrix_scale;
 	}
 
 	inline void Matrix4X4Decompose(const mat4x4& matrix, vec3& rotation, vec3& scalar, vec3& translation)

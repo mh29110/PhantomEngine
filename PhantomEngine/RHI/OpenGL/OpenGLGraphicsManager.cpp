@@ -828,12 +828,13 @@ namespace Phantom {
 		const std::string & oKey = geoNode->GetSceneObjectRef();
 		auto pGeometry = geoObjects[oKey];
 		const auto& pMesh = pGeometry->GetMesh().lock();
+		auto skin = pMesh->GetSkin().lock();
+		if (!skin) return;
 
 		glBindVertexArray(drawBatch.vao);
 		const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
 
-		auto skin = pMesh->GetSkin().lock();
-		if (!skin) return;
+		
 		auto skeleton = skin->GetSkeleton().lock();
 		auto boneCountArr = skin->GetBoneCountArray().lock();
 		auto boneIndexArr = skin->GetBoneIndexArray().lock();

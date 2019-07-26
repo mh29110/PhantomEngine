@@ -115,7 +115,7 @@ bool Phantom::maths::mat3x3::operator!=(const mat3x3 &other)
 {
 	for (int i = 0; i < 9; i++)
 	{
-		if (elements[i] != other.elements[i])
+		if (abs(elements[i] - other.elements[i]) > std::numeric_limits<float>::epsilon())
 			return true;
 	}
 	return false;

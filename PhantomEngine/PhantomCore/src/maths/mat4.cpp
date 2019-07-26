@@ -24,7 +24,7 @@ namespace Phantom {namespace maths {
 			elements[i + i * 4] = 1.0f;
 		}
 	}
-
+	
 	mat4x4::mat4x4(float m00, float m01, float m02, float m03, // 1st column
 			float m04, float m05, float m06, float m07, // 2nd column
 			float m08, float m09, float m10, float m11, // 3rd column
@@ -75,7 +75,15 @@ namespace Phantom {namespace maths {
 		return result;
 	}
 
-
+	mat4x4 mat4x4::Transpose()
+	{
+		return mat4x4(
+			elements[0], elements[4], elements[8],elements[12],
+			elements[1], elements[5], elements[9],elements[13],
+			elements[2], elements[6], elements[10],elements[14],
+			elements[3], elements[7], elements[11],elements[15]
+		);
+	}
 	
 
 	///////////////////////////////////////////////////////////////////////////////
