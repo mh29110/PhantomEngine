@@ -40,6 +40,8 @@ namespace Phantom {
 		void CalculateCameraMatrix();
 		void CalculateLights();
 
+		void CalculateSkeletonSkin();
+
 		void UpdateConstants();
 
 		virtual void BindShaderByType(Shader_Type st) = 0;

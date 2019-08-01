@@ -7,6 +7,7 @@
 #include "SceneObjectSkin.h"
 
 namespace Phantom {
+	//todo apart for SceneObjectMesh  and SceneObjectSkeletonMesh.
     class SceneObjectMesh : public SceneBaseObject
     {
         protected:
@@ -41,7 +42,7 @@ namespace Phantom {
             const SceneObjectVertexArray& GetVertexPropertyArray(const size_t index) const { return m_VertexArray[index]; };
             const SceneObjectIndexArray& GetIndexArray(const size_t index) const { return m_IndexArray[index]; };
             const PrimitiveType& GetPrimitiveType() { return m_PrimitiveType; };
-
         friend std::ostream& operator<<(std::ostream& out, const SceneObjectMesh& obj);
+	private:
     };
 }

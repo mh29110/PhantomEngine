@@ -501,6 +501,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 						_skin.AddBoneWeightArr(std::move(bwa));
 						_skin.AddSkeleton(std::move(_skeleton));
 						mesh->AddSkin(std::move(_skin));
+						scene.SkeletonAnimationObjects.emplace(_object->GetGuid(), _object);
 					}
 					break;
 					default:

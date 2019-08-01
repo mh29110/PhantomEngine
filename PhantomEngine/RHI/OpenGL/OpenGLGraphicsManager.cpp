@@ -833,7 +833,6 @@ namespace Phantom {
 
 		glBindVertexArray(drawBatch.vao);
 		const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
-
 		
 		auto skeleton = skin->GetSkeleton().lock();
 		auto boneCountArr = skin->GetBoneCountArray().lock();
@@ -841,8 +840,6 @@ namespace Phantom {
 		auto boneWeightArr = skin->GetBoneWeightArray().lock();
 		auto skinRootTransform = skin->GetSkinMatrix();
 
-		auto binePoseTransform = skeleton->getTransform().lock();
-		const std::vector< maths::mat4x4 >& bindPoseMatAll = binePoseTransform->GetMatrixAll();
 		auto sceneBoneNodes = scene.BoneNodes;
 		auto vBoneRefArr = skeleton->GetBoneRefArr().lock()->GetBoneNodeRefArr();
 
@@ -885,16 +882,12 @@ namespace Phantom {
 					float weight = *(bwa++);
 
 					auto boneRef = vBoneRefArr[idx];
-					mat4x4 bpMat = bindPoseMatAll[idx];
-					bpMat.InverseMatrix4X4f();
-
 					const std::string &boneName = boneRef->GetName();
 					auto boneNode = sceneBoneNodes.find(boneName)->second.lock();
-					auto runtimeMat = boneNode->GetCalculatedTransform();
+					auto finalMat = boneNode->m_RuntimeWithBindPoseMat;
 					
 					tt =  
-								(*runtimeMat)*
-								bpMat *
+						*( finalMat )*
 								v;
 					tt *= weight;
 					tv += tt;

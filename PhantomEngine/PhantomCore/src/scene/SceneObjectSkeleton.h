@@ -8,7 +8,10 @@ namespace Phantom {
 	class SceneBoneNode :public SceneBaseNode
 	{
 	public :
-		SceneBoneNode(const std::string& name) :SceneBaseNode(name) {}
+		SceneBoneNode(const std::string& name) :SceneBaseNode(name) {
+			m_RuntimeWithBindPoseMat = std::make_shared<maths::mat4x4>();
+		}
+		std::shared_ptr<maths::mat4x4>         m_RuntimeWithBindPoseMat; // runtime * bindpose
 	};
 
 	class SkeletonBoneRefArray

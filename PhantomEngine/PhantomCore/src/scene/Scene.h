@@ -8,6 +8,7 @@
 #include "SceneObjectGeometry.h"
 #include "SceneObjectMaterial.h"
 #include "camera.h"
+#include "utils/guid.hpp"
 namespace Phantom{
 
 class Scene
@@ -27,6 +28,7 @@ public:
 	std::unordered_multimap<std::string, std::weak_ptr<SceneGeometryNode>>      GeometryNodes;
 	std::unordered_map<std::string, std::weak_ptr<SceneLightNode>>              LightNodes;
 	std::unordered_multimap<std::string , std::weak_ptr<SceneBoneNode>>               BoneNodes;
+	std::unordered_map<Guid , std::weak_ptr<SceneObjectGeometry>>      SkeletonAnimationObjects;
 
 	std::vector<std::weak_ptr<SceneBaseNode>>                                   AnimationNodes;
 

@@ -116,6 +116,42 @@ void Phantom::GraphicsManager::CalculateLights()
 	}
 }
 
+void Phantom::GraphicsManager::CalculateSkeletonSkin()
+{
+	auto scene = g_pSceneManager->GetSceneForRendering();
+
+	auto sceneBoneNodes = scene.BoneNodes;
+
+	std::unordered_map<Guid, std::weak_ptr<SceneObjectGeometry>>      skeletonAnimationObjects = scene.SkeletonAnimationObjects;
+	for (auto skeleton : skeletonAnimationObjects)
+	{
+		shared_ptr<SceneObjectGeometry> pGeometry = skeleton.second.lock();
+		const auto& pMesh = pGeometry->GetMesh().lock();
+
+		const auto pSkin = pMesh->GetSkin().lock();
+		const auto skeleton = pSkin->GetSkeleton().lock();
+		//bone ref arr
+		const auto vBoneRefArr = skeleton->GetBoneRefArr().lock()->GetBoneNodeRefArr();
+		//bindpose transforms array.
+		auto binePoseTransform = skeleton->getTransform().lock();
+		const std::vector< maths::mat4x4 >& bindPoseMatAll = binePoseTransform->GetMatrixAll();
+
+		const int boneArrLen = vBoneRefArr.size();
+		for (int i = 0; i < boneArrLen; i++)
+		{
+			auto boneRef = vBoneRefArr[i];
+			const std::string &boneName = boneRef->GetName();
+			auto boneNode = sceneBoneNodes.find(boneName)->second.lock();
+			auto runtimeMat = boneNode->GetCalculatedTransform();
+
+			mat4x4 bpMat = bindPoseMatAll[i];
+			bpMat.InverseMatrix4X4f();
+
+			*(boneNode->m_RuntimeWithBindPoseMat) =  (*runtimeMat) * bpMat;
+		}
+	}
+}
+
 void Phantom::GraphicsManager::UpdateConstants() {
 
 	for (auto& pDbc : m_Frame.batchContexts)
@@ -126,7 +162,7 @@ void Phantom::GraphicsManager::UpdateConstants() {
 	//#todo
 	CalculateCameraMatrix();
 	CalculateLights();
-
+	CalculateSkeletonSkin();
 
 	SetPerFrameConstants(m_Frame.frameContext);
 	SetPerFrameLight();
