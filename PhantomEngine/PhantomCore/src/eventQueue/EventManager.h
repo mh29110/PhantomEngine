@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <list>
 #include <map>
 #include "common/Singleton.h"
@@ -16,6 +16,7 @@ namespace Phantom {
 	public:
 		static EventManager& Instance() ;
 
+		//外部维护EventHandler很麻烦
 		void AddEventHandler(int id, EventHandler * handler);
 		void RemoveEventHandler(int id, EventHandler * handler) ;
 

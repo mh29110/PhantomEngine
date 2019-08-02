@@ -32,6 +32,8 @@ namespace Phantom {
 		virtual void resize(int32_t width, int32_t height);
 
 	protected:
+		virtual void EnterScene(const Scene& scene);
+		virtual void PurgeCurScene();
 	private:
 		void RenderBatches();
 		

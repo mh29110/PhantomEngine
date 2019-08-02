@@ -48,10 +48,7 @@ int main(int argc, char** argv) {
 		cerr << "Failed. err =  g_pSceneManager initialize failed , will exit now." << ret;
 		return ret;
 	}
-	if ((ret = g_pGraphicsManager->Init()) != 0) {
-		printf("Graphics Manager Init failed, will exit now.");
-		return ret;
-	}
+	
 	if ((ret = g_pBehaviourManager->Init()) != 0) {
 		printf("g_pBehaviourManager  Init failed, will exit now.");
 		return ret;
@@ -65,6 +62,11 @@ int main(int argc, char** argv) {
 		printf("AnimationManager  Init failed, will exit now.");
 		return ret;
 	}
+	if ((ret = g_pGraphicsManager->Init()) != 0) {
+		printf("Graphics Manager Init failed, will exit now.");
+		return ret;
+	}
+	g_pSceneManager->LoadScene();
 
 
 	Timer timer;
@@ -79,11 +81,11 @@ int main(int argc, char** argv) {
 		g_pApp->Tick();
 		// g_pMemoryManager->Tick(deltaTime);
 		g_pAssetLoader->Tick();
-		g_pSceneManager->Tick();
 		AnimationManager::GetInstance().Tick(deltaTime);
-        g_pGraphicsManager->Tick();
+		g_pSceneManager->Tick();
 		g_pBehaviourManager->Tick();
 		g_pInputManager->Tick();
+        g_pGraphicsManager->Tick();
 
 		frames++;
 		if (timer.Elapsed() - secondCount > 1.0f)

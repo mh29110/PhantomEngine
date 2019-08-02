@@ -31,6 +31,11 @@ void Phantom::BehaviourManager::Tick()
 	if (g_pInputManager->GetRightKeyPressed()) {
 		camera.lock()->ProcessKeyboard(RIGHT, factor);
 	}
+
+	if (g_pInputManager->IsKeyPressed(76))
+	{
+		g_pSceneManager->SwitchScene("Resources/Scene/anim.ogex");
+	}
 }
 
 void Phantom::BehaviourManager::LeftMouseDrag(int deltaX, int deltaY)

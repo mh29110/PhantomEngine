@@ -4,6 +4,8 @@
 #include "SceneManager.h"
 #include "interface/IApplication.h"
 #include "GfxConfiguration.h"
+#include "eventQueue/EventManager.h"
+
 
 using namespace std;
 using namespace Phantom::maths;
@@ -21,11 +23,18 @@ int Phantom::GraphicsManager::Init()
 {
 	Inited = true;
 	fontEngine.LoadFontFace(FONT_PATH);
+	
+	evthandler = new EventQueue::ClassBasedEventHandler<GraphicsManager>(this,&GraphicsManager::OnLoadSceneCompleted);
+	EventQueue::EventManager::Instance().AddEventHandler(EventQueue::EventId::EVT_LOADSCENE_COMPLETED, evthandler);
 	return 0;
 }
 
 void Phantom::GraphicsManager::Shutdown()
 {
+	EventQueue::EventManager::Instance().RemoveEventHandler(EventQueue::EventId::EVT_LOADSCENE_COMPLETED, evthandler);
+	delete evthandler;
+	evthandler = nullptr;
+	printf("shut down");
 }
 
 void Phantom::GraphicsManager::Tick()
@@ -45,7 +54,16 @@ void Phantom::GraphicsManager::DrawString(GUI::GUIIndex idx, float posx, float p
 }
 
 namespace Phantom {
-	extern IApplication* g_pApp;  //wtf !  namespace 
+	extern IApplication* g_pApp;
+	void GraphicsManager::EnterScene(const Scene & scene)
+	{
+		
+	}
+	void GraphicsManager::PurgeCurScene()
+	{
+		m_Frame.batchContexts.clear();
+	}
+	//wtf !  namespace 
 	void GraphicsManager::CalculateCameraMatrix() {
 		const GfxConfiguration& conf = g_pApp->GetConfiguration();
 		float aspect = (float)conf.screenWidth / (conf.screenHeight?conf.screenHeight:1);
@@ -167,4 +185,12 @@ void Phantom::GraphicsManager::UpdateConstants() {
 	SetPerFrameConstants(m_Frame.frameContext);
 	SetPerFrameLight();
 	SetPerBatchConstants(m_Frame.batchContexts);
+}
+
+int Phantom::GraphicsManager::OnLoadSceneCompleted(EventQueue::Event * evt)
+{
+	PurgeCurScene();
+	auto scene = g_pSceneManager->GetSceneForRendering();
+	EnterScene(scene);
+	return 0;
 }

@@ -9,7 +9,8 @@ namespace Phantom {
 
 	enum EventId
 	{
-		EVT_TICK = 0,
+			EVT_TICK = 0,
+			EVT_LOADSCENE_COMPLETED = 1,
 	};
 	struct Event
 	{

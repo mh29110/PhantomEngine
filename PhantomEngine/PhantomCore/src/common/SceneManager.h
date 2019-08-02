@@ -15,9 +15,13 @@ namespace Phantom {
 		virtual void Tick();
 
 		const Scene& GetSceneForRendering();
+
+		bool LoadScene(const std::string&  sceneName = "Resources/Scene/c8.ogex");
+
+		void SwitchScene(const std::string& sceneName);
 	protected:
 		std::shared_ptr<Scene>  m_pScene;
-		bool LoadScene();
+		
 	};
 	extern SceneManager* g_pSceneManager;
 }

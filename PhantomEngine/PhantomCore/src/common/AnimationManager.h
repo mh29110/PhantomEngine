@@ -13,6 +13,7 @@ namespace Phantom {
 		int Init();
 		void Shutdown();
 		void Tick(float delta);
+		int AttachCurScene();
 
 		void AddAnimationClip(std::shared_ptr<SceneObjectAnimationClip> clip);
 		void ClearAnimationClips();

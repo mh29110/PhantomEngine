@@ -125,9 +125,9 @@ namespace Phantom {
 				const auto vProArrSize = vProArr.GetDataSize();
 				const auto vProArrData = vProArr.GetData();
 
-				glGenBuffers(1, &vertexBufferId); 
+				glGenBuffers(1, &vertexBufferId);
 				if (i == 0) { positionBufferId = vertexBufferId; }
-				
+
 				glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
 				glBufferData(GL_ARRAY_BUFFER, vProArrSize, vProArrData, GL_STATIC_DRAW);
 
@@ -304,35 +304,25 @@ namespace Phantom {
 			glCullFace(GL_BACK);*/
 
 		}
-
 		InitializeShader();
-		InitializeBuffers();
-		initializeSkyBox();
 		initializeTextVao();
-		
-		
+
 		glGenBuffers(1, &m_uboBatchId);
 		glGenBuffers(1, &m_uboFrameId);
 		glGenBuffers(1, &m_lightId);
 		glGenFramebuffers(1, &m_shadowMapFboId);
-
 		return result;
 	}
 
 	void OpenGLGraphicsManager::Shutdown()
 	{
-		//#todo
-
-		// Disable the two vertex array attributes.
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-
-		// Release the vertex buffer.
-		/*glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glDeleteBuffers(1, &m_vertexBufferId);*/
-
+		PurgeCurScene();
 		m_textures.clear();
-
+		glDeleteBuffers(1, &m_uboBatchId);
+		glDeleteBuffers(1, &m_uboFrameId);
+		glDeleteBuffers(1, &m_lightId);
+		glDeleteFramebuffers(1, &m_shadowMapFboId);
+		GraphicsManager::Shutdown();
 	}
 
 	void OpenGLGraphicsManager::Tick()
@@ -379,8 +369,8 @@ namespace Phantom {
 		GfxConfiguration& conf = g_pApp->GetConfiguration();
 		m_pro.orthographic(0.0f, conf.screenWidth, 0.0f, conf.screenHeight, 0.01f, 10000.0f);
 		m_TextShader->setUniformMat4("projection", m_pro);
-		
-		
+
+
 
 		glBindVertexArray(m_TextVaoId);
 		m_TextShader->setUniform1i("text", 3);
@@ -405,8 +395,8 @@ namespace Phantom {
 
 				GLfloat xOffsetUv = ch.offset.x / TextCore::K_TEXTURE_SIZE;
 				GLfloat yOffsetUv = ch.offset.y / TextCore::K_TEXTURE_SIZE;
-				GLfloat xPlusWidthUv = (ch.offset.x + w)/ TextCore::K_TEXTURE_SIZE;
-				GLfloat yPlusHeightUv = (ch.offset.y + h)/ TextCore::K_TEXTURE_SIZE;
+				GLfloat xPlusWidthUv = (ch.offset.x + w) / TextCore::K_TEXTURE_SIZE;
+				GLfloat yPlusHeightUv = (ch.offset.y + h) / TextCore::K_TEXTURE_SIZE;
 
 				GLfloat vertices[6][4] = {
 				  { xpos,     ypos + h,   xOffsetUv, yOffsetUv },
@@ -426,14 +416,14 @@ namespace Phantom {
 				unit.posX += (ch.Advance >> 6)*scale;
 			}
 		}
-		
+
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	bool OpenGLGraphicsManager::initializeSkyBox()
 	{
-        
+
 		//==============================================
 		static float skyboxVertices[] = {
 			// positions          
@@ -481,7 +471,7 @@ namespace Phantom {
 		};
 
 		//为得到不扭曲的天空盒，需考虑大点。
-		for (int i = 0 ;i < sizeof(skyboxVertices)/4; i++)
+		for (int i = 0; i < sizeof(skyboxVertices) / 4; i++)
 		{
 			skyboxVertices[i] = 256.0f * skyboxVertices[i];
 		}
@@ -495,7 +485,7 @@ namespace Phantom {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	
+
 		GLenum target;
 		target = GL_TEXTURE_CUBE_MAP;
 		uint32_t texture_id;
@@ -511,7 +501,7 @@ namespace Phantom {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + picIdx, 0, GL_RGB, imgptr->Width, imgptr->Height,
 				0, GL_RGB, GL_UNSIGNED_BYTE, imgptr->data);
 		}
-		
+
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -526,15 +516,15 @@ namespace Phantom {
 		m_Frame.frameContext.skybox = texture_id;
 		m_skyboxShader->bind();
 		m_skyboxShader->setUniform1i("skybox", 2); //2号纹理  /如果是0的话这里可以忽略
-		
+
 
 		m_skyboxContext.vao = skyboxVAO;
 		m_skyboxContext.mode = GL_TRIANGLES;
 		m_skyboxContext.type = GL_UNSIGNED_BYTE;
 		m_skyboxContext.indexCount = 36;
-		
 
-	
+
+
 		return true;
 	}
 
@@ -605,19 +595,6 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::DrawSkyBox()
 	{
-		
-		 //Prepare & Bind per frame constant buffer
-		//uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
-
-		//if (blockIndex == GL_INVALID_INDEX)
-		//{
-		//	// the shader does not use "ConstantsPerFrame"
-		//	// simply return here
-		//	return;
-		//}
-		//glUniformBlockBinding(m_skyboxShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);//frame'ubo bind constant position
-		//glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
-
 
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
@@ -626,13 +603,13 @@ namespace Phantom {
 
 		//m_skyboxShader->setUniformMat4("projection", m_Frame.frameContext.projectionMatrix);
 		//m_skyboxShader->setUniformMat4("view", m_Frame.frameContext.viewMatrix);
-        uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
-        if (blockIndex != GL_INVALID_INDEX)
-        {
-            glUniformBlockBinding(m_skyboxShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
-            glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
-        }
-        
+		uint32_t blockIndex = glGetUniformBlockIndex(m_skyboxShader->m_ShaderId, "ConstantsPerFrame");
+		if (blockIndex != GL_INVALID_INDEX)
+		{
+			glUniformBlockBinding(m_skyboxShader->m_ShaderId, blockIndex, ConstantsPerFrameBind);
+			glBindBufferBase(GL_UNIFORM_BUFFER, ConstantsPerFrameBind, m_uboFrameId);
+		}
+
 		glBindVertexArray(m_skyboxContext.vao);
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
@@ -649,6 +626,32 @@ namespace Phantom {
 		GfxConfiguration& conf = g_pApp->GetConfiguration();
 		conf.screenWidth = width;
 		conf.screenHeight = height;
+	}
+
+	void OpenGLGraphicsManager::EnterScene(const Scene & scene)
+	{
+		GraphicsManager::EnterScene(scene);
+		
+		InitializeBuffers();
+		initializeSkyBox();
+	
+
+	}
+
+	void OpenGLGraphicsManager::PurgeCurScene()
+	{
+		auto& batchs = m_Frame.batchContexts;
+		for (auto& dbc : batchs) {
+			glDeleteVertexArrays(1, &dynamic_pointer_cast<OpenGLContextPerDrawBatch>(dbc)->vao);
+		}
+
+		for (auto& te : m_textures)
+		{
+			glDeleteTextures(1, &te.second);
+		}
+		m_textures.clear();
+
+		GraphicsManager::PurgeCurScene();
 	}
 
 	void OpenGLGraphicsManager::BindShaderByType(Shader_Type st)
@@ -668,7 +671,7 @@ namespace Phantom {
 			std::cout << "this shader is not supported!" << std::endl;
 			break;
 		}
-		shared_ptr<OpenGLShader> curShader =  m_currentShader.lock();
+		shared_ptr<OpenGLShader> curShader = m_currentShader.lock();
 		curShader->bind();
 	}
 
@@ -703,7 +706,7 @@ namespace Phantom {
 			uint32_t diffuseIndex = glGetUniformLocation(curShader->m_ShaderId, "diffuseColor");
 			if (dbc.diffuseMap >= 0 && diffuseIndex != GL_INVALID_INDEX) {
 				m_pShader->setUniform1i("diffuseColor", 0);  //material.SetTexture.
-				glActiveTexture(GL_TEXTURE0);  
+				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, dbc.diffuseMap);
 			}
 
@@ -713,20 +716,20 @@ namespace Phantom {
 		glBindVertexArray(0);
 	}
 
-    void OpenGLGraphicsManager::RenderShadowMap()
-    {
+	void OpenGLGraphicsManager::RenderShadowMap()
+	{
 		BindShaderByType(ShadowMap_Shader);
-        
-        BeginShadowMap();
-        
-        RenderBatches();
-        
-        EndShadowMap();
-    }
+
+		BeginShadowMap();
+
+		RenderBatches();
+
+		EndShadowMap();
+	}
 
 	static const int kSizeOfShadowMap = 1024;
-    void OpenGLGraphicsManager::BeginShadowMap()
-    {
+	void OpenGLGraphicsManager::BeginShadowMap()
+	{
 		//clear shadow map
 		if (m_Frame.frameContext.shadowMap != -1)
 		{
@@ -746,13 +749,13 @@ namespace Phantom {
 
 		m_Frame.frameContext.shadowMap = shadowMap;
 
-        glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFboId);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFboId);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap, 0);
-        // Always check that our framebuffer is ok
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        {
-            std::cout << " error !!!" <<std::endl;
-        }
+		// Always check that our framebuffer is ok
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			std::cout << " error !!!" << std::endl;
+		}
 		glDrawBuffers(0, nullptr); // No color buffer is drawn to.
 		glDepthMask(GL_TRUE);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -763,19 +766,19 @@ namespace Phantom {
 		// which are already separated from the front faces by a small distance
 		// (if your geometry is made this way)
 		glCullFace(GL_FRONT); // Cull front-facing triangles -> draw only back-facing triangles
-    }
-    
-    void OpenGLGraphicsManager::EndShadowMap()
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 
-        //glDeleteFramebuffers(1, &m_shadowMapFboId); //参考  glGenFramebuffers
+	void OpenGLGraphicsManager::EndShadowMap()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        const GfxConfiguration& conf = g_pApp->GetConfiguration();
-        glViewport( 0 , 0 , conf.screenWidth, conf.screenHeight);
-        
+		//glDeleteFramebuffers(1, &m_shadowMapFboId); //参考  glGenFramebuffers
+
+		const GfxConfiguration& conf = g_pApp->GetConfiguration();
+		glViewport(0, 0, conf.screenWidth, conf.screenHeight);
+
 		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
-    }
+	}
 
 	void OpenGLGraphicsManager::SetShadowMap()
 	{
@@ -792,21 +795,21 @@ namespace Phantom {
 		m_pShader = make_shared<OpenGLShader>(VS_SHADER_SOURCE_FILE, PS_SHADER_SOURCE_FILE);
 		m_skyboxShader = make_shared<OpenGLShader>(SKYBOX_VS_SHADER_SOURCE_FILE, SKYBOX_PS_SHADER_SOURCE_FILE);
 		m_pShadowMapShader = make_shared<OpenGLShader>(SHADOWMAP_VS_SHADER_SOURCE_FILE, SHADOWMAP_PS_SHADER_SOURCE_FILE);
-		m_TextShader = make_shared<OpenGLShader>(TEXT_VS_SHADER_SOURCE_FILE,TEXT_PS_SHADER_SOURCE_FILE);
+		m_TextShader = make_shared<OpenGLShader>(TEXT_VS_SHADER_SOURCE_FILE, TEXT_PS_SHADER_SOURCE_FILE);
 		m_currentShader = m_pShader;
 		return true;
 	}
 
 	void OpenGLGraphicsManager::SetPerFrameLight()
 	{
-	
+
 
 		glBindBuffer(GL_UNIFORM_BUFFER, m_lightId);
 		glBufferData(GL_UNIFORM_BUFFER, kSizeOfLightBuffer, &m_Frame.light, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	
+
 
 	void OpenGLGraphicsManager::SetPerFrameConstants(const ContextPerFrame& context)
 	{
@@ -816,7 +819,7 @@ namespace Phantom {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	static void * pBuffer = new uint8_t[1024*1024];//todo 挪到引擎core中
+	static void * pBuffer = new uint8_t[1024 * 1024];//todo 挪到引擎core中
 	// GraphicsManager中处理Cpu-skin ， 将处理完的顶点数据传入各GL进行处理？？？？//todo
 	void OpenGLGraphicsManager::ProcessCpuSkin(const ConstantsPerBatch& batch)
 	{
@@ -833,7 +836,7 @@ namespace Phantom {
 
 		glBindVertexArray(drawBatch.vao);
 		const auto vertexPropertiesCount = pMesh->GetVertexPropertiesCount();
-		
+
 		auto skeleton = skin->GetSkeleton().lock();
 		auto boneCountArr = skin->GetBoneCountArray().lock();
 		auto boneIndexArr = skin->GetBoneIndexArray().lock();
@@ -885,37 +888,37 @@ namespace Phantom {
 					const std::string &boneName = boneRef->GetName();
 					auto boneNode = sceneBoneNodes.find(boneName)->second.lock();
 					auto finalMat = boneNode->m_RuntimeWithBindPoseMat;
-					
-					tt =  
-						*( finalMat )*
-								v;
+
+					tt =
+						*(finalMat)*
+						v;
 					tt *= weight;
 					tv += tt;
 					assert(weight <= 1.0);
 				}
 
 				mat4x4 rotation; //todo
-				rotation= rotation.rotation(270, vec3(1.0f, 0.0f, 0.0f));
+				rotation = rotation.rotation(270, vec3(1.0f, 0.0f, 0.0f));
 				tv = rotation * tv;
 
 				*((float*)pBuffer + 0) = tv.x;
 				*((float*)pBuffer + 1) = tv.y;
 				*((float*)pBuffer + 2) = tv.z;
-			
+
 				pBuffer = (float*)pBuffer + 3;
 			}
-		
+
 			pBuffer = (float*)pBuffer - (verNum * 3);
 #pragma endregion
 
-			
+
 
 			glBindBuffer(GL_ARRAY_BUFFER, drawBatch.posBuffId);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, vProArrSize, pBuffer);
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i, 3, GL_FLOAT, false, 0, 0);
-			glBindBuffer(GL_ARRAY_BUFFER,0);
-		
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 			break;//仅仅处理顶点位置蒙皮先 //todo normal *****
 		}
 		glBindVertexArray(0);

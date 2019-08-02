@@ -36,7 +36,7 @@ public:
 	//camera¡Ÿ ±”√
 	std::shared_ptr<CameraNode>  camera;
 
-
+	std::string  Name;
 public:
 	const std::shared_ptr<SceneObjectMaterial> GetFirstMaterial() const;
 	const std::shared_ptr<SceneObjectMaterial> GetMaterial(const std::string&  matName) const;
