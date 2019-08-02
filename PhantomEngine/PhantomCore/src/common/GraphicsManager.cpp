@@ -57,7 +57,9 @@ namespace Phantom {
 	extern IApplication* g_pApp;
 	void GraphicsManager::EnterScene(const Scene & scene)
 	{
-		
+#ifdef _DEBUG
+		printf("dd");
+#endif
 	}
 	void GraphicsManager::PurgeCurScene()
 	{
