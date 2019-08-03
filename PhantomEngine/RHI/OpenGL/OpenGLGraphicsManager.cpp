@@ -350,8 +350,13 @@ namespace Phantom {
 
 		// Render the model using the color shader.
 		BindShaderByType(Common_Shader);
+		
 		SetShadowMap();
+		
 		RenderBatches();
+
+		RenderDebugInfo();
+
 		DrawSkyBox();
 		m_pShader->unbind();
 		//glFlush();
@@ -628,6 +633,7 @@ namespace Phantom {
 		conf.screenHeight = height;
 	}
 
+	
 	void OpenGLGraphicsManager::EnterScene(const Scene & scene)
 	{
 		GraphicsManager::EnterScene(scene);
@@ -715,6 +721,8 @@ namespace Phantom {
 		}
 		glBindVertexArray(0);
 	}
+
+	
 
 	void OpenGLGraphicsManager::RenderShadowMap()
 	{
@@ -926,20 +934,87 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::SetPerBatchConstants(const std::vector<std::shared_ptr<ContextPerDrawBatch>>& batches)
 	{
-		uint8_t * pBuffer = new uint8_t[kSizeOfBatchConstantBuffer* batches.size()];
+
+		uint8_t * lpBuffer = new uint8_t[kSizeOfBatchConstantBuffer* batches.size()];
 		for (auto & pBatch : batches)
 		{
 			const ConstantsPerBatch& constants = static_cast<ConstantsPerBatch&>(*pBatch);
 			ProcessCpuSkin(constants);
-			memcpy(pBuffer + pBatch->batchIndex * kSizeOfBatchConstantBuffer, &constants, kSizeOfBatchConstantBuffer);
+			memcpy(lpBuffer + pBatch->batchIndex * kSizeOfBatchConstantBuffer, &constants, kSizeOfBatchConstantBuffer);
 		}
 
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboBatchId);
-		glBufferData(GL_UNIFORM_BUFFER, kSizeOfBatchConstantBuffer*batches.size(), pBuffer, GL_DYNAMIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, kSizeOfBatchConstantBuffer*batches.size(), lpBuffer, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		delete[] pBuffer;
-		pBuffer = nullptr;
+		delete[] lpBuffer;
+		lpBuffer = nullptr;
 	}
+	void OpenGLGraphicsManager::DrawLine(const maths::vec3 & from, const maths::vec3 & to, const maths::vec3 & color)
+	{
+		const int LEN = 2;
+		GLfloat* _vertices = new GLfloat[3 * LEN];
 
+		{
+			_vertices[0] = from.x;
+			_vertices[1] = from.y;
+			_vertices[2] = from.z;
+			_vertices[3] = to.x;
+			_vertices[4] = to.y;
+			_vertices[5] = to.z;
+		}
+
+		uint32_t vao;
+		glGenVertexArrays(1, &vao);
+		// Bind the vertex array object to store all the buffers and vertex attributes we create here.
+		glBindVertexArray(vao);
+		uint32_t buffer_id;
+		// Generate an ID for the vertex buffer.
+		glGenBuffers(1, &buffer_id);
+		// Bind the vertex buffer and load the vertex (position and color) data into the vertex buffer.
+		glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * LEN, _vertices, GL_STATIC_DRAW);
+		delete[] _vertices;
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+		DebugDrawBatchContext& dbc = *(new DebugDrawBatchContext); //leak?
+		dbc.vao = vao;
+		dbc.mode = GL_LINES;
+		dbc.indexCount = static_cast<int32_t>(LEN);
+		dbc.color = color;
+		dbc.posBuffId = buffer_id;
+
+		m_DebugDrawBatchContext.push_back(std::move(dbc));
+	}
+	void OpenGLGraphicsManager::RenderDebugInfo()
+	{
+		if (m_DebugDrawBatchContext.size() < 1) return;
+		BindShaderByType(Shader_Type::Common_Shader);
+		std::shared_ptr<OpenGLShader> curShader = m_currentShader.lock();
+
+		//只要在Geometry后面渲染就不必改变Uniform state。//todo 做一套DEBUG独有的shader和buffer。
+		//ConstantsPerFrame constants = static_cast<ConstantsPerFrame>(m_Frame.frameContext);   //MaterialPropertyBlock
+		//glBindBuffer(GL_UNIFORM_BUFFER, m_uboFrameId);
+		//glBufferData(GL_UNIFORM_BUFFER, kSizeOfFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);// 256 ¶ÔÆë  £¬ gpu¿é¶ÁÈ¡ todo
+
+		//create a standard world matrix
+		uint8_t * lpBuffer = new uint8_t[kSizeOfBatchConstantBuffer];
+		ConstantsPerBatch cfb;
+		memcpy(lpBuffer , &cfb, kSizeOfBatchConstantBuffer);
+
+		uint32_t bIndex = glGetUniformBlockIndex(curShader->m_ShaderId, "ConstantsPerBatch");
+		glBindBuffer(GL_UNIFORM_BUFFER, m_uboBatchId);
+		glBindBufferRange(GL_UNIFORM_BUFFER, bIndex, m_uboBatchId,0, kSizeOfBatchConstantBuffer);
+	
+		for (auto& pDbc : m_DebugDrawBatchContext)
+		{
+			const OpenGLContextPerDrawBatch& dbc = dynamic_cast<const OpenGLContextPerDrawBatch&>(pDbc);
+			glBindVertexArray(dbc.vao);
+			glDrawArrays(dbc.mode,0, dbc.indexCount);
+		}
+		delete[] lpBuffer;
+		lpBuffer = nullptr;
+	}
 }

@@ -31,11 +31,15 @@ namespace Phantom {
 
 		virtual void resize(int32_t width, int32_t height);
 
+		virtual void DrawLine(const maths::vec3& from, const maths::vec3& to, const maths::vec3& color);
+
 	protected:
 		virtual void EnterScene(const Scene& scene);
 		virtual void PurgeCurScene();
 	private:
 		void RenderBatches();
+
+		void RenderDebugInfo();
 		
 		void RenderShadowMap();
 		void BeginShadowMap();        
@@ -86,6 +90,13 @@ namespace Phantom {
 		};
 
 		OpenGLContextPerDrawBatch m_skyboxContext;
+
+#ifdef _DEBUG
+		struct DebugDrawBatchContext : public OpenGLContextPerDrawBatch {
+			maths::vec3 color;
+		};
+		std::vector<DebugDrawBatchContext> m_DebugDrawBatchContext;
+#endif
 	};
 
 

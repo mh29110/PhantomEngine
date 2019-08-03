@@ -38,6 +38,10 @@ namespace Phantom {
 		virtual void resize(int32_t width, int32_t height) {};
 
 		bool Inited = false;
+
+#ifdef _DEBUG
+		virtual void DrawLine(const maths::vec3& from, const maths::vec3& to, const maths::vec3& color) {}
+#endif
 	protected:
 		virtual void EnterScene(const Scene& scene);
 		virtual void PurgeCurScene();

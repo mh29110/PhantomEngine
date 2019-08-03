@@ -8,12 +8,14 @@
 // #include "MemoryManager.h"
 #include "common/AnimationManager.h"
 #include "utils/Timer.h"
+#include "common/DebugManager.h"
 
 using namespace Phantom;
 using namespace std;
 
 namespace Phantom {
 	extern IApplication*    g_pApp;
+    extern DebugManager* g_pDebugManager;
 	extern AssetLoadManager* g_pAssetLoader;
     //extern MemoryManager*   g_pMemoryManager;
     extern GraphicsManager* g_pGraphicsManager;
@@ -66,6 +68,13 @@ int main(int argc, char** argv) {
 		printf("Graphics Manager Init failed, will exit now.");
 		return ret;
 	}
+
+#ifdef _DEBUG
+	if ((ret = g_pDebugManager->Init()) != 0) {
+		cerr << "g_pDebugManager Failed. err =" << ret;
+		return ret;
+	}
+#endif
 	g_pSceneManager->LoadScene();
 
 
@@ -86,7 +95,9 @@ int main(int argc, char** argv) {
 		g_pBehaviourManager->Tick();
 		g_pInputManager->Tick();
         g_pGraphicsManager->Tick();
-
+#ifdef _DEBUG
+		g_pDebugManager->Tick();
+#endif
 		frames++;
 		if (timer.Elapsed() - secondCount > 1.0f)
 		{
@@ -97,7 +108,9 @@ int main(int argc, char** argv) {
 			frames = 0;
 		}
 	}
-
+#ifdef _DEBUG
+	g_pDebugManager->Shutdown();
+#endif
     // g_pMemoryManager->Shutdown();
 	AnimationManager::GetInstance().Shutdown();
 	g_pInputManager->Shutdown();
