@@ -1,4 +1,4 @@
-﻿#include "GraphicsManager.h"
+#include "GraphicsManager.h"
 #include <iostream>
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -143,9 +143,9 @@ void Phantom::GraphicsManager::CalculateSkeletonSkin()
 	auto sceneBoneNodes = scene.BoneNodes;
 
 	std::unordered_map<Guid, std::weak_ptr<SceneObjectGeometry>>      skeletonAnimationObjects = scene.SkeletonAnimationObjects;
-	for (auto skeleton : skeletonAnimationObjects)
+	for (auto skeAnimObj : skeletonAnimationObjects)
 	{
-		shared_ptr<SceneObjectGeometry> pGeometry = skeleton.second.lock();
+		shared_ptr<SceneObjectGeometry> pGeometry = skeAnimObj.second.lock();
 		const auto& pMesh = pGeometry->GetMesh().lock();
 
 		const auto pSkin = pMesh->GetSkin().lock();

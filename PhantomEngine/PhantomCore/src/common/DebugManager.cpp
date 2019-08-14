@@ -34,7 +34,7 @@ void DebugManager::ToggleDebugInfo()
 
 void DebugManager::DrawDebugInfo()
 {
-    DrawGrid();
+//    DrawGrid();
     DrawAxis();
 }
 

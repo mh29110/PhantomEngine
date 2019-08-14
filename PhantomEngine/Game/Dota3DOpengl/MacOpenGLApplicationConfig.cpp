@@ -16,6 +16,7 @@
 #include "interface/IApplication.h"
 #include "common/BehaviourManager.h"
 #include "common/InputManager.h"
+#include "common/DebugManager.h"
 
 namespace Phantom {
 	//ÅäÖÃ³ÌÐò¼¯ÃüÃû¿Õ¼äÄÚ¹ÜÀíÆ÷µÄÈ«¾Ö±äÁ¿
@@ -27,6 +28,7 @@ namespace Phantom {
     AssetLoadManager*     g_pAssetLoader     = static_cast<AssetLoadManager*>(new AssetLoadManager);
 	SceneManager*     g_pSceneManager     = static_cast<SceneManager*>(new SceneManager);
     InputManager* g_pInputManager = static_cast<InputManager* >(new InputManager);
+	DebugManager*    g_pDebugManager = static_cast<DebugManager*>(new DebugManager);
 
 }
 
