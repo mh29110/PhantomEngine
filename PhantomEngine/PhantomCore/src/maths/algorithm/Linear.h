@@ -107,7 +107,7 @@ namespace Phantom{ namespace maths{
 				// Interpolate scalar 
 				vec3 scalar =   scalar1 *(1.0f - s) +  scalar2*s;
 				// Interpolate rotation
-				vec3 rotation =  rotation1 * (1.0f - s) +   rotation2 * s;
+				//vec3 rotation =  rotation1 * (1.0f - s) +   rotation2 * s;
 				assert((s >= 0.0f && s <= 1.0f));
 
 				// compose the interpolated matrix

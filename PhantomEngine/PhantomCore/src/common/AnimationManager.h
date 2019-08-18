@@ -22,6 +22,6 @@ namespace Phantom {
 		~AnimationManager() {};
 	private:
 		std::list<std::shared_ptr<SceneObjectAnimationClip>> m_AnimationClips;
-		bool m_bTimeLineStarted = false;
+		//bool m_bTimeLineStarted = false;
 	};
 }

@@ -1,4 +1,4 @@
-﻿#include "opengexparser.h"
+#include "opengexparser.h"
 #include "maths/PhMaths.h"
 #include "scene/SceneHeaders.h"
 #include "maths/algorithm/Curve.h"
@@ -409,6 +409,7 @@ void Phantom::OpengexParser::ConvertOddlStructureToSceneNode(const ODDL::Structu
 
 						
 						bool object_flag = pTransformArr->GetObjectFlag();//todo
+                        printf("%d",object_flag);
 						std::shared_ptr<SceneObjectTransform> transform = std::make_shared<SceneObjectTransform>(base_node->GetName());
 						data = pTransformArr->GetTransform();
 

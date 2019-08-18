@@ -37,7 +37,7 @@ namespace Phantom {
 				assert(0);
 			}
 
-			void Update(const maths::vec3 amount)
+			virtual void Update(const maths::vec3 amount)
 			{
 				// should not be used.
 				assert(0);

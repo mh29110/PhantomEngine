@@ -25,6 +25,7 @@ namespace Phantom {
 			appName(app_name)
 		{}
 
+        
 		uint32_t redBits; ///< red color channel depth in bits
 		uint32_t greenBits; ///< green color channel depth in bits
 		uint32_t blueBits; ///< blue color channel depth in bits
@@ -37,7 +38,11 @@ namespace Phantom {
 		uint32_t screenOriginWidth;
 		uint32_t screenOriginHeight;
         const char* appName;
-
+        
+        static const uint32_t kMaxInFlightFrameCount = 1;
+        static const uint32_t kMaxSceneObjectCount = 2048;
+        static const uint32_t kMaxTextureCount = 2048;
+        
         friend std::wostream& operator<<(std::wostream& out, const GfxConfiguration& conf)
         { 
             out << "App Name:" << conf.appName << std::endl;

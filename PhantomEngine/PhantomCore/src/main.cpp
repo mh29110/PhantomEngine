@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <chrono>
+#include <thread>
 #include "interface/IApplication.h"
 #include "common/GraphicsManager.h"
 #include "common/AssetLoadManager.h"
@@ -35,9 +37,8 @@ int main(int argc, char** argv) {
 		return ret;
 	}
 	// create the main window
-#ifndef  OS_MACOS
 	g_pApp->CreateMainWindow();
-#endif
+    
 	// if ((ret = g_pMemoryManager->Init()) != 0) {
 	// 	printf("Memory Manager Init failed, will exit now.");
 	// 	return ret;
@@ -94,7 +95,10 @@ int main(int argc, char** argv) {
 		g_pSceneManager->Tick();
 		g_pBehaviourManager->Tick();
 		g_pInputManager->Tick();
-        g_pGraphicsManager->Tick();
+#ifndef OS_MACOS
+        g_pGraphicsManager->Tick(); //todo macos tick on metalView
+#endif
+
 #ifdef _DEBUG
 		g_pDebugManager->Tick();
 #endif
@@ -104,9 +108,11 @@ int main(int argc, char** argv) {
 			secondCount += 1.0f;
 			string str = std::to_string(frames);
 			g_pGraphicsManager->DrawString(GUI::FrameGuiIdx,20, 400, "fps:" + str);
+//            printf("%d\n", frames);
 		/* 由于N卡默认开启自动同步，除非手动代码设置（或者显卡配置），最多60帧。 A卡默认关闭。*/
 			frames = 0;
 		}
+//        std::this_thread::sleep_for(std::chrono::milliseconds(int(1000/60 - deltaTime)));
 	}
 #ifdef _DEBUG
 	g_pDebugManager->Shutdown();

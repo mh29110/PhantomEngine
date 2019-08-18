@@ -18,4 +18,6 @@ namespace Phantom {
         virtual void CreateMainWindow() = 0;
         virtual void* GetMainWindowHandler() = 0;
     };
+    
+    extern IApplication*    g_pApp;
 }

@@ -36,6 +36,10 @@ namespace Phantom {
 	protected:
 		virtual void EnterScene(const Scene& scene);
 		virtual void PurgeCurScene();
+
+		void BeginFrame() final;
+        void EndFrame() final;
+
 	private:
 		void RenderBatches();
 

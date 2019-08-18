@@ -35,7 +35,6 @@ void CocoaApplication::CreateMainWindow()
     [NSApp activateIgnoringOtherApps:YES];
     [NSApp finishLaunching];
     
-
     NSInteger style = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |
                       NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
 

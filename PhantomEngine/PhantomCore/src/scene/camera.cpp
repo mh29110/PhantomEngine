@@ -12,13 +12,14 @@
 
 using namespace Phantom::maths;
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_POS (0,500,500);
+//front 因pitch失效。
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_FRONT (1,-1,0);
 const Phantom::maths::vec3 Phantom::CameraNode::DEFAULT_UP (1,1,0);
 void Phantom::CameraNode::initViewMatrix()
 {
 
-	Yaw += 0.1f;//todo  有个bug，启动第一帧天空盒不渲
-	updateCameraVectors();
+    Yaw += 0.1f;//todo  有个bug，启动第一帧天空盒不渲 //front 因pitch失效。
+    updateCameraVectors();
 	if (true||m_Transforms.size() == 0) {
 		m_viewMatrix.LookAtMatrixBuild(Position, Position + Front, UP);
 

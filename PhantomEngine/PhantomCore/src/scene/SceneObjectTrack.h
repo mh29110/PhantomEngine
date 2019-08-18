@@ -3,7 +3,7 @@
 #include "SceneBaseObject.h"
 #include "ability/IAnimatable.h"
 #include "scene/SceneObjectTransform.h"
-#include "maths/algorithm/curve.h"
+#include "maths/algorithm/Curve.h"
 
 namespace Phantom {
 	ENUM(SceneObjectTrackType)

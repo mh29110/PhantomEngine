@@ -3,7 +3,6 @@
 #include "interface/IRuntimeModule.h"
 #include "maths/mat4.h"
 #include "maths/vector.h"
-#include "scene/camera.h"
 #include "scene/Scene.h"
 #include "graphics/GfxStruct.h"
 #include "graphics/textCore/FontEngine.h"
@@ -45,6 +44,10 @@ namespace Phantom {
 	protected:
 		virtual void EnterScene(const Scene& scene);
 		virtual void PurgeCurScene();
+
+		
+        virtual void BeginFrame() {}
+        virtual void EndFrame() {}
 
 	private:
 		void CalculateCameraMatrix();

@@ -23074,6 +23074,16 @@ GeometryObject $geometry2		// Bip001 Footsteps
 			}
 		}
 
+
+		VertexArray (attrib = "texcoord")
+		{
+			float[2]		// 9
+			{
+				{0x3F0AE600, 0x3F00C1AE}, {0x3F20E9D8, 0x3F00C678}, {0x3F1FD392, 0x3F0E9132}, {0x3F0AE5D3, 0x3F0EDA58}, {0x3D9A43B1, 0x3F0B7EDC}, {0x3D8D75AD, 0x3F05CE3A}, {0x3DBCB7A5, 0x3F07CFD4}, {0x3D24B729, 0x3F0B1CAC},
+				{0x3D017CA9, 0x3F06FDCC}
+			}
+		}
+
 		IndexArray
 		{
 			unsigned_int32[3]		// 8

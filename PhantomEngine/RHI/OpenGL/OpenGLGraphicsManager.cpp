@@ -327,21 +327,26 @@ namespace Phantom {
 
 	void OpenGLGraphicsManager::Tick()
 	{
-		Clear();
 		GraphicsManager::Tick();
 	}
 
-	void OpenGLGraphicsManager::Clear()
+	void OpenGLGraphicsManager::BeginFrame()
 	{
 		for (GLenum err; (err = glGetError()) != GL_NO_ERROR;)
 		{
 			printf("gl error = %d", err);
 		}
-		// Set the color to clear the screen to.
-		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
-		// Clear the screen and depth buffer.
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	    // Set the color to clear the screen to.
+	    glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
+	    // Clear the screen and depth buffer.
+	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
+
+	void OpenGLGraphicsManagerCommonBase::EndFrame()
+	{
+
+	}
+
 
 	void OpenGLGraphicsManager::Draw()
 	{

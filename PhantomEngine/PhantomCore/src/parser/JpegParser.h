@@ -66,6 +66,29 @@ namespace Phantom {
 			img.mipmaps[0].pitch = img.pitch;
 			img.mipmaps[0].offset = 0;
 			img.mipmaps[0].data_size = img.data_size;
+
+
+			if(img.bitcount == 24)  //24bit metal not supported.
+			{
+				int compNum = img.Width * img.Height;
+				uint8_t * tempPtr  = img.data;
+				img.data = new uint8_t[compNum * 4];
+				std::memset(img.data, 0x50, compNum * 4);
+				for( int i = 0; i < compNum; i++)
+				{
+					memcpy(img.data + i*4, tempPtr + i*3 , 3);
+				}
+				
+
+				img.bitcount = 32;
+                img.pitch = row_stride/3*4;
+                img.data_size = img.data_size/3*4;
+                img.mipmaps[0].pitch = img.pitch;
+                img.mipmaps[0].offset = 0;
+                img.mipmaps[0].data_size = img.data_size;
+
+				delete tempPtr;
+			}
 			return img;
 		}
 	};

@@ -40,8 +40,11 @@ void Phantom::GraphicsManager::Shutdown()
 void Phantom::GraphicsManager::Tick()
 {
 	UpdateConstants();
-	Draw();
-	DrawGUI();
+    BeginFrame();
+    Draw();
+    EndFrame();
+
+    DrawGUI();
 }
 
 
@@ -92,7 +95,7 @@ void Phantom::GraphicsManager::CalculateLights()
 		mat4x4 projectionMat;
 #pragma region test_light_move
 		float tempX = cos(factor);
-		float tempY = sin(factor);
+		//float tempY = sin(factor);
 		factor += 0.003f;
 
 		light.lightPos = vec4(0.0f, 0.0f, 0.0f, 1.0f);//µ±Ç°Æ½ÐÐ¹âÏÂÃ»ÓÐÓÃµ½
